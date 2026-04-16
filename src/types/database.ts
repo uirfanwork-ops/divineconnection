@@ -106,6 +106,15 @@ export interface Database {
           typed_signature?: string;
           ip_address?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "registrations_tier_id_fkey";
+            columns: ["tier_id"];
+            isOneToOne: false;
+            referencedRelation: "pricing_tiers";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       pricing_tiers: {
         Row: {
@@ -153,6 +162,7 @@ export interface Database {
           stripe_price_id?: string | null;
           features?: Json;
         };
+        Relationships: [];
       };
       payments: {
         Row: {
@@ -194,6 +204,15 @@ export interface Database {
           receipt_id?: string | null;
           metadata?: Json | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "payments_registration_id_fkey";
+            columns: ["registration_id"];
+            isOneToOne: false;
+            referencedRelation: "registrations";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       receipts: {
         Row: {
@@ -259,6 +278,15 @@ export interface Database {
           reviewed_by?: string | null;
           reviewed_at?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "receipts_registration_id_fkey";
+            columns: ["registration_id"];
+            isOneToOne: false;
+            referencedRelation: "registrations";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       admin_roles: {
         Row: {
@@ -285,6 +313,7 @@ export interface Database {
           email?: string;
           display_name?: string | null;
         };
+        Relationships: [];
       };
       audit_log: {
         Row: {
@@ -317,6 +346,7 @@ export interface Database {
           details?: Json | null;
           ip_address?: string | null;
         };
+        Relationships: [];
       };
       retreat_config: {
         Row: {
@@ -340,16 +370,24 @@ export interface Database {
           updated_at?: string;
           updated_by?: string | null;
         };
+        Relationships: [];
       };
     };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
     Enums: {
       registration_status: RegistrationStatus;
       payment_method: PaymentMethod;
       payment_status: PaymentStatus;
       receipt_status: ReceiptStatus;
       admin_role: AdminRole;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
     };
   };
 }
