@@ -19,6 +19,18 @@ export interface RegistrationActionState {
   registrationId?: string;
 }
 
+const FALLBACK_TIER_PRICES: Record<string, { price_cents: number; currency: string; name: string }> = {
+  "00000000-0000-0000-0000-000000000001": { price_cents: 15000, currency: "CAD", name: "Economy" },
+  "00000000-0000-0000-0000-000000000002": { price_cents: 25000, currency: "CAD", name: "Standard" },
+  "00000000-0000-0000-0000-000000000003": { price_cents: 40000, currency: "CAD", name: "Premium" },
+};
+
+function parseBool(value: FormDataEntryValue | null): boolean {
+  if (value === null) return false;
+  const s = String(value).toLowerCase();
+  return s === "true" || s === "on" || s === "yes" || s === "1";
+}
+
 export async function submitRegistration(
   _prevState: RegistrationActionState,
   formData: FormData
@@ -33,8 +45,7 @@ export async function submitRegistration(
   if (!rateLimit.success) {
     return {
       success: false,
-      error:
-        "Too many registration attempts. Please try again in an hour.",
+      error: "Too many registration attempts. Please try again in an hour.",
     };
   }
 
@@ -42,17 +53,28 @@ export async function submitRegistration(
     full_name: formData.get("full_name"),
     email: formData.get("email"),
     phone: formData.get("phone"),
+    date_of_birth: formData.get("date_of_birth"),
+    gender: formData.get("gender"),
+    is_minor: parseBool(formData.get("is_minor")),
+    guardian_name: formData.get("guardian_name") || "",
+    guardian_phone: formData.get("guardian_phone") || "",
+    guardian_email: formData.get("guardian_email") || "",
+    guardian_signature: formData.get("guardian_signature") || "",
     tier_id: formData.get("tier_id"),
     emergency_contact_name: formData.get("emergency_contact_name"),
+    emergency_contact_relationship: formData.get("emergency_contact_relationship"),
     emergency_contact_phone: formData.get("emergency_contact_phone"),
-    dietary_restrictions: formData.get("dietary_restrictions") || "",
+    allergies: formData.get("allergies") || "",
     medical_conditions: formData.get("medical_conditions") || "",
-    accept_privacy_policy: formData.get("accept_privacy_policy") === "true",
-    accept_terms_of_service:
-      formData.get("accept_terms_of_service") === "true",
-    accept_refund_policy: formData.get("accept_refund_policy") === "true",
-    accept_code_of_conduct:
-      formData.get("accept_code_of_conduct") === "true",
+    current_medications: formData.get("current_medications") || "",
+    dietary_restrictions: formData.get("dietary_restrictions") || "",
+    driving_self: parseBool(formData.get("driving_self")),
+    seeking_carpool: parseBool(formData.get("seeking_carpool")),
+    photo_consent: parseBool(formData.get("photo_consent")),
+    accept_waiver: parseBool(formData.get("accept_waiver")),
+    accept_code_of_conduct: parseBool(formData.get("accept_code_of_conduct")),
+    accept_consent_form: parseBool(formData.get("accept_consent_form")),
+    accept_privacy_policy: parseBool(formData.get("accept_privacy_policy")),
     typed_signature: formData.get("typed_signature"),
     recaptcha_token: formData.get("recaptcha_token"),
   };
@@ -62,9 +84,7 @@ export async function submitRegistration(
     const fieldErrors: Record<string, string[]> = {};
     for (const issue of parsed.error.issues) {
       const path = issue.path.join(".");
-      if (!fieldErrors[path]) {
-        fieldErrors[path] = [];
-      }
+      if (!fieldErrors[path]) fieldErrors[path] = [];
       fieldErrors[path].push(issue.message);
     }
     return {
@@ -80,59 +100,84 @@ export async function submitRegistration(
   if (!recaptchaResult.success) {
     return {
       success: false,
-      error:
-        "reCAPTCHA verification failed. Please refresh the page and try again.",
+      error: "reCAPTCHA verification failed. Please refresh and try again.",
     };
   }
 
   const supabase = createServiceClient();
 
-  const { data: tier, error: tierError } = await supabase
+  // Fetch tier price from DB (or fall back for dummy tiers)
+  let tierName = "";
+  let priceCents = 0;
+  let currency = "CAD";
+  let tierExistsInDb = false;
+
+  const { data: tier } = await supabase
     .from("pricing_tiers")
     .select("*")
     .eq("id", data.tier_id)
     .single();
 
-  if (tierError || !tier) {
-    return {
-      success: false,
-      error: "Selected pricing tier not found. Please try again.",
-    };
+  if (tier) {
+    if (!tier.is_active) {
+      return { success: false, error: "Selected pricing tier is no longer available." };
+    }
+    if (tier.max_spots !== null && tier.spots_taken >= tier.max_spots) {
+      return { success: false, error: "This tier is sold out. Please select a different tier." };
+    }
+    tierName = tier.name;
+    priceCents = tier.price_cents;
+    currency = tier.currency;
+    tierExistsInDb = true;
+  } else {
+    const fallback = FALLBACK_TIER_PRICES[data.tier_id];
+    if (!fallback) {
+      return { success: false, error: "Selected pricing tier not found." };
+    }
+    tierName = fallback.name;
+    priceCents = fallback.price_cents;
+    currency = fallback.currency;
   }
 
-  if (!tier.is_active) {
-    return {
-      success: false,
-      error: "Selected pricing tier is no longer available.",
-    };
-  }
+  const now = new Date().toISOString();
 
-  if (tier.max_spots !== null && tier.spots_taken >= tier.max_spots) {
-    return {
-      success: false,
-      error: "This tier is sold out. Please select a different tier.",
-    };
-  }
+  const insertPayload = {
+    full_name: data.full_name,
+    email: data.email,
+    phone: data.phone,
+    date_of_birth: data.date_of_birth,
+    gender: data.gender,
+    is_minor: data.is_minor,
+    guardian_name: data.is_minor ? data.guardian_name : null,
+    guardian_phone: data.is_minor ? data.guardian_phone || null : null,
+    guardian_email: data.is_minor ? data.guardian_email || null : null,
+    guardian_signature: data.is_minor ? data.guardian_signature : null,
+    tier_id: data.tier_id,
+    status: "pending" as const,
+    payment_status: "pending" as const,
+    amount_cents: priceCents,
+    currency,
+    emergency_contact_name: data.emergency_contact_name,
+    emergency_contact_phone: data.emergency_contact_phone,
+    emergency_contact_relationship: data.emergency_contact_relationship,
+    allergies: data.allergies || null,
+    medical_conditions: data.medical_conditions || null,
+    current_medications: data.current_medications || null,
+    dietary_restrictions: data.dietary_restrictions || null,
+    driving_self: data.driving_self,
+    seeking_carpool: data.seeking_carpool,
+    photo_consent: data.photo_consent,
+    policy_consent_at: now,
+    waiver_accepted_at: now,
+    conduct_accepted_at: now,
+    consent_form_accepted_at: now,
+    typed_signature: data.typed_signature,
+    ip_address: ip,
+  };
 
   const { data: registration, error: insertError } = await supabase
     .from("registrations")
-    .insert({
-      full_name: data.full_name,
-      email: data.email,
-      phone: data.phone,
-      tier_id: data.tier_id,
-      status: "pending",
-      payment_status: "pending",
-      amount_cents: tier.price_cents,
-      currency: tier.currency,
-      emergency_contact_name: data.emergency_contact_name,
-      emergency_contact_phone: data.emergency_contact_phone,
-      dietary_restrictions: data.dietary_restrictions || null,
-      medical_conditions: data.medical_conditions || null,
-      policy_consent_at: new Date().toISOString(),
-      typed_signature: data.typed_signature,
-      ip_address: ip,
-    })
+    .insert(insertPayload)
     .select("id")
     .single();
 
@@ -140,50 +185,38 @@ export async function submitRegistration(
     console.error("Registration insert failed:", insertError?.message);
     return {
       success: false,
-      error: "Failed to create registration. Please try again.",
+      error:
+        "Failed to create registration. Please try again, or contact info@divineconnections.ca if the problem persists.",
     };
   }
 
-  const { error: updateError } = await supabase
-    .from("pricing_tiers")
-    .update({ spots_taken: tier.spots_taken + 1 })
-    .eq("id", data.tier_id);
-
-  if (updateError) {
-    console.error("Failed to update spots_taken:", updateError.message);
+  if (tierExistsInDb && tier) {
+    await supabase
+      .from("pricing_tiers")
+      .update({ spots_taken: tier.spots_taken + 1 })
+      .eq("id", data.tier_id);
   }
 
-  const regEmailData = {
+  // Fire-and-forget emails
+  const emailData = {
     id: registration.id,
     full_name: data.full_name,
     email: data.email,
-    amount_cents: tier.price_cents,
-    currency: tier.currency,
+    amount_cents: priceCents,
+    currency,
   };
 
-  const confirmation = eTransferConfirmationEmail(regEmailData);
   sendEmail({
     to: data.email,
-    subject: confirmation.subject,
-    html: confirmation.html,
-  }).catch((err) =>
-    console.error("Failed to send confirmation email:", err)
-  );
+    ...eTransferConfirmationEmail(emailData),
+  }).catch((err) => console.error("Failed to send confirmation:", err));
 
   const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
   if (adminEmail) {
-    const notification = adminNewRegistrationEmail({
-      ...regEmailData,
-      phone: data.phone,
-      tier_name: tier.name,
-    });
     sendEmail({
       to: adminEmail,
-      subject: notification.subject,
-      html: notification.html,
-    }).catch((err) =>
-      console.error("Failed to send admin notification:", err)
-    );
+      ...adminNewRegistrationEmail({ ...emailData, phone: data.phone, tier_name: tierName }),
+    }).catch((err) => console.error("Failed to send admin notification:", err));
   }
 
   redirect(`/register/payment?id=${registration.id}`);

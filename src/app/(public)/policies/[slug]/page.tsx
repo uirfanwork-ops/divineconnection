@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 
 const POLICIES_DIR = path.join(process.cwd(), "content", "policies", "v1");
 
-const validSlugs = ["privacy", "terms", "refund", "code-of-conduct"];
+const validSlugs = ["privacy", "terms", "refund", "code-of-conduct", "waiver", "consent"];
 
 interface PolicyPageProps {
   params: Promise<{ slug: string }>;
@@ -55,16 +55,18 @@ export default async function PolicyPage({ params }: PolicyPageProps) {
   const htmlContent = mdxToHtml(content);
 
   return (
-    <div className="container py-12">
-      <div className="mx-auto max-w-3xl">
-        <article className="prose prose-neutral max-w-none">
-          <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-        </article>
-        <div className="mt-8 border-t pt-4 text-sm text-muted-foreground">
-          <p>
-            Version {data.version} - Effective{" "}
-            {data.effectiveDate}
-          </p>
+    <div className="starfield relative overflow-hidden bg-gradient-to-b from-slate-950 via-blue-950/20 to-slate-950">
+      <div className="nebula nebula-blue h-[400px] w-[400px]" style={{ top: "-10%", left: "-10%" }} />
+      <div className="container relative py-16">
+        <div className="mx-auto max-w-3xl">
+          <div className="glass-strong rounded-3xl p-8 md:p-12">
+            <article className="policy-article">
+              <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+            </article>
+            <div className="mt-10 border-t border-white/10 pt-4 text-sm text-slate-500">
+              <p>Version {data.version} - Effective {data.effectiveDate}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

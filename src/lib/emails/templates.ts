@@ -22,9 +22,9 @@ function baseLayout(content: string): string {
       <td align="center">
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;max-width:600px;width:100%;">
           <tr>
-            <td style="background-color:#1a6847;padding:24px 32px;text-align:center;">
+            <td style="background:linear-gradient(135deg,#0b1120 0%,#1e3a8a 100%);padding:28px 32px;text-align:center;">
               <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:bold;">${siteConfig.shortName}</h1>
-              <p style="margin:4px 0 0;color:rgba(255,255,255,0.85);font-size:14px;">${siteConfig.footer.tagline}</p>
+              <p style="margin:4px 0 0;color:#fbbf24;font-size:13px;letter-spacing:1px;text-transform:uppercase;">${siteConfig.footer.tagline}</p>
             </td>
           </tr>
           <tr>
