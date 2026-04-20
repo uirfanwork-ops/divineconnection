@@ -419,8 +419,8 @@ CREATE POLICY "retreat_config_admin_delete"
 -- 6. Seed Data: Default retreat config
 -- -----------------------------------------------
 INSERT INTO retreat_config (key, value) VALUES
-  ('e_transfer_email', '"payments@divineconnections.ca"'),
-  ('e_transfer_instructions', '"Please send your Interac e-Transfer to payments@divineconnections.ca. Include your full name and registration ID in the message field. Your registration will be confirmed once we verify receipt of payment."'),
+  ('e_transfer_email', '"finance@mathabah.org"'),
+  ('e_transfer_instructions', '"Please send your Interac e-Transfer to finance@mathabah.org. Include your full name and registration ID in the message field. Your registration will be confirmed once we verify receipt of payment."'),
   ('retreat_name', '"Divine Connections: Servants of Allah"'),
   ('retreat_date_start', '"2025-08-15"'),
   ('retreat_date_end', '"2025-08-17"'),
