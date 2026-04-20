@@ -6,34 +6,27 @@ export function CtaSection() {
   const { cta } = siteConfig;
 
   return (
-    <section className="relative overflow-hidden py-20 md:py-28">
+    <section className="relative py-20 md:py-28 bg-constellation">
       <div className="container">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 p-8 md:p-16">
-          {/* Decorative elements */}
-          <div className="absolute inset-0 bg-grid opacity-10" />
-          <div
-            className="blob blob-orange absolute h-[500px] w-[500px] opacity-30"
-            style={{ top: "-20%", right: "-10%" }}
-          />
-          <div
-            className="blob blob-blue absolute h-[400px] w-[400px] opacity-40"
-            style={{ bottom: "-20%", left: "-10%", animationDelay: "5s" }}
-          />
+        <div className="starfield relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-900/60 via-indigo-900/40 to-purple-900/30 p-8 md:p-16">
+          {/* Nebula effects */}
+          <div className="nebula nebula-gold h-[500px] w-[500px]" style={{ top: "-30%", right: "-10%" }} />
+          <div className="nebula nebula-teal h-[400px] w-[400px]" style={{ bottom: "-30%", left: "-10%", animationDelay: "8s" }} />
 
           <div className="relative text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-orange-200 backdrop-blur-xl">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-amber-500/10 border border-amber-500/20 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-amber-400">
               <Sparkles className="h-3 w-3" />
               Limited Spots Available
             </div>
-            <h2 className="text-balance text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
+            <h2 className="text-balance text-4xl font-bold tracking-tight text-slate-100 md:text-5xl lg:text-6xl">
               {cta.title}
             </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-balance text-lg text-blue-100">
+            <p className="mx-auto mt-6 max-w-2xl text-balance text-lg text-slate-400">
               {cta.description}
             </p>
             <Link
               href={cta.buttonHref}
-              className="btn-glow group mt-10 inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-10 text-base font-semibold text-white transition-all hover:from-orange-600 hover:to-orange-700"
+              className="btn-glow group mt-10 inline-flex h-14 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-10 text-base font-semibold text-slate-900 transition-all hover:from-amber-400 hover:to-amber-500"
             >
               {cta.buttonText}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -9,15 +8,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30 hover:from-orange-600 hover:to-orange-700 hover:shadow-xl hover:shadow-orange-500/40",
+          "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 shadow-lg shadow-amber-500/25 hover:from-amber-400 hover:to-amber-500 hover:shadow-xl hover:shadow-amber-500/35",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-slate-200 bg-white hover:bg-blue-50 hover:border-blue-200",
+          "border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10 hover:border-white/20",
         secondary:
-          "bg-blue-100 text-blue-900 hover:bg-blue-200",
-        ghost: "hover:bg-blue-50 hover:text-blue-700",
-        link: "text-blue-700 underline-offset-4 hover:underline",
+          "bg-blue-500/15 text-blue-300 hover:bg-blue-500/25",
+        ghost: "text-slate-400 hover:bg-white/5 hover:text-slate-200",
+        link: "text-blue-400 underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-5 py-2",
