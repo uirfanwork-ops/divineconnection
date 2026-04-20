@@ -1,112 +1,56 @@
 import Link from "next/link";
-import { Calendar, MapPin, ArrowRight, Sparkles } from "lucide-react";
 import { siteConfig } from "../../../content/site-config";
 
 export function HeroSection() {
-  const { hero, retreatDate, retreatVenue, retreatCity } = siteConfig;
+  const { hero, retreatDate, retreatVenue } = siteConfig;
 
   return (
-    <section className="starfield relative overflow-hidden bg-gradient-to-b from-slate-950 via-blue-950/50 to-slate-950">
-      {/* Nebula effects */}
-      <div
-        className="nebula nebula-blue h-[600px] w-[600px]"
-        style={{ top: "-20%", left: "-15%" }}
-      />
-      <div
-        className="nebula nebula-purple h-[500px] w-[500px]"
-        style={{ top: "10%", right: "-15%", animationDelay: "10s" }}
-      />
-      <div
-        className="nebula nebula-teal h-[400px] w-[400px]"
-        style={{ bottom: "-10%", left: "20%", animationDelay: "20s" }}
-      />
+    <>
+      {/* Hero with background image placeholder (dark gradient simulates image overlay) */}
+      <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden bg-gradient-to-b from-[#0a1a0a] via-[#0d1f0d] to-[var(--bg-primary)]">
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/40" />
 
-      <div className="container relative z-10 py-24 md:py-36 lg:py-44">
-        <div className="mx-auto max-w-4xl text-center">
-          {/* Floating badge */}
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full glass px-5 py-2.5 text-sm font-medium text-slate-300 animate-fade-in-up">
-            <Sparkles className="h-4 w-4 text-amber-400" />
-            <span>{retreatDate}</span>
-            <span className="h-1 w-1 rounded-full bg-amber-400" />
-            <span>{retreatVenue}</span>
-          </div>
-
-          {/* Title */}
-          <h1
-            className="text-balance text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl animate-fade-in-up"
-            style={{ animationDelay: "0.1s", opacity: 0 }}
-          >
-            <span className="block text-slate-100">{hero.title}</span>
-            <span className="mt-2 block gradient-text-gold">
-              {hero.subtitle}
-            </span>
+        <div className="container relative z-10 py-32 text-center">
+          <h1 className="font-heading text-5xl font-bold uppercase tracking-wide text-[var(--text-primary)] sm:text-6xl md:text-7xl lg:text-8xl">
+            {hero.title}
           </h1>
-
-          <p
-            className="mx-auto mt-8 max-w-2xl text-balance text-lg leading-relaxed text-slate-400 sm:text-xl animate-fade-in-up"
-            style={{ animationDelay: "0.2s", opacity: 0 }}
-          >
-            {hero.description}
+          <p className="mt-4 text-sm font-medium uppercase tracking-[0.3em] text-[var(--gold-light)] sm:text-base md:text-lg">
+            {hero.subtitle} | {retreatDate}
           </p>
-
-          {/* CTAs */}
-          <div
-            className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in-up"
-            style={{ animationDelay: "0.3s", opacity: 0 }}
-          >
-            <Link
-              href={hero.ctaHref}
-              className="btn-glow group inline-flex h-14 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-8 text-base font-semibold text-slate-900 transition-all hover:from-amber-400 hover:to-amber-500"
-            >
+          <p className="mx-auto mt-2 text-xs uppercase tracking-[0.2em] text-[var(--text-secondary)]">
+            {retreatVenue}
+          </p>
+          <div className="mt-12">
+            <Link href={hero.ctaHref} className="btn-outline-gold">
               {hero.ctaText}
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <Link
-              href={hero.secondaryCtaHref}
-              className="glass inline-flex h-14 items-center justify-center rounded-full px-8 text-base font-semibold text-slate-200 transition-all hover:bg-white/10"
-            >
-              {hero.secondaryCtaText}
-            </Link>
-          </div>
-
-          {/* Info badges */}
-          <div
-            className="mx-auto mt-20 grid max-w-2xl grid-cols-2 gap-4 animate-fade-in-up"
-            style={{ animationDelay: "0.4s", opacity: 0 }}
-          >
-            <div className="glass-glow-blue rounded-2xl p-5 text-left">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
-                  <Calendar className="h-5 w-5 text-blue-400" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-                    Dates
-                  </p>
-                  <p className="text-sm font-semibold text-slate-200">
-                    {retreatDate}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="glass-glow-gold rounded-2xl p-5 text-left">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/20">
-                  <MapPin className="h-5 w-5 text-amber-400" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-                    Location
-                  </p>
-                  <p className="text-sm font-semibold text-slate-200">
-                    {retreatCity}
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
+      </section>
+
+      {/* Steps Bar */}
+      <div className="border-y border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
+        <div className="container flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
+          {[
+            { step: 1, label: "Choose a Retreat" },
+            { step: 2, label: "Register Online" },
+            { step: 3, label: "Enjoy!" },
+          ].map(({ step, label }) => (
+            <div key={step} className="flex items-center gap-3">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--gold)] text-xs font-semibold text-[var(--gold)]">
+                {step}
+              </span>
+              <span className="text-xs font-medium uppercase tracking-[0.15em] text-[var(--text-secondary)]">
+                {label}
+              </span>
+            </div>
+          ))}
+          <Link href="/register" className="btn-outline-gold">
+            Register Now
+          </Link>
+        </div>
       </div>
-    </section>
+    </>
   );
 }

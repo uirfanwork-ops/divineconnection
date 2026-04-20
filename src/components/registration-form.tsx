@@ -272,7 +272,7 @@ export function RegistrationForm({
                 })}
               </SelectNative>
               {selectedTier && (
-                <p className="mt-1.5 text-xs text-slate-500">
+                <p className="mt-1.5 text-xs text-[var(--text-muted)]">
                   {selectedTier.description}
                 </p>
               )}
@@ -408,18 +408,18 @@ export function RegistrationForm({
 
         {/* 6. Payment Information */}
         <Section icon={CreditCard} title="Payment Information">
-          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
-            <p className="text-sm text-slate-300">
+          <div className="rounded-lg border border-[var(--border-color)] bg-[var(--gold)]/5 p-4">
+            <p className="text-sm text-[var(--text-secondary)]">
               Details for payment will be sent upon registration confirmation.
               Payment will be collected via Interac e-Transfer to{" "}
-              <code className="text-amber-400">finance@mathabah.org</code>.
+              <code className="text-[var(--gold)]">finance@mathabah.org</code>.
             </p>
           </div>
         </Section>
 
         {/* 7. Photo/Media Consent */}
         <Section icon={Camera} title="Photo / Media Consent">
-          <p className="mb-3 text-sm text-slate-400">
+          <p className="mb-3 text-sm text-[var(--text-secondary)]">
             I consent to photographs and videos being taken during the retreat
             which may be used for future promotional purposes.
           </p>
@@ -436,7 +436,7 @@ export function RegistrationForm({
 
         {/* 8. Document Acceptance */}
         <Section icon={FileCheck} title="Required Agreements" accent="amber">
-          <p className="mb-4 text-sm text-slate-400">
+          <p className="mb-4 text-sm text-[var(--text-secondary)]">
             Please read and accept each of the following documents. Click each
             title to open and review.
           </p>
@@ -490,7 +490,7 @@ export function RegistrationForm({
 
         {/* 9. Declaration and Signature */}
         <Section icon={PenLine} title="Declaration">
-          <div className="rounded-lg border border-white/10 bg-white/5 p-4 text-sm leading-relaxed text-slate-300">
+          <div className="rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] p-4 text-sm leading-relaxed text-[var(--text-secondary)]">
             <p>
               I declare that the information provided above is accurate to the
               best of my knowledge. I agree to comply with the rules and
@@ -500,7 +500,7 @@ export function RegistrationForm({
           <Field
             label={
               <>
-                Participant Signature <span className="text-xs font-normal text-slate-500">(type your full name exactly)</span>
+                Participant Signature <span className="text-xs font-normal text-[var(--text-muted)]">(type your full name exactly)</span>
               </>
             }
             required
@@ -529,13 +529,13 @@ export function RegistrationForm({
         </Section>
 
         {/* Submit */}
-        <div className="space-y-4 border-t border-white/10 pt-6">
+        <div className="space-y-4 border-t border-[var(--border-color)] pt-6">
           {selectedTier && (
-            <div className="flex items-center justify-between rounded-lg glass-glow-gold p-4">
-              <span className="text-sm font-medium text-slate-400">
+            <div className="flex items-center justify-between rounded-lg glass-luxury p-4">
+              <span className="text-sm font-medium text-[var(--text-secondary)]">
                 Total for {selectedTier.name}
               </span>
-              <span className="text-2xl font-bold gradient-text-gold">
+              <span className="text-2xl font-bold text-gold">
                 {formatCents(selectedTier.price_cents, selectedTier.currency)}{" "}
                 {selectedTier.currency}
               </span>
@@ -544,7 +544,7 @@ export function RegistrationForm({
           <Button type="submit" size="lg" disabled={isSubmitting} className="w-full">
             {isSubmitting ? "Submitting..." : "Submit Registration"}
           </Button>
-          <p className="text-center text-xs text-slate-500">
+          <p className="text-center text-xs text-[var(--text-muted)]">
             Indeed, in the remembrance of Allah do hearts find rest. (Qur&apos;an 13:28)
           </p>
         </div>
@@ -572,8 +572,8 @@ function Section({
 }) {
   const iconBg =
     accent === "amber"
-      ? "bg-gradient-to-br from-amber-400 to-amber-600 shadow-amber-500/30"
-      : "bg-gradient-to-br from-blue-500 to-blue-700 shadow-blue-500/30";
+      ? "bg-[var(--gold)] shadow-[var(--gold-muted)]"
+      : "bg-[var(--bg-elevated)] border border-[var(--border-color)]";
   return (
     <fieldset className="space-y-4">
       <legend className="flex items-center gap-3">
@@ -581,8 +581,8 @@ function Section({
           <Icon className="h-4 w-4 text-white" />
         </div>
         <div>
-          <h3 className="text-lg font-bold text-slate-100">{title}</h3>
-          {subtitle && <p className="text-xs text-slate-500">{subtitle}</p>}
+          <h3 className="text-lg font-bold text-[var(--text-primary)]">{title}</h3>
+          {subtitle && <p className="text-xs text-[var(--text-muted)]">{subtitle}</p>}
         </div>
       </legend>
       {children}
@@ -607,9 +607,9 @@ function Field({
 }) {
   return (
     <div>
-      <Label className="mb-1.5 block text-slate-300">
+      <Label className="mb-1.5 block text-[var(--text-secondary)]">
         {label}
-        {required && <span className="ml-0.5 text-amber-400">*</span>}
+        {required && <span className="ml-0.5 text-[var(--gold)]">*</span>}
       </Label>
       {children}
       {error && <p className="mt-1.5 text-sm text-destructive">{error}</p>}
@@ -634,16 +634,16 @@ function YesNoRadio({
   explicit?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-lg border border-white/10 bg-white/5 p-4">
-      {label && <span className="text-sm font-medium text-slate-300">{label}</span>}
+    <div className="flex items-center justify-between gap-4 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] p-4">
+      {label && <span className="text-sm font-medium text-[var(--text-secondary)]">{label}</span>}
       <div className="flex gap-2">
         <button
           type="button"
           onClick={() => onChange(true)}
           className={`rounded-md px-4 py-2 text-sm font-medium transition-all ${
             value === true
-              ? "bg-amber-500 text-slate-900 shadow-md shadow-amber-500/30"
-              : "bg-white/5 text-slate-400 hover:bg-white/10"
+              ? "bg-[var(--gold)] text-[var(--bg-primary)] shadow-md shadow-[var(--gold-muted)]"
+              : "bg-[var(--bg-card)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]"
           }`}
         >
           {yesLabel}
@@ -653,10 +653,10 @@ function YesNoRadio({
           onClick={() => onChange(false)}
           className={`rounded-md px-4 py-2 text-sm font-medium transition-all ${
             value === false && explicit
-              ? "bg-slate-600 text-slate-100"
+              ? "bg-[var(--bg-elevated)] text-[var(--text-primary)]"
               : value === false
-                ? "bg-white/10 text-slate-400"
-                : "bg-white/5 text-slate-400 hover:bg-white/10"
+                ? "bg-[var(--bg-elevated)] text-[var(--text-secondary)]"
+                : "bg-[var(--bg-card)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]"
           }`}
         >
           {noLabel}
@@ -689,8 +689,8 @@ function AgreementCheckbox({
         htmlFor={id}
         className={`flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition-colors ${
           checked
-            ? "border-amber-500/40 bg-amber-500/5"
-            : "border-white/10 bg-white/5 hover:border-white/20"
+            ? "border-[var(--gold)] bg-[var(--gold)]/5"
+            : "border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--gold)]"
         }`}
       >
         <input
@@ -698,23 +698,23 @@ function AgreementCheckbox({
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
-          className="mt-0.5 h-4 w-4 rounded border-slate-600 bg-slate-800 accent-amber-500"
+          className="mt-0.5 h-4 w-4 rounded border-[var(--border-color)] bg-[var(--bg-card)] accent-[var(--gold)]"
         />
         <div className="flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold text-slate-200">
+            <span className="text-sm font-semibold text-[var(--text-primary)]">
               I accept the{" "}
               <Link
                 href={href}
                 target="_blank"
-                className="text-amber-400 underline underline-offset-4 hover:text-amber-300"
+                className="text-[var(--gold)] underline underline-offset-4 hover:text-[var(--gold-light)]"
                 onClick={(e) => e.stopPropagation()}
               >
                 {title}
               </Link>
             </span>
           </div>
-          <p className="mt-0.5 text-xs text-slate-500">{description}</p>
+          <p className="mt-0.5 text-xs text-[var(--text-muted)]">{description}</p>
         </div>
       </label>
       {error && <p className="mt-1.5 text-sm text-destructive">{error}</p>}

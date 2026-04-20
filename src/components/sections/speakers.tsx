@@ -1,61 +1,45 @@
 import { speakers } from "../../../content/speakers";
-import { User, BookOpen } from "lucide-react";
-
-const gradients = [
-  "from-blue-600 via-indigo-700 to-purple-800",
-  "from-amber-600 via-orange-700 to-rose-800",
-  "from-emerald-600 via-teal-700 to-cyan-800",
-];
+import { User } from "lucide-react";
 
 export function SpeakersSection() {
   return (
-    <section id="speakers" className="starfield relative overflow-hidden py-20 md:py-28 bg-gradient-to-b from-slate-950/50 via-indigo-950/20 to-slate-950/50">
-      <div className="nebula nebula-purple h-[400px] w-[400px]" style={{ bottom: "10%", left: "-10%" }} />
-
-      <div className="container relative">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="mb-4 flex justify-center">
-            <span className="inline-flex items-center gap-2 rounded-full bg-purple-500/10 border border-purple-500/20 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-purple-400">
-              <User className="h-3 w-3" />
-              Our Speakers
-            </span>
-          </div>
-          <h2 className="text-4xl font-bold tracking-tight text-slate-100 md:text-5xl">
-            Learn from{" "}
-            <span className="gradient-text-gold">qualified scholars</span>
+    <section id="speakers" className="border-y border-[var(--border-subtle)] bg-dark-alt py-24 md:py-32">
+      <div className="container">
+        <div className="text-center">
+          <p className="label-gold">Our Speakers</p>
+          <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
+            Learn from the Best
           </h2>
         </div>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-3">
-          {speakers.map((speaker, index) => (
+        <div className="mt-16 grid gap-8 md:grid-cols-3">
+          {speakers.map((speaker) => (
             <div
               key={speaker.name}
-              className="glass-card group overflow-hidden rounded-3xl transition-all duration-300 hover:-translate-y-1 hover:border-white/20"
+              className="border border-[var(--border-subtle)] bg-[var(--bg-card)] transition-colors hover:border-[var(--border-color)]"
             >
-              <div className={`relative flex h-40 items-center justify-center bg-gradient-to-br ${gradients[index % gradients.length]}`}>
-                <div className="absolute inset-0 starfield opacity-50" />
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-xl ring-4 ring-white/10">
-                  <User className="h-10 w-10 text-white/80" />
+              <div className="flex h-44 items-center justify-center bg-gradient-to-br from-[var(--bg-elevated)] to-[var(--bg-card)]">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full border border-[var(--gold)] border-opacity-30">
+                  <User className="h-10 w-10 text-[var(--gold)]" />
                 </div>
               </div>
-
               <div className="p-6">
-                <h3 className="text-xl font-bold text-slate-100">{speaker.name}</h3>
-                <p className="mt-1 text-sm font-semibold text-amber-400">{speaker.title}</p>
-                <p className="mt-4 text-sm leading-relaxed text-slate-400">{speaker.bio}</p>
-
-                <div className="mt-5 border-t border-white/5 pt-4">
-                  <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-                    <BookOpen className="h-3 w-3" />
-                    Topics
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {speaker.topics.map((topic) => (
-                      <span key={topic} className="inline-block rounded-full bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 text-xs font-medium text-blue-300">
-                        {topic}
-                      </span>
-                    ))}
-                  </div>
+                <p className="label-gold text-[10px]">{speaker.title}</p>
+                <h3 className="font-heading mt-1 text-xl font-bold uppercase tracking-wide text-[var(--text-primary)]">
+                  {speaker.name}
+                </h3>
+                <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">
+                  {speaker.bio}
+                </p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {speaker.topics.map((topic) => (
+                    <span
+                      key={topic}
+                      className="inline-block border border-[var(--border-color)] px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-[var(--gold)]"
+                    >
+                      {topic}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, Sparkles } from "lucide-react";
+import { Check } from "lucide-react";
 import { formatCents } from "@/lib/utils";
 import type { Database } from "@/types/database";
 
@@ -7,24 +7,16 @@ type PricingTier = Database["public"]["Tables"]["pricing_tiers"]["Row"];
 
 export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
   return (
-    <section id="pricing" className="starfield relative overflow-hidden py-20 md:py-28 bg-gradient-to-b from-slate-950/50 via-blue-950/20 to-slate-950/50">
-      <div className="nebula nebula-blue h-[400px] w-[400px]" style={{ top: "20%", left: "-10%" }} />
-      <div className="nebula nebula-gold h-[400px] w-[400px]" style={{ bottom: "10%", right: "-10%", animationDelay: "8s" }} />
-
-      <div className="container relative">
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="mb-4 flex justify-center">
-            <span className="inline-flex items-center gap-2 rounded-full bg-amber-500/10 border border-amber-500/20 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-amber-400">
-              <Sparkles className="h-3 w-3" />
-              Pricing
-            </span>
-          </div>
-          <h2 className="text-4xl font-bold tracking-tight text-slate-100 md:text-5xl">
-            Choose your <span className="gradient-text-gold">tier</span>
+    <section id="pricing" className="border-y border-[var(--border-subtle)] bg-dark-alt bg-topo py-24 md:py-32">
+      <div className="container">
+        <div className="text-center">
+          <p className="label-gold">Pricing</p>
+          <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
+            Choose Your Tier
           </h2>
         </div>
 
-        <div className="mx-auto mt-16 grid max-w-6xl gap-6 md:grid-cols-3">
+        <div className="mx-auto mt-16 grid max-w-5xl gap-8 md:grid-cols-3">
           {tiers.map((tier, index) => {
             const features = Array.isArray(tier.features) ? (tier.features as string[]) : [];
             const isPopular = index === 1;
@@ -33,48 +25,48 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
             return (
               <div
                 key={tier.id}
-                className={`relative flex flex-col rounded-3xl p-8 transition-all duration-300 ${
+                className={`relative flex flex-col border p-8 transition-colors ${
                   isPopular
-                    ? "glass-glow-gold -translate-y-2 md:scale-105"
-                    : "glass-card hover:-translate-y-1 hover:border-white/20"
+                    ? "border-[var(--gold)] bg-[var(--bg-card)]"
+                    : "border-[var(--border-subtle)] bg-[var(--bg-card)] hover:border-[var(--border-color)]"
                 }`}
               >
                 {isPopular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-1.5 text-xs font-bold text-slate-900 shadow-lg shadow-amber-500/40">
-                      <Sparkles className="h-3 w-3" />
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="btn-gold-filled py-1 px-4 text-[10px]">
                       Most Popular
                     </span>
                   </div>
                 )}
 
-                <div className="mb-6">
-                  <h3 className={`text-2xl font-bold ${isPopular ? "gradient-text-gold" : "text-slate-100"}`}>{tier.name}</h3>
-                  <p className="mt-2 text-sm text-slate-400">{tier.description}</p>
+                <p className="label-gold text-[10px]">{tier.name}</p>
+                <div className="mt-3 flex items-baseline">
+                  <span className="font-heading text-5xl font-bold text-[var(--text-primary)]">
+                    {formatCents(tier.price_cents, tier.currency).replace(/\.\d+$/, "")}
+                  </span>
+                  <span className="ml-2 text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                    {tier.currency}
+                  </span>
                 </div>
 
-                <div className="mb-6">
-                  <div className="flex items-baseline">
-                    <span className="text-5xl font-bold text-slate-100">
-                      {formatCents(tier.price_cents, tier.currency).replace(/\.\d+$/, "")}
-                    </span>
-                    <span className="ml-1 text-sm font-medium text-slate-500">{tier.currency}</span>
-                  </div>
-                  {spotsLeft !== null && (
-                    <p className={`mt-2 text-sm font-medium ${spotsLeft <= 10 ? "text-amber-400" : "text-slate-500"}`}>
-                      {spotsLeft > 0 ? `${spotsLeft} spots remaining` : "Sold out"}
-                    </p>
-                  )}
-                </div>
+                <p className="mt-3 text-sm text-[var(--text-secondary)]">
+                  {tier.description}
+                </p>
+
+                {spotsLeft !== null && (
+                  <p className={`mt-2 text-xs font-medium uppercase tracking-wider ${
+                    spotsLeft <= 10 ? "text-[var(--gold)]" : "text-[var(--text-muted)]"
+                  }`}>
+                    {spotsLeft > 0 ? `${spotsLeft} spots remaining` : "Sold out"}
+                  </p>
+                )}
+
+                <div className="divider-gold my-6" />
 
                 <ul className="mb-8 flex-1 space-y-3">
                   {features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-sm text-slate-400">
-                      <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
-                        isPopular ? "bg-gradient-to-br from-amber-400 to-amber-600" : "bg-gradient-to-br from-blue-400 to-blue-600"
-                      }`}>
-                        <Check className="h-3 w-3 text-white" />
-                      </div>
+                    <li key={feature} className="flex items-start gap-2.5 text-sm text-[var(--text-secondary)]">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--gold)]" />
                       {feature}
                     </li>
                   ))}
@@ -82,11 +74,9 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
 
                 <Link
                   href={spotsLeft === 0 ? "#" : `/register?tier=${tier.id}`}
-                  className={`inline-flex h-12 w-full items-center justify-center rounded-xl text-sm font-semibold transition-all ${
-                    isPopular
-                      ? "btn-glow bg-gradient-to-r from-amber-500 to-amber-600 text-slate-900 hover:from-amber-400 hover:to-amber-500"
-                      : "bg-white/5 text-slate-200 ring-1 ring-white/10 hover:bg-white/10 hover:ring-white/20"
-                  } ${spotsLeft === 0 ? "pointer-events-none opacity-50" : ""}`}
+                  className={`${isPopular ? "btn-gold-filled" : "btn-outline-gold"} w-full text-center ${
+                    spotsLeft === 0 ? "pointer-events-none opacity-50" : ""
+                  }`}
                   aria-disabled={spotsLeft === 0}
                 >
                   {spotsLeft === 0 ? "Sold Out" : "Register Now"}
