@@ -6,6 +6,11 @@ import { registrationSchema } from "@/lib/validations/registration";
 import { createServiceClient } from "@/lib/supabase/service";
 import { checkRegistrationRateLimit } from "@/lib/rate-limit";
 import { verifyRecaptcha } from "@/lib/recaptcha";
+import { sendEmail } from "@/lib/email";
+import {
+  eTransferConfirmationEmail,
+  adminNewRegistrationEmail,
+} from "@/lib/emails/templates";
 
 export interface RegistrationActionState {
   success: boolean;
@@ -146,6 +151,39 @@ export async function submitRegistration(
 
   if (updateError) {
     console.error("Failed to update spots_taken:", updateError.message);
+  }
+
+  const regEmailData = {
+    id: registration.id,
+    full_name: data.full_name,
+    email: data.email,
+    amount_cents: tier.price_cents,
+    currency: tier.currency,
+  };
+
+  const confirmation = eTransferConfirmationEmail(regEmailData);
+  sendEmail({
+    to: data.email,
+    subject: confirmation.subject,
+    html: confirmation.html,
+  }).catch((err) =>
+    console.error("Failed to send confirmation email:", err)
+  );
+
+  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
+  if (adminEmail) {
+    const notification = adminNewRegistrationEmail({
+      ...regEmailData,
+      phone: data.phone,
+      tier_name: tier.name,
+    });
+    sendEmail({
+      to: adminEmail,
+      subject: notification.subject,
+      html: notification.html,
+    }).catch((err) =>
+      console.error("Failed to send admin notification:", err)
+    );
   }
 
   redirect(`/register/payment?id=${registration.id}`);
