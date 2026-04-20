@@ -23,28 +23,54 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export function WhatIsIncludedSection() {
   return (
-    <section className="bg-muted py-16 md:py-24">
-      <div className="container">
-        <h2 className="text-center text-3xl font-bold text-foreground md:text-4xl">
-          What Is Included
-        </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-muted-foreground">
-          Everything you need for a transformative weekend is taken care of.
-        </p>
+    <section className="relative overflow-hidden bg-slate-900 py-20 md:py-28">
+      {/* Background effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900" />
+      <div
+        className="blob blob-blue absolute h-[500px] w-[500px] opacity-30"
+        style={{ top: "-10%", left: "10%" }}
+      />
+      <div
+        className="blob blob-orange absolute h-[400px] w-[400px] opacity-20"
+        style={{ bottom: "10%", right: "10%", animationDelay: "5s" }}
+      />
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {whatIsIncluded.map((item) => {
+      <div className="container relative">
+        <div className="mx-auto max-w-2xl text-center">
+          <div className="mb-4 flex justify-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-xl">
+              <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+              What Is Included
+            </span>
+          </div>
+          <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
+            Everything you need,{" "}
+            <span className="gradient-orange">taken care of</span>
+          </h2>
+        </div>
+
+        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {whatIsIncluded.map((item, index) => {
             const Icon = iconMap[item.icon];
+            const isOrange = index % 3 === 0;
             return (
               <div
                 key={item.title}
-                className="rounded-lg bg-background p-6 shadow-sm"
+                className="glass-dark group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
               >
                 {Icon && (
-                  <Icon className="mb-3 h-8 w-8 text-primary" />
+                  <div
+                    className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl ${
+                      isOrange
+                        ? "bg-gradient-to-br from-orange-400 to-orange-600"
+                        : "bg-gradient-to-br from-blue-400 to-blue-600"
+                    }`}
+                  >
+                    <Icon className="h-5 w-5 text-white" />
+                  </div>
                 )}
-                <h3 className="font-semibold text-foreground">{item.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
+                <h3 className="text-lg font-bold text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300">
                   {item.description}
                 </p>
               </div>

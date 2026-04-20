@@ -4,31 +4,47 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 160 30% 8%;
+    /* Backgrounds */
+    --background: 220 50% 98%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 160 30% 8%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 160 30% 8%;
-    --primary: 160 60% 28%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Brand: Deep ocean blue */
+    --primary: 220 85% 25%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 40 70% 50%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 160 10% 96%;
-    --muted-foreground: 160 5% 45%;
-    --accent: 40 70% 50%;
-    --accent-foreground: 0 0% 9%;
+
+    /* Accent: Warm orange */
+    --secondary: 24 95% 58%;
+    --secondary-foreground: 222 47% 11%;
+    --accent: 24 95% 58%;
+    --accent-foreground: 222 47% 11%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 45%;
+
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 160 10% 90%;
-    --input: 160 10% 90%;
-    --ring: 160 60% 28%;
-    --radius: 0.5rem;
-    --chart-1: 160 60% 28%;
-    --chart-2: 40 70% 50%;
-    --chart-3: 200 60% 45%;
-    --chart-4: 280 60% 45%;
-    --chart-5: 340 60% 45%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 85% 35%;
+
+    --radius: 0.75rem;
+
+    /* Chart palette */
+    --chart-1: 220 85% 45%;
+    --chart-2: 24 95% 58%;
+    --chart-3: 200 80% 50%;
+    --chart-4: 35 95% 55%;
+    --chart-5: 260 70% 55%;
+
+    /* Brand gradient stops for effects */
+    --gradient-from: 220 85% 35%;
+    --gradient-via: 210 90% 45%;
+    --gradient-to: 24 95% 58%;
   }
 }
 
@@ -37,6 +53,194 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism base */
+  .glass {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+      0 8px 32px 0 rgba(31, 38, 135, 0.1),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+      0 12px 40px 0 rgba(31, 38, 135, 0.12),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .glass-dark {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .glass-blue {
+    background: linear-gradient(
+      135deg,
+      rgba(30, 64, 175, 0.08) 0%,
+      rgba(59, 130, 246, 0.04) 100%
+    );
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+  }
+
+  .glass-orange {
+    background: linear-gradient(
+      135deg,
+      rgba(249, 115, 22, 0.08) 0%,
+      rgba(251, 146, 60, 0.04) 100%
+    );
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--gradient-from)) 0%,
+      hsl(var(--gradient-via)) 50%,
+      hsl(var(--gradient-to)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .gradient-orange {
+    background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Animated background blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    pointer-events: none;
+    animation: blob-float 20s ease-in-out infinite;
+  }
+
+  .blob-blue {
+    background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+  }
+
+  .blob-orange {
+    background: radial-gradient(circle, #fb923c 0%, transparent 70%);
+  }
+
+  @keyframes blob-float {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(40px, -60px) scale(1.1);
+    }
+    50% {
+      transform: translate(-30px, 40px) scale(0.9);
+    }
+    75% {
+      transform: translate(50px, 30px) scale(1.05);
+    }
+  }
+
+  /* Subtle grid background */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .bg-dot {
+    background-image: radial-gradient(
+      circle,
+      rgba(30, 64, 175, 0.1) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
+  }
+
+  /* Soft glow button */
+  .btn-glow {
+    position: relative;
+    box-shadow:
+      0 0 0 0 rgba(249, 115, 22, 0),
+      0 10px 30px -10px rgba(249, 115, 22, 0.5),
+      0 4px 15px -3px rgba(30, 64, 175, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-glow:hover {
+    box-shadow:
+      0 0 0 3px rgba(249, 115, 22, 0.1),
+      0 15px 40px -10px rgba(249, 115, 22, 0.6),
+      0 8px 20px -3px rgba(30, 64, 175, 0.4);
+    transform: translateY(-2px);
+  }
+
+  /* Fade in animation */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* Shimmer loading */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(59, 130, 246, 0.08),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s infinite;
+  }
+
+  /* Text balance */
+  .text-balance {
+    text-wrap: balance;
   }
 }
