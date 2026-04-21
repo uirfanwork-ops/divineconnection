@@ -1,113 +1,132 @@
-import { MapPin, User } from "lucide-react";
 import { schedule } from "../../../content/schedule";
 import type { ScheduleEvent } from "../../../content/schedule";
 
-const typeColors: Record<ScheduleEvent["type"], string> = {
-  lecture: "text-[var(--gold)]",
-  workshop: "text-purple-400",
-  prayer: "text-emerald-400",
-  meal: "text-amber-400",
-  activity: "text-sky-400",
-  break: "text-[var(--text-muted)]",
-  ceremony: "text-rose-400",
-};
-
-const typeLabels: Record<ScheduleEvent["type"], string> = {
-  lecture: "Lecture",
-  workshop: "Workshop",
-  prayer: "Prayer",
-  meal: "Meal",
-  activity: "Activity",
-  break: "Break",
-  ceremony: "Ceremony",
+const typeStyles: Record<
+  ScheduleEvent["type"],
+  { border: string; bg: string; dot: string; label: string }
+> = {
+  prayer:       { border: "border-l-amber-700",   bg: "bg-amber-900/10",    dot: "bg-amber-700",   label: "Prayer" },
+  sh_sulaiman:  { border: "border-l-blue-600",    bg: "bg-blue-900/10",     dot: "bg-blue-600",    label: "Sh. Sulaiman" },
+  sh_omar:      { border: "border-l-orange-500",  bg: "bg-orange-900/10",   dot: "bg-orange-500",  label: "Sh. Omar" },
+  sh_yusuf:     { border: "border-l-red-500",     bg: "bg-red-900/10",      dot: "bg-red-500",     label: "Sh. Yusuf" },
+  sh_sohaib:    { border: "border-l-teal-500",    bg: "bg-teal-900/10",     dot: "bg-teal-500",    label: "Sh. Sohaib" },
+  dr_shariq:    { border: "border-l-rose-600",    bg: "bg-rose-900/10",     dot: "bg-rose-600",    label: "Dr. Shariq" },
+  meals:        { border: "border-l-green-600",   bg: "bg-green-900/10",    dot: "bg-green-600",   label: "Meals" },
+  outdoor:      { border: "border-l-emerald-500", bg: "bg-emerald-900/10",  dot: "bg-emerald-500", label: "Outdoor" },
+  break:        { border: "border-l-stone-500",   bg: "bg-stone-800/20",    dot: "bg-stone-500",   label: "Break / Free" },
 };
 
 export function ScheduleSection() {
   return (
-    <section id="schedule" className="bg-topo bg-dark py-24 md:py-32">
+    <section id="schedule" className="bg-dark py-24 md:py-32">
       <div className="container">
+        {/* Header */}
         <div className="text-center">
-          <p className="label-gold">Four Day Schedule</p>
-          <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
-            Your Weekend, Hour by Hour
+          <p className="label-gold">Mathabah&apos;s Annual Retreat</p>
+          <h2 className="font-heading mt-3 text-4xl font-bold text-[var(--text-primary)] md:text-5xl">
+            Divine Connections
           </h2>
+          <p className="mt-2 font-heading text-base italic text-[var(--text-muted)]">
+            Program Schedule &mdash; August 2026
+          </p>
         </div>
 
-        <div className="mt-16 space-y-12">
-          {schedule.map((day, dayIndex) => (
-            <div key={day.date}>
+        {/* Legend */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+          {Object.entries(typeStyles).map(([key, style]) => (
+            <div key={key} className="flex items-center gap-1.5">
+              <span className={`h-2.5 w-2.5 rounded-full ${style.dot}`} />
+              <span className="text-xs text-[var(--text-muted)]">
+                {style.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: 4-column grid */}
+        <div className="mt-12 hidden lg:grid lg:grid-cols-4 lg:gap-px lg:bg-[var(--border-subtle)]">
+          {schedule.map((day) => (
+            <div key={day.date} className="bg-[var(--bg-primary)]">
               {/* Day header */}
-              <div className="mb-6 flex flex-col gap-3 border-b border-[var(--border-color)] pb-4 sm:flex-row sm:items-end sm:justify-between">
-                <div className="flex items-center gap-4">
-                  <span className="flex h-12 w-12 items-center justify-center border border-[var(--gold)] font-heading text-xl font-bold text-[var(--gold)]">
-                    {dayIndex + 1}
-                  </span>
-                  <div>
-                    <p className="label-gold text-[10px]">{day.dayLabel}</p>
-                    <h3 className="font-heading text-2xl font-bold uppercase tracking-wide text-[var(--text-primary)]">
-                      {day.title}
-                    </h3>
-                  </div>
-                </div>
-                <p className="text-xs uppercase tracking-[0.15em] text-[var(--text-muted)]">
-                  {new Date(day.date).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+              <div className="border-b border-[var(--border-subtle)] p-6 text-center">
+                <h3 className="font-heading text-2xl font-bold text-[var(--text-primary)]">
+                  {day.dayLabel}
+                </h3>
+                <p className="mt-0.5 font-heading text-xs italic text-[var(--text-muted)]">
+                  {day.subtitle}
                 </p>
               </div>
 
-              {/* Events table */}
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <tbody>
-                    {day.events.map((event, idx) => (
-                      <tr
-                        key={idx}
-                        className="group border-b border-[var(--border-subtle)] transition-colors hover:bg-[var(--bg-secondary)]"
+              {/* Events */}
+              <div className="space-y-1.5 p-3">
+                {day.events.map((event, idx) => {
+                  const style = typeStyles[event.type];
+                  return (
+                    <div
+                      key={idx}
+                      className={`border-l-[3px] ${style.border} ${style.bg} px-3 py-2.5`}
+                    >
+                      <p className="text-[10px] font-medium text-[var(--text-muted)]">
+                        {event.time}
+                      </p>
+                      <p
+                        className={`text-sm font-semibold ${
+                          event.type === "break"
+                            ? "text-[var(--text-muted)]"
+                            : "text-[var(--text-primary)]"
+                        }`}
                       >
-                        <td className="w-28 whitespace-nowrap py-4 pr-4 align-top">
-                          <span className="text-sm font-semibold text-[var(--gold)]">
-                            {event.time}
-                          </span>
-                        </td>
-                        <td className="py-4 pr-4">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <h4 className="font-heading text-base font-semibold text-[var(--text-primary)]">
-                              {event.title}
-                            </h4>
-                            <span
-                              className={`text-[10px] font-semibold uppercase tracking-widest ${typeColors[event.type]}`}
-                            >
-                              {typeLabels[event.type]}
-                            </span>
-                          </div>
-                          {event.description && (
-                            <p className="mt-1 text-sm leading-relaxed text-[var(--text-secondary)]">
-                              {event.description}
-                            </p>
-                          )}
-                          <div className="mt-1.5 flex flex-wrap gap-4 text-[11px] text-[var(--text-muted)]">
-                            {event.speaker && (
-                              <span className="inline-flex items-center gap-1">
-                                <User className="h-3 w-3" />
-                                {event.speaker}
-                              </span>
-                            )}
-                            {event.location && (
-                              <span className="inline-flex items-center gap-1">
-                                <MapPin className="h-3 w-3" />
-                                {event.location}
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                        {event.title}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile: stacked day cards */}
+        <div className="mt-12 space-y-8 lg:hidden">
+          {schedule.map((day) => (
+            <div
+              key={day.date}
+              className="border border-[var(--border-subtle)] bg-[var(--bg-secondary)]"
+            >
+              {/* Day header */}
+              <div className="border-b border-[var(--border-subtle)] p-5">
+                <h3 className="font-heading text-2xl font-bold text-[var(--text-primary)]">
+                  {day.dayLabel}
+                </h3>
+                <p className="mt-0.5 font-heading text-xs italic text-[var(--text-muted)]">
+                  {day.subtitle}
+                </p>
+              </div>
+
+              {/* Events */}
+              <div className="space-y-1.5 p-3">
+                {day.events.map((event, idx) => {
+                  const style = typeStyles[event.type];
+                  return (
+                    <div
+                      key={idx}
+                      className={`border-l-[3px] ${style.border} ${style.bg} px-4 py-3`}
+                    >
+                      <p className="text-[11px] font-medium text-[var(--text-muted)]">
+                        {event.time}
+                      </p>
+                      <p
+                        className={`text-sm font-semibold ${
+                          event.type === "break"
+                            ? "text-[var(--text-muted)]"
+                            : "text-[var(--text-primary)]"
+                        }`}
+                      >
+                        {event.title}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
