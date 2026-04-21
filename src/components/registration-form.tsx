@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import {
   User,
   Users,
@@ -20,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { SelectNative } from "@/components/ui/select-native";
 import { Button } from "@/components/ui/button";
+import { PolicyDialog } from "@/components/policy-dialog";
 import {
   registrationSchema,
   type RegistrationFormInput,
@@ -449,7 +449,7 @@ export function RegistrationForm({
               }
               title="Waiver Form"
               description="Assumption of risk, release of liability, and COVID-19 acknowledgment"
-              href="/policies/waiver"
+              slug="waiver"
               error={errors.accept_waiver?.message || serverState.fieldErrors?.accept_waiver?.[0]}
             />
             <AgreementCheckbox
@@ -460,7 +460,7 @@ export function RegistrationForm({
               }
               title="Code of Conduct"
               description="Respectful behavior, modesty, participation, zero-tolerance policy"
-              href="/policies/code-of-conduct"
+              slug="code-of-conduct"
               error={errors.accept_code_of_conduct?.message || serverState.fieldErrors?.accept_code_of_conduct?.[0]}
             />
             <AgreementCheckbox
@@ -471,7 +471,7 @@ export function RegistrationForm({
               }
               title="Consent Form"
               description="Medical consent, acknowledgment of risks, behavioral expectations"
-              href="/policies/consent"
+              slug="consent"
               error={errors.accept_consent_form?.message || serverState.fieldErrors?.accept_consent_form?.[0]}
             />
             <AgreementCheckbox
@@ -482,7 +482,7 @@ export function RegistrationForm({
               }
               title="Privacy Policy"
               description="How we collect, use, and protect your personal information"
-              href="/policies/privacy"
+              slug="privacy"
               error={errors.accept_privacy_policy?.message || serverState.fieldErrors?.accept_privacy_policy?.[0]}
             />
           </div>
@@ -672,7 +672,7 @@ function AgreementCheckbox({
   onChange,
   title,
   description,
-  href,
+  slug,
   error,
 }: {
   id: string;
@@ -680,16 +680,18 @@ function AgreementCheckbox({
   onChange: (v: boolean) => void;
   title: string;
   description: string;
-  href: string;
+  slug: string;
   error?: string;
 }) {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   return (
     <div>
       <label
         htmlFor={id}
-        className={`flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition-colors ${
+        className={`flex cursor-pointer items-start gap-3 border p-4 transition-colors ${
           checked
-            ? "border-[var(--gold)] bg-[var(--gold)]/5"
+            ? "border-[var(--gold)] bg-[var(--gold-muted)]"
             : "border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--gold)]"
         }`}
       >
@@ -698,26 +700,36 @@ function AgreementCheckbox({
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
-          className="mt-0.5 h-4 w-4 rounded border-[var(--border-color)] bg-[var(--bg-card)] accent-[var(--gold)]"
+          className="mt-0.5 h-4 w-4 border-[var(--border-color)] bg-[var(--bg-card)] accent-[var(--gold)]"
         />
         <div className="flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-semibold text-[var(--text-primary)]">
               I accept the{" "}
-              <Link
-                href={href}
-                target="_blank"
+              <button
+                type="button"
                 className="text-[var(--gold)] underline underline-offset-4 hover:text-[var(--gold-light)]"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setDialogOpen(true);
+                }}
               >
                 {title}
-              </Link>
+              </button>
             </span>
           </div>
           <p className="mt-0.5 text-xs text-[var(--text-muted)]">{description}</p>
         </div>
       </label>
       {error && <p className="mt-1.5 text-sm text-destructive">{error}</p>}
+
+      <PolicyDialog
+        slug={slug}
+        title={title}
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+      />
     </div>
   );
 }
