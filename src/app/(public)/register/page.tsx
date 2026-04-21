@@ -50,29 +50,27 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
   const tiers = await loadTiers();
 
   return (
-    <div className="bg-[#f5f0e8] py-16 md:py-20">
+    <div className="bg-gradient-to-b from-[#0a1a0a] via-[#0d1f0d] to-[var(--bg-primary)] bg-topo py-16 md:py-20">
       <div className="container">
         <div className="mx-auto max-w-3xl">
           <div className="mb-12 text-center">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8b7355]">
-              Registration
-            </p>
-            <h1 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[#1a1a1a] md:text-5xl">
+            <p className="label-gold">Registration</p>
+            <h1 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
               Secure Your Spot
             </h1>
-            <p className="mt-4 text-sm uppercase tracking-[0.15em] text-[#6b6560]">
+            <p className="mt-4 text-sm uppercase tracking-[0.15em] text-[var(--text-muted)]">
               {siteConfig.retreatDate} | {siteConfig.retreatVenue}
             </p>
-            <p className="mt-1 text-xs text-[#8b7355]">
+            <p className="mt-1 text-xs text-[var(--text-muted)]">
               {siteConfig.retreatAddress}
             </p>
             <div className="mx-auto mt-6 flex items-center justify-center gap-3">
-              <div className="h-px w-12 bg-[#c9a84c]" />
-              <div className="h-2 w-2 rotate-45 border border-[#c9a84c]" />
-              <div className="h-px w-12 bg-[#c9a84c]" />
+              <div className="h-px w-12 bg-[var(--gold)]" />
+              <div className="h-2 w-2 rotate-45 border border-[var(--gold)]" />
+              <div className="h-px w-12 bg-[var(--gold)]" />
             </div>
-            <p className="mt-4 text-sm text-[#6b6560]">
-              Fields marked with <span className="font-semibold text-[#c9a84c]">*</span> are required.
+            <p className="mt-4 text-sm text-[var(--text-muted)]">
+              Fields marked with <span className="font-semibold text-[var(--gold)]">*</span> are required.
             </p>
           </div>
 
