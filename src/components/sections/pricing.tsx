@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, Clock, Mail } from "lucide-react";
 import { formatCents } from "@/lib/utils";
 import type { Database } from "@/types/database";
 
@@ -16,25 +16,26 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
           </h2>
         </div>
 
-        <div className="mx-auto mt-16 grid max-w-5xl gap-8 md:grid-cols-3">
+        <div className="mx-auto mt-16 grid max-w-4xl gap-8 md:grid-cols-2">
           {tiers.map((tier, index) => {
             const features = Array.isArray(tier.features) ? (tier.features as string[]) : [];
-            const isPopular = index === 1;
+            const isEarlyBird = index === 0;
             const spotsLeft = tier.max_spots !== null ? tier.max_spots - tier.spots_taken : null;
 
             return (
               <div
                 key={tier.id}
                 className={`relative flex flex-col border p-8 transition-colors ${
-                  isPopular
+                  isEarlyBird
                     ? "border-[var(--gold)] bg-[var(--bg-card)]"
                     : "border-[var(--border-subtle)] bg-[var(--bg-card)] hover:border-[var(--border-color)]"
                 }`}
               >
-                {isPopular && (
+                {isEarlyBird && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="btn-gold-filled py-1 px-4 text-[10px]">
-                      Most Popular
+                    <span className="btn-gold-filled flex items-center gap-1.5 py-1 px-4 text-[10px]">
+                      <Clock className="h-3 w-3" />
+                      Limited Time
                     </span>
                   </div>
                 )}
@@ -49,14 +50,18 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
                   </span>
                 </div>
 
-                <p className="mt-3 text-sm text-[var(--text-secondary)]">
+                <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
                   {tier.description}
                 </p>
 
-                {spotsLeft !== null && (
-                  <p className={`mt-2 text-xs font-medium uppercase tracking-wider ${
-                    spotsLeft <= 10 ? "text-[var(--gold)]" : "text-[var(--text-muted)]"
-                  }`}>
+                {isEarlyBird && (
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-[var(--gold)]">
+                    Until July 13th, 2026
+                  </p>
+                )}
+
+                {spotsLeft !== null && spotsLeft <= 10 && (
+                  <p className="mt-2 text-xs font-medium uppercase tracking-wider text-[var(--gold)]">
                     {spotsLeft > 0 ? `${spotsLeft} spots remaining` : "Sold out"}
                   </p>
                 )}
@@ -74,7 +79,7 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
 
                 <Link
                   href={spotsLeft === 0 ? "#" : `/register?tier=${tier.id}`}
-                  className={`${isPopular ? "btn-gold-filled" : "btn-outline-gold"} w-full text-center ${
+                  className={`${isEarlyBird ? "btn-gold-filled" : "btn-outline-gold"} w-full text-center ${
                     spotsLeft === 0 ? "pointer-events-none opacity-50" : ""
                   }`}
                   aria-disabled={spotsLeft === 0}
@@ -84,6 +89,20 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
               </div>
             );
           })}
+        </div>
+
+        {/* Installment note */}
+        <div className="mx-auto mt-10 max-w-4xl text-center">
+          <p className="flex items-center justify-center gap-2 text-sm text-[var(--text-secondary)]">
+            <Mail className="h-4 w-4 text-[var(--gold)]" />
+            Installment options available. Email{" "}
+            <a
+              href="mailto:finance@mathabah.org"
+              className="font-semibold text-[var(--gold)] underline underline-offset-4 hover:text-[var(--gold-light)]"
+            >
+              finance@mathabah.org
+            </a>
+          </p>
         </div>
       </div>
     </section>

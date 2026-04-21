@@ -18,18 +18,13 @@ interface RegisterPageProps {
 const fallbackTiers: PricingTier[] = [
   {
     id: "00000000-0000-0000-0000-000000000001", created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-    name: "Economy", description: "Shared dormitory-style cabin, full access to all sessions, all meals included.",
-    price_cents: 15000, currency: "CAD", max_spots: 50, spots_taken: 0, is_active: true, sort_order: 1, stripe_price_id: null, features: [],
+    name: "Early Bird", description: "Early bird registrations receive a FREE PRINT poster of the Ibaadur Rahman verses (limited time offer!). Available until July 13th, 2026.",
+    price_cents: 47500, currency: "CAD", max_spots: null, spots_taken: 0, is_active: true, sort_order: 1, stripe_price_id: null, features: [],
   },
   {
     id: "00000000-0000-0000-0000-000000000002", created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-    name: "Standard", description: "Shared cabin (2 per room), all halal meals, full access to lectures and workshops.",
-    price_cents: 25000, currency: "CAD", max_spots: 60, spots_taken: 0, is_active: true, sort_order: 2, stripe_price_id: null, features: [],
-  },
-  {
-    id: "00000000-0000-0000-0000-000000000003", created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-    name: "Premium", description: "Private cabin, priority check-in, all meals, exclusive Q&A session with speakers.",
-    price_cents: 40000, currency: "CAD", max_spots: 40, spots_taken: 0, is_active: true, sort_order: 3, stripe_price_id: null, features: [],
+    name: "Regular", description: "Standard registration for the Divine Connections retreat. Full access to all sessions, meals, and activities.",
+    price_cents: 55000, currency: "CAD", max_spots: null, spots_taken: 0, is_active: true, sort_order: 2, stripe_price_id: null, features: [],
   },
 ];
 

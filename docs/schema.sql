@@ -450,31 +450,22 @@ INSERT INTO retreat_config (key, value) VALUES
 -- -----------------------------------------------
 INSERT INTO pricing_tiers (name, description, price_cents, currency, max_spots, sort_order, features) VALUES
   (
-    'Economy',
-    'Ideal for students and those seeking an affordable option. Shared dormitory-style accommodation with full access to all sessions.',
-    15000,
+    'Early Bird',
+    'Early bird registrations receive a FREE PRINT poster of the Ibaadur Rahman verses (limited time offer!). Available until July 13th, 2026.',
+    47500,
     'CAD',
-    50,
+    NULL,
     1,
-    '["Shared dormitory accommodation (4-6 per room)", "All halal meals included", "Full access to lectures and workshops", "Welcome package", "Prayer facilities", "Outdoor activities", "Post-retreat digital resources"]'::JSONB
+    '["FREE Ibaadur Rahman verses print poster", "Shared dormitory accommodation (4-6 per room)", "All halal meals included", "Full access to lectures and workshops", "Welcome package", "Prayer facilities", "Outdoor activities", "Post-retreat digital resources"]'::JSONB
   ),
   (
-    'Standard',
-    'Our most popular option. Comfortable shared accommodation with a roommate, perfect for building brotherhood.',
-    25000,
+    'Regular',
+    'Standard registration for the Divine Connections retreat. Full access to all sessions, meals, and activities.',
+    55000,
     'CAD',
-    60,
+    NULL,
     2,
-    '["Shared room (2 per room)", "All halal meals included", "Full access to lectures and workshops", "Welcome package with premium items", "Prayer facilities", "Outdoor activities", "Networking sessions", "Post-retreat digital resources"]'::JSONB
-  ),
-  (
-    'Premium',
-    'For those who prefer privacy and extra comfort. Private room with the best views and additional perks.',
-    40000,
-    'CAD',
-    40,
-    3,
-    '["Private room with mountain view", "All halal meals included", "Full access to lectures and workshops", "Premium welcome package", "Prayer facilities", "Outdoor activities", "Exclusive Q&A session with speakers", "Networking sessions", "Post-retreat digital resources", "Priority check-in"]'::JSONB
+    '["Shared dormitory accommodation (4-6 per room)", "All halal meals included", "Full access to lectures and workshops", "Welcome package", "Prayer facilities", "Outdoor activities", "Post-retreat digital resources"]'::JSONB
   );
 
 -- -----------------------------------------------
