@@ -36,6 +36,7 @@ type PricingTier = Database["public"]["Tables"]["pricing_tiers"]["Row"];
 interface RegistrationFormProps {
   tiers: PricingTier[];
   preselectedTierId?: string;
+  mode?: "dark" | "light";
 }
 
 declare global {
@@ -65,6 +66,7 @@ function calculateIsMinor(dobStr: string): boolean {
 export function RegistrationForm({
   tiers,
   preselectedTierId,
+  mode = "dark",
 }: RegistrationFormProps) {
   const [serverState, setServerState] = useState<RegistrationActionState>({
     success: false,
@@ -171,7 +173,7 @@ export function RegistrationForm({
   const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
   return (
-    <>
+    <div className={mode === "light" ? "theme-cream" : ""}>
       {recaptchaSiteKey && (
         <script
           src={`https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`}
@@ -549,7 +551,7 @@ export function RegistrationForm({
           </p>
         </div>
       </form>
-    </>
+    </div>
   );
 }
 

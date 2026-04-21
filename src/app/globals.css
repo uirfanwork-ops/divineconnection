@@ -157,6 +157,36 @@
     border: 1px solid rgba(201, 168, 76, 0.1);
   }
 
+  /* ======= LIGHT MODE OVERRIDES (for registration) ======= */
+  .theme-cream {
+    --bg-primary: #f5f0e8;
+    --bg-secondary: #faf6f0;
+    --bg-card: #ffffff;
+    --bg-elevated: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #b08930;
+    --gold-muted: rgba(201, 168, 76, 0.12);
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4540;
+    --text-muted: #8b7355;
+    --border-color: rgba(201, 168, 76, 0.25);
+    --border-subtle: #e0d5c5;
+
+    --background: 35 30% 94%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --primary: 43 50% 54%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 35 20% 92%;
+    --muted-foreground: 30 15% 42%;
+    --border: 35 25% 82%;
+    --input: 35 25% 82%;
+    --ring: 43 50% 54%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+  }
+
   /* ======= TEXT BALANCE ======= */
   .text-balance {
     text-wrap: balance;
