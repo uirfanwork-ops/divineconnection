@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { HeroSection } from "@/components/sections/hero";
+import { GalleryMarquee } from "@/components/sections/gallery-marquee";
 import { AboutSection } from "@/components/sections/about";
 import { QualitiesSection } from "@/components/sections/qualities";
 import { ScheduleSection } from "@/components/sections/schedule";
@@ -89,6 +90,7 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection />
+      <GalleryMarquee />
       <AboutSection />
       <QualitiesSection />
       <ScheduleSection />

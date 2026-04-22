@@ -157,6 +157,24 @@
     border: 1px solid rgba(201, 168, 76, 0.1);
   }
 
+  /* ======= MARQUEE SCROLL ======= */
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .marquee-track {
+    animation: marquee-scroll 60s linear infinite;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
   /* ======= LIGHT MODE OVERRIDES (for registration) ======= */
   .theme-cream {
     --bg-primary: #f5f0e8;
