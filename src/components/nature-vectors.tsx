@@ -58,16 +58,20 @@ interface FloatingElement {
 }
 
 const elements: FloatingElement[] = [
-  { id: 1, Component: LeafSvg, x: "5%", y: "15%", size: "w-16", delay: 0, speed: 0.3 },
-  { id: 2, Component: TreeSvg, x: "90%", y: "25%", size: "w-10", delay: 2, speed: 0.2 },
-  { id: 3, Component: StarSvg, x: "15%", y: "45%", size: "w-8", delay: 1, speed: 0.4 },
-  { id: 4, Component: MountainSvg, x: "80%", y: "55%", size: "w-24", delay: 3, speed: 0.15 },
-  { id: 5, Component: CrescentSvg, x: "50%", y: "10%", size: "w-12", delay: 0.5, speed: 0.25 },
-  { id: 6, Component: LeafSvg, x: "92%", y: "70%", size: "w-14", delay: 1.5, speed: 0.35 },
-  { id: 7, Component: StarSvg, x: "70%", y: "80%", size: "w-6", delay: 4, speed: 0.45 },
-  { id: 8, Component: TreeSvg, x: "8%", y: "65%", size: "w-8", delay: 2.5, speed: 0.2 },
-  { id: 9, Component: CrescentSvg, x: "35%", y: "85%", size: "w-10", delay: 3.5, speed: 0.3 },
-  { id: 10, Component: LeafSvg, x: "60%", y: "35%", size: "w-12", delay: 1, speed: 0.25 },
+  { id: 1, Component: LeafSvg, x: "3%", y: "8%", size: "w-28", delay: 0, speed: 0.3 },
+  { id: 2, Component: TreeSvg, x: "88%", y: "15%", size: "w-20", delay: 2, speed: 0.2 },
+  { id: 3, Component: StarSvg, x: "12%", y: "35%", size: "w-14", delay: 1, speed: 0.4 },
+  { id: 4, Component: MountainSvg, x: "75%", y: "45%", size: "w-40", delay: 3, speed: 0.15 },
+  { id: 5, Component: CrescentSvg, x: "45%", y: "5%", size: "w-20", delay: 0.5, speed: 0.25 },
+  { id: 6, Component: LeafSvg, x: "90%", y: "60%", size: "w-24", delay: 1.5, speed: 0.35 },
+  { id: 7, Component: StarSvg, x: "65%", y: "75%", size: "w-12", delay: 4, speed: 0.45 },
+  { id: 8, Component: TreeSvg, x: "5%", y: "55%", size: "w-16", delay: 2.5, speed: 0.2 },
+  { id: 9, Component: CrescentSvg, x: "30%", y: "80%", size: "w-18", delay: 3.5, speed: 0.3 },
+  { id: 10, Component: LeafSvg, x: "55%", y: "25%", size: "w-20", delay: 1, speed: 0.25 },
+  { id: 11, Component: MountainSvg, x: "15%", y: "70%", size: "w-32", delay: 2, speed: 0.18 },
+  { id: 12, Component: TreeSvg, x: "78%", y: "90%", size: "w-14", delay: 1, speed: 0.22 },
+  { id: 13, Component: StarSvg, x: "40%", y: "50%", size: "w-10", delay: 3, speed: 0.35 },
+  { id: 14, Component: CrescentSvg, x: "85%", y: "30%", size: "w-16", delay: 0, speed: 0.28 },
 ];
 
 export function FloatingNatureVectors() {
@@ -97,7 +101,7 @@ export function FloatingNatureVectors() {
             }}
           >
             <el.Component
-              className={`${el.size} text-[var(--gold)] opacity-[0.04]`}
+              className={`${el.size} text-[var(--gold)] opacity-[0.12]`}
             />
           </div>
         );
