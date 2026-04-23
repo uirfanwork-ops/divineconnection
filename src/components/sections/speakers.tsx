@@ -12,14 +12,8 @@ const speakerImages: Record<string, string> = {
 
 export function SpeakersSection() {
   return (
-    <section id="speakers" className="relative bg-dark-green py-24 md:py-32 overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
-        style={{ backgroundImage: "url('/gallery/07.jpg')" }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a1a0a] via-[#0a1a0a]/70 to-[#0a1a0a]" />
-
-      <div className="container relative">
+    <section id="speakers" className="bg-dark-green py-24 md:py-32">
+      <div className="container">
         <div className="text-center">
           <p className="label-gold">Our Speakers</p>
           <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
@@ -35,7 +29,6 @@ export function SpeakersSection() {
                 key={speaker.name}
                 className="border border-[var(--border-subtle)] bg-[#0a0f0a] transition-colors hover:border-[var(--border-color)]"
               >
-                {/* Photo placeholder */}
                 <div className="relative flex h-52 items-center justify-center overflow-hidden bg-gradient-to-br from-[#0d150d] to-[#050a05]">
                   {imgSrc && (
                     <Image
@@ -54,7 +47,6 @@ export function SpeakersSection() {
                       }}
                     />
                   )}
-                  {/* Fallback icon (shows when no image) */}
                   <div className="flex h-20 w-20 items-center justify-center rounded-full border border-[var(--gold)] border-opacity-30">
                     <User className="h-10 w-10 text-[var(--gold)]" />
                   </div>

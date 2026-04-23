@@ -9,15 +9,8 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export function WhatIsIncludedSection() {
   return (
-    <section className="relative bg-dark-green py-24 md:py-32 overflow-hidden">
-      {/* Background image with heavy gradient */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
-        style={{ backgroundImage: "url('/gallery/10.jpg')" }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0a1a0a] via-[#0a1a0a]/80 to-[#0a1a0a]" />
-
-      <div className="container relative">
+    <section className="bg-dark-green py-24 md:py-32">
+      <div className="container">
         <div className="text-center">
           <p className="label-gold">What Is Included</p>
           <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">

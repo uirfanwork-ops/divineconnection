@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { FloatingNatureVectors } from "@/components/nature-vectors";
 
 export default function PublicLayout({
   children,
@@ -8,8 +9,9 @@ export default function PublicLayout({
 }) {
   return (
     <>
+      <FloatingNatureVectors />
       <Header />
-      <main>{children}</main>
+      <main className="relative z-10">{children}</main>
       <Footer />
     </>
   );
