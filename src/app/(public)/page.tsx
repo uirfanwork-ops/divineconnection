@@ -3,7 +3,6 @@ import { HeroSection } from "@/components/sections/hero";
 import { GalleryMarquee } from "@/components/sections/gallery-marquee";
 import { AboutSection } from "@/components/sections/about";
 import { QualitiesSection } from "@/components/sections/qualities";
-import { ScheduleSection } from "@/components/sections/schedule";
 import { SpeakersSection } from "@/components/sections/speakers";
 import { VenueSection } from "@/components/sections/venue";
 import { WhatIsIncludedSection } from "@/components/sections/what-is-included";
@@ -93,7 +92,6 @@ export default async function HomePage() {
       <GalleryMarquee />
       <AboutSection />
       <QualitiesSection />
-      <ScheduleSection />
       <SpeakersSection />
       <VenueSection />
       <WhatIsIncludedSection />
