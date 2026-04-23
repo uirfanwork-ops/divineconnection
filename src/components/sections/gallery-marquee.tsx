@@ -30,6 +30,9 @@ export function GalleryMarquee() {
         <h2 className="font-heading mt-2 text-2xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-3xl">
           Memories from Divine Connections
         </h2>
+        <p className="mt-2 text-sm text-[var(--text-muted)]">
+          View our 2025 retreat gallery
+        </p>
       </div>
 
       <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-24 bg-gradient-to-r from-[var(--bg-secondary)] to-transparent md:w-40" />
