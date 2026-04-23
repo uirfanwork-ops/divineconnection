@@ -451,7 +451,7 @@ INSERT INTO retreat_config (key, value) VALUES
 INSERT INTO pricing_tiers (name, description, price_cents, currency, max_spots, sort_order, features) VALUES
   (
     'Early Bird',
-    'Early bird registrations receive a FREE PRINT poster of the Ibaadur Rahman verses (limited time offer!). Available until July 13th, 2026.',
+    'Early bird registrations receive a FREE PRINT poster of the Ibaadur Rahman verses (limited time offer!).',
     47500,
     'CAD',
     NULL,

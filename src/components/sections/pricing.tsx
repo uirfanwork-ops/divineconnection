@@ -20,6 +20,7 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
           {tiers.map((tier, index) => {
             const features = Array.isArray(tier.features) ? (tier.features as string[]) : [];
             const isEarlyBird = index === 0;
+            const isRegular = !isEarlyBird;
             const spotsLeft = tier.max_spots !== null ? tier.max_spots - tier.spots_taken : null;
 
             return (
@@ -28,7 +29,7 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
                 className={`relative flex flex-col border p-8 transition-colors ${
                   isEarlyBird
                     ? "border-[var(--gold)] bg-[var(--bg-card)]"
-                    : "border-[var(--border-subtle)] bg-[var(--bg-card)] hover:border-[var(--border-color)]"
+                    : "border-[var(--border-subtle)] bg-[var(--bg-card)] opacity-60"
                 }`}
               >
                 {isEarlyBird && (
@@ -42,7 +43,7 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
 
                 <p className="label-gold text-[10px]">{tier.name}</p>
                 <div className="mt-3 flex items-baseline">
-                  <span className="font-heading text-5xl font-bold text-[var(--text-primary)]">
+                  <span className={`font-heading text-5xl font-bold ${isRegular ? "text-[var(--text-muted)]" : "text-[var(--text-primary)]"}`}>
                     {formatCents(tier.price_cents, tier.currency).replace(/\.\d+$/, "")}
                   </span>
                   <span className="ml-2 text-xs uppercase tracking-wider text-[var(--text-muted)]">
@@ -50,12 +51,12 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
                   </span>
                 </div>
 
-                <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
+                <p className={`mt-3 text-sm leading-relaxed ${isRegular ? "text-[var(--text-muted)]" : "text-[var(--text-secondary)]"}`}>
                   {tier.description}
                 </p>
 
                 {isEarlyBird && (
-                  <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-[var(--gold)]">
+                  <p className="mt-3 text-sm font-bold uppercase tracking-wider text-[var(--gold)]">
                     Until July 13th, 2026
                   </p>
                 )}
@@ -69,12 +70,22 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
                 <div className="divider-gold my-6" />
 
                 <ul className="mb-8 flex-1 space-y-3">
-                  {features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2.5 text-sm text-[var(--text-secondary)]">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--gold)]" />
-                      {feature}
-                    </li>
-                  ))}
+                  {features.map((feature) => {
+                    const isFreeGift = feature.toLowerCase().includes("ibaadur rahman") || feature.toLowerCase().includes("free");
+                    return (
+                      <li
+                        key={feature}
+                        className={`flex items-start gap-2.5 text-sm ${
+                          isRegular ? "text-[var(--text-muted)]" : "text-[var(--text-secondary)]"
+                        }`}
+                      >
+                        <Check className={`mt-0.5 h-4 w-4 shrink-0 ${isRegular ? "text-[var(--text-muted)]" : "text-[var(--gold)]"}`} />
+                        <span className={isFreeGift ? "font-bold text-[var(--gold)]" : ""}>
+                          {feature}
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
 
                 <Link
@@ -91,7 +102,6 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
           })}
         </div>
 
-        {/* Installment note */}
         <div className="mx-auto mt-10 max-w-4xl text-center">
           <p className="flex items-center justify-center gap-2 text-sm text-[var(--text-secondary)]">
             <Mail className="h-4 w-4 text-[var(--gold)]" />

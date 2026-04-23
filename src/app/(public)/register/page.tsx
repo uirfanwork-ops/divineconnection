@@ -18,7 +18,7 @@ interface RegisterPageProps {
 const fallbackTiers: PricingTier[] = [
   {
     id: "00000000-0000-0000-0000-000000000001", created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-    name: "Early Bird", description: "Early bird registrations receive a FREE PRINT poster of the Ibaadur Rahman verses (limited time offer!). Available until July 13th, 2026.",
+    name: "Early Bird", description: "Early bird registrations receive a FREE PRINT poster of the Ibaadur Rahman verses (limited time offer!).",
     price_cents: 47500, currency: "CAD", max_spots: null, spots_taken: 0, is_active: true, sort_order: 1, stripe_price_id: null, features: [],
   },
   {
