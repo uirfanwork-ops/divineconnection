@@ -5,17 +5,16 @@ export function AboutSection() {
 
   return (
     <section id="about" className="relative overflow-hidden bg-dark-green py-24 md:py-32">
-      {/* Bottom-right image with edge gradients */}
-      <div className="pointer-events-none absolute bottom-0 right-0 hidden h-[70%] w-[40%] md:block">
+      {/* Bottom-left image with edge gradients */}
+      <div className="pointer-events-none absolute bottom-0 left-0 hidden h-[70%] w-[40%] md:block">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
           style={{ backgroundImage: "url('/gallery/03.jpg')" }}
         />
-        {/* Gradient blending on all edges */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1a0a] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-l from-[#0a1a0a] via-transparent to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a1a0a] via-transparent to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a1a0a] via-[#0a1a0a]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-l from-[#0a1a0a]/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1a0a]/30 to-transparent" />
       </div>
 
       <div className="container relative">
