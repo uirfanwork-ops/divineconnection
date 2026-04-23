@@ -5,16 +5,14 @@ export async function middleware(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // If Supabase isn't configured, skip auth entirely.
-  // Public pages work fine; admin pages show login which will fail gracefully.
+  // If Supabase isn't configured, redirect admin to login page
   if (!supabaseUrl || !supabaseAnonKey) {
-    // Only protect admin routes with a simple redirect to login
     if (
       request.nextUrl.pathname.startsWith("/admin") &&
-      !request.nextUrl.pathname.startsWith("/admin/login")
+      !request.nextUrl.pathname.startsWith("/admin-login")
     ) {
       const url = request.nextUrl.clone();
-      url.pathname = "/admin/login";
+      url.pathname = "/admin-login";
       return NextResponse.redirect(url);
     }
     return NextResponse.next();
@@ -40,24 +38,9 @@ export async function middleware(request: NextRequest) {
       },
     });
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    // Protect admin routes
-    if (request.nextUrl.pathname.startsWith("/admin")) {
-      if (
-        !user &&
-        !request.nextUrl.pathname.startsWith("/admin/login")
-      ) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/admin/login";
-        return NextResponse.redirect(url);
-      }
-    }
+    await supabase.auth.getUser();
   } catch {
-    // If Supabase call fails, let the request through for public pages.
-    // Admin pages will handle auth checks at the layout level.
+    // Supabase call failed, let request through
   }
 
   return supabaseResponse;

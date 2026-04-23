@@ -7,10 +7,15 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const admin = await getAdminUser();
+  let admin;
+  try {
+    admin = await getAdminUser();
+  } catch {
+    admin = null;
+  }
 
   if (!admin) {
-    redirect("/admin/login");
+    redirect("/admin-login");
   }
 
   return (

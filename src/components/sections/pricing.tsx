@@ -7,11 +7,11 @@ type PricingTier = Database["public"]["Tables"]["pricing_tiers"]["Row"];
 
 export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
   return (
-    <section id="pricing" className="bg-dark py-24 md:py-32">
+    <section id="pricing" className="bg-cream py-24 md:py-32">
       <div className="container">
         <div className="text-center">
-          <p className="label-gold">Pricing</p>
-          <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8b7355]">Pricing</p>
+          <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[#1a1a1a] md:text-5xl">
             Choose Your Tier
           </h2>
         </div>
@@ -28,46 +28,46 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
                 key={tier.id}
                 className={`relative flex flex-col border p-8 transition-colors ${
                   isEarlyBird
-                    ? "border-[var(--gold)] bg-[var(--bg-card)]"
-                    : "border-[var(--border-subtle)] bg-[var(--bg-card)] opacity-60"
+                    ? "border-[#c9a84c] bg-white"
+                    : "border-[#e0d5c5] bg-white opacity-60"
                 }`}
               >
                 {isEarlyBird && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="btn-gold-filled flex items-center gap-1.5 py-1 px-4 text-[10px]">
+                    <span className="inline-flex items-center gap-1.5 bg-[#c9a84c] px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-white">
                       <Clock className="h-3 w-3" />
                       Limited Time
                     </span>
                   </div>
                 )}
 
-                <p className="label-gold text-[10px]">{tier.name}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#c9a84c]">{tier.name}</p>
                 <div className="mt-3 flex items-baseline">
-                  <span className={`font-heading text-5xl font-bold ${isRegular ? "text-[var(--text-muted)]" : "text-[var(--text-primary)]"}`}>
+                  <span className={`font-heading text-5xl font-bold ${isRegular ? "text-[#8b7355]" : "text-[#1a1a1a]"}`}>
                     {formatCents(tier.price_cents, tier.currency).replace(/\.\d+$/, "")}
                   </span>
-                  <span className="ml-2 text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                  <span className="ml-2 text-xs uppercase tracking-wider text-[#8b7355]">
                     {tier.currency}
                   </span>
                 </div>
 
-                <p className={`mt-3 text-sm leading-relaxed ${isRegular ? "text-[var(--text-muted)]" : "text-[var(--text-secondary)]"}`}>
+                <p className={`mt-3 text-sm leading-relaxed ${isRegular ? "text-[#8b7355]" : "text-[#4a4540]"}`}>
                   {tier.description}
                 </p>
 
                 {isEarlyBird && (
-                  <p className="mt-3 text-sm font-bold uppercase tracking-wider text-[var(--gold)]">
+                  <p className="mt-3 text-sm font-bold uppercase tracking-wider text-[#c9a84c]">
                     Until July 13th, 2026
                   </p>
                 )}
 
                 {spotsLeft !== null && spotsLeft <= 10 && (
-                  <p className="mt-2 text-xs font-medium uppercase tracking-wider text-[var(--gold)]">
+                  <p className="mt-2 text-xs font-medium uppercase tracking-wider text-[#c9a84c]">
                     {spotsLeft > 0 ? `${spotsLeft} spots remaining` : "Sold out"}
                   </p>
                 )}
 
-                <div className="divider-gold my-6" />
+                <div className="my-6 h-px w-16 bg-[#c9a84c] opacity-50" />
 
                 <ul className="mb-8 flex-1 space-y-3">
                   {features.map((feature) => {
@@ -75,12 +75,10 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
                     return (
                       <li
                         key={feature}
-                        className={`flex items-start gap-2.5 text-sm ${
-                          isRegular ? "text-[var(--text-muted)]" : "text-[var(--text-secondary)]"
-                        }`}
+                        className={`flex items-start gap-2.5 text-sm ${isRegular ? "text-[#8b7355]" : "text-[#4a4540]"}`}
                       >
-                        <Check className={`mt-0.5 h-4 w-4 shrink-0 ${isRegular ? "text-[var(--text-muted)]" : "text-[var(--gold)]"}`} />
-                        <span className={isFreeGift ? "font-bold text-[var(--gold)]" : ""}>
+                        <Check className={`mt-0.5 h-4 w-4 shrink-0 ${isRegular ? "text-[#8b7355]" : "text-[#c9a84c]"}`} />
+                        <span className={isFreeGift ? "font-bold text-[#c9a84c]" : ""}>
                           {feature}
                         </span>
                       </li>
@@ -90,9 +88,11 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
 
                 <Link
                   href={spotsLeft === 0 ? "#" : `/register?tier=${tier.id}`}
-                  className={`${isEarlyBird ? "btn-gold-filled" : "btn-outline-gold"} w-full text-center ${
-                    spotsLeft === 0 ? "pointer-events-none opacity-50" : ""
-                  }`}
+                  className={`inline-flex w-full items-center justify-center border py-3 text-xs font-medium uppercase tracking-[0.15em] transition-all ${
+                    isEarlyBird
+                      ? "border-[#c9a84c] bg-[#c9a84c] text-white hover:bg-[#b08930]"
+                      : "border-[#c9a84c] text-[#c9a84c] hover:bg-[#c9a84c] hover:text-white"
+                  } ${spotsLeft === 0 ? "pointer-events-none opacity-50" : ""}`}
                   aria-disabled={spotsLeft === 0}
                 >
                   {spotsLeft === 0 ? "Sold Out" : "Register Now"}
@@ -103,12 +103,12 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
         </div>
 
         <div className="mx-auto mt-10 max-w-4xl text-center">
-          <p className="flex items-center justify-center gap-2 text-sm text-[var(--text-secondary)]">
-            <Mail className="h-4 w-4 text-[var(--gold)]" />
+          <p className="flex items-center justify-center gap-2 text-sm text-[#4a4540]">
+            <Mail className="h-4 w-4 text-[#c9a84c]" />
             Installment options available. Email{" "}
             <a
               href="mailto:finance@mathabah.org"
-              className="font-semibold text-[var(--gold)] underline underline-offset-4 hover:text-[var(--gold-light)]"
+              className="font-semibold text-[#c9a84c] underline underline-offset-4 hover:text-[#b08930]"
             >
               finance@mathabah.org
             </a>
