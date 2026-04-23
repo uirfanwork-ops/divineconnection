@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 const galleryImages = [
   { src: "/gallery/01.jpg", alt: "Retreat gathering" },
@@ -30,9 +31,12 @@ export function GalleryMarquee() {
         <h2 className="font-heading mt-2 text-2xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-3xl">
           Memories from Divine Connections
         </h2>
-        <p className="mt-2 text-sm text-[var(--text-muted)]">
-          View our 2025 retreat gallery
-        </p>
+        <Link
+          href="/gallery"
+          className="mt-2 inline-flex items-center gap-1 text-sm text-[var(--gold)] underline underline-offset-4 transition-colors hover:text-[var(--gold-light)]"
+        >
+          View full gallery
+        </Link>
       </div>
 
       <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-24 bg-gradient-to-r from-[var(--bg-secondary)] to-transparent md:w-40" />
