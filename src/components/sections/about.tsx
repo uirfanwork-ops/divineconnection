@@ -4,8 +4,16 @@ export function AboutSection() {
   const { about } = siteConfig;
 
   return (
-    <section id="about" className="bg-topo bg-dark py-24 md:py-32">
-      <div className="container">
+    <section id="about" className="relative bg-dark-green py-24 md:py-32 overflow-hidden">
+      {/* Background image with heavy gradient overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
+        style={{ backgroundImage: "url('/gallery/03.jpg')" }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0a1a0a] via-[#0a1a0a]/80 to-[#0a1a0a]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a1a0a] via-transparent to-[#0a1a0a]" />
+
+      <div className="container relative">
         <div className="grid gap-16 md:grid-cols-2">
           <div>
             <p className="label-gold">{siteConfig.organizerName}</p>

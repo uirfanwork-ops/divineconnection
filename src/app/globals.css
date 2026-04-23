@@ -74,6 +74,18 @@
     background-size: 600px 600px;
   }
 
+  .bg-dark-green {
+    background-color: #0a1a0a;
+  }
+
+  .bg-cream {
+    background-color: #f5f0e8;
+  }
+
+  .bg-cream-alt {
+    background-color: #faf6f0;
+  }
+
   /* ======= GOLD TEXT ======= */
   .text-gold {
     color: var(--gold);

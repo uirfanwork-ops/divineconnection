@@ -14,7 +14,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export function QualitiesSection() {
   return (
-    <section className="border-y border-[var(--border-subtle)] bg-dark-alt py-24 md:py-32">
+    <section className="border-y border-[var(--border-subtle)] bg-dark py-24 md:py-32">
       <div className="container">
         <div className="text-center">
           <p className="label-gold">Why Attend</p>

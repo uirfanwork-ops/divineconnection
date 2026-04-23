@@ -7,7 +7,7 @@ type PricingTier = Database["public"]["Tables"]["pricing_tiers"]["Row"];
 
 export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
   return (
-    <section id="pricing" className="border-y border-[var(--border-subtle)] bg-dark-alt bg-topo py-24 md:py-32">
+    <section id="pricing" className="bg-dark py-24 md:py-32">
       <div className="container">
         <div className="text-center">
           <p className="label-gold">Pricing</p>

@@ -3,8 +3,15 @@ import { User } from "lucide-react";
 
 export function SpeakersSection() {
   return (
-    <section id="speakers" className="border-y border-[var(--border-subtle)] bg-dark-alt py-24 md:py-32">
-      <div className="container">
+    <section id="speakers" className="relative bg-dark-green py-24 md:py-32 overflow-hidden">
+      {/* Background image with heavy gradient */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
+        style={{ backgroundImage: "url('/gallery/07.jpg')" }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a1a0a] via-[#0a1a0a]/70 to-[#0a1a0a]" />
+
+      <div className="container relative">
         <div className="text-center">
           <p className="label-gold">Our Speakers</p>
           <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
@@ -12,7 +19,7 @@ export function SpeakersSection() {
           </h2>
         </div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3">
+        <div className="mt-16 grid gap-8 md:grid-cols-3 lg:grid-cols-5">
           {speakers.map((speaker) => (
             <div
               key={speaker.name}
