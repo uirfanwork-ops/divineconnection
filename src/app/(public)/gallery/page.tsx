@@ -73,9 +73,6 @@ export default function GalleryPage() {
                   unoptimized
                 />
               </div>
-              <div className="px-4 py-3">
-                <p className="text-xs text-[var(--text-muted)]">{img.caption}</p>
-              </div>
             </div>
           ))}
         </div>
