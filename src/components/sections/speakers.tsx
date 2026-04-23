@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { speakers } from "../../../content/speakers";
 import { User } from "lucide-react";

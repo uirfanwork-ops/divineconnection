@@ -36,8 +36,9 @@ export const siteConfig = {
   about: {
     title: "About the Retreat",
     description: [
-      "Divine Connections: Servants of Allah is a four day Islamic retreat dedicated to nurturing the spiritual growth of Muslim men. Set at the beautiful Mansfield Outdoor Centre in Mulmur, Ontario, this retreat offers a unique blend of Islamic knowledge, spiritual reflection, and brotherhood in the embrace of nature.",
-      "Our carefully curated program features lectures from renowned scholars, interactive workshops, guided dhikr sessions, hiking, and outdoor activities that bring you closer to Allah's creation. Whether you are a student of knowledge or just beginning your journey, this retreat is designed to meet you where you are.",
+      "Divine Connections: Servants of Allah is a four day Islamic retreat dedicated to nurturing the spiritual growth of Muslim men and women. Set at the beautiful Mansfield Outdoor Centre in Mulmur, Ontario, this retreat offers a unique blend of Islamic knowledge, spiritual reflection, and brotherhood and sisterhood in the embrace of nature.",
+      "At the heart of our program is an intensive tafsir study of Surah Al-Furqan, verses 63 to 76, the powerful ayat describing the Ibaadur Rahman, the Servants of the Most Gracious. These sessions will be delivered by world renowned scholar Shaykh Sulaiman Moola, whose depth of knowledge and masterful delivery will bring these verses to life. While the classes are intensive and rich in content, they are designed for every Muslim regardless of prior background. The only prerequisite is a serious commitment to show up, engage, and grow.",
+      "Alongside the tafsir program, you will experience interactive workshops, guided dhikr sessions, hiking, and outdoor activities that bring you closer to Allah's creation.",
       "Step away from the distractions of daily life. Immerse yourself under the open sky, walk among the stars and trees, and leave with a renewed heart and practical tools to strengthen your deen long after the retreat ends.",
     ],
   },
