@@ -66,13 +66,13 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
   return (
     <div className="container py-12">
       <div className="mx-auto max-w-2xl">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-foreground">
-            Complete Your Payment
+        <div className="mb-8 rounded-lg border border-green-200 bg-green-50 p-6 text-center">
+          <h1 className="text-2xl font-bold text-green-800">
+            Thank You for Registering!
           </h1>
-          <p className="mt-2 text-muted-foreground">
-            Your registration is pending. Please complete payment via
-            Interac e-Transfer to confirm your spot.
+          <p className="mt-2 text-sm text-green-700">
+            Your registration will only be confirmed once your e-Transfer payment is complete.
+            Please check your inbox and spam folder for a follow-up email with your confirmation code.
           </p>
         </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -12,6 +12,7 @@ import {
   FileCheck,
   PenLine,
   CreditCard,
+  Loader2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -59,6 +60,7 @@ export function RegistrationForm({
     success: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const earlyBirdTier = tiers.find((t) => t.name === "Early Bird") ?? tiers[0];
   const tierId = preselectedTierId ?? earlyBirdTier?.id ?? "";
@@ -68,7 +70,7 @@ export function RegistrationForm({
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors, submitCount },
   } = useForm<RegistrationFormInput>({
     resolver: zodResolver(registrationSchema),
     defaultValues: {
@@ -97,6 +99,17 @@ export function RegistrationForm({
   });
 
   const fullName = watch("full_name");
+
+  // Scroll to first validation error when form is submitted with errors
+  useEffect(() => {
+    if (submitCount > 0 && Object.keys(errors).length > 0) {
+      const firstError = formRef.current?.querySelector("[data-error='true']") ??
+        formRef.current?.querySelector(".text-destructive");
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [submitCount, errors]);
 
   const getRecaptchaToken = useCallback(async (): Promise<string> => {
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
@@ -158,7 +171,7 @@ export function RegistrationForm({
         />
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-10" noValidate>
+      <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="space-y-10" noValidate>
         {serverState.error && (
           <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
             {serverState.error}
@@ -436,7 +449,14 @@ export function RegistrationForm({
             </div>
           )}
           <Button type="submit" size="lg" disabled={isSubmitting} className="w-full">
-            {isSubmitting ? "Submitting..." : "Submit Registration"}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Submitting your registration...
+              </>
+            ) : (
+              "Submit Registration"
+            )}
           </Button>
           <p className="text-center text-xs text-[var(--text-muted)]">
             Indeed, in the remembrance of Allah do hearts find rest. (Qur&apos;an 13:28)
@@ -495,7 +515,7 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div>
+    <div data-error={error ? "true" : undefined}>
       <Label className="mb-1.5 block text-[var(--text-secondary)]">
         {label}
         {required && <span className="ml-0.5 text-[var(--gold)]">*</span>}
