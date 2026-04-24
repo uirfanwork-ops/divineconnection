@@ -6,7 +6,6 @@ const phoneMsg =
 
 export const registrationSchema = z
   .object({
-    // Participant Information
     full_name: z
       .string()
       .min(2, "Full name must be at least 2 characters")
@@ -32,26 +31,6 @@ export const registrationSchema = z
       .min(1, "Please select a gender")
       .max(30)
       .trim(),
-
-    // Parent/Guardian (conditional)
-    is_minor: z.boolean(),
-    guardian_name: z.string().max(100).trim().optional().default(""),
-    guardian_phone: z
-      .string()
-      .max(20)
-      .regex(phoneRegex, phoneMsg)
-      .trim()
-      .optional()
-      .or(z.literal("")),
-    guardian_email: z
-      .string()
-      .email("Please enter a valid email")
-      .max(255)
-      .trim()
-      .toLowerCase()
-      .optional()
-      .or(z.literal("")),
-    guardian_signature: z.string().max(100).trim().optional().default(""),
 
     // Emergency Contact
     emergency_contact_name: z
@@ -80,13 +59,10 @@ export const registrationSchema = z
     driving_self: z.boolean(),
     seeking_carpool: z.boolean(),
 
-    // Photo/Media Consent (explicit yes/no required)
+    // Photo/Media Consent
     photo_consent: z.boolean(),
 
-    // Tier
-    tier_id: z.string().uuid("Please select a valid pricing tier"),
-
-    // Dietary (keeping from previous)
+    // Dietary
     dietary_restrictions: z.string().max(500).trim().optional().default(""),
 
     // Document acceptances
@@ -119,24 +95,6 @@ export const registrationSchema = z
     {
       message: "Typed signature must match your full name exactly",
       path: ["typed_signature"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (!data.is_minor) return true;
-      return (
-        data.guardian_name.length >= 2 &&
-        data.guardian_phone &&
-        data.guardian_phone.length >= 7 &&
-        data.guardian_email &&
-        data.guardian_email.length > 0 &&
-        data.guardian_signature.length >= 2
-      );
-    },
-    {
-      message:
-        "Parent/Guardian information and signature are required for participants under 18",
-      path: ["guardian_name"],
     }
   );
 

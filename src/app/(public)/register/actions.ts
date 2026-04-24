@@ -1,5 +1,6 @@
 "use server";
 
+import crypto from "crypto";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { registrationSchema } from "@/lib/validations/registration";
@@ -30,6 +31,10 @@ function parseBool(value: FormDataEntryValue | null): boolean {
   return s === "true" || s === "on" || s === "yes" || s === "1";
 }
 
+function generateConfirmationCode(): string {
+  return crypto.randomBytes(4).toString("hex").toUpperCase().slice(0, 8);
+}
+
 export async function submitRegistration(
   _prevState: RegistrationActionState,
   formData: FormData
@@ -48,18 +53,14 @@ export async function submitRegistration(
     };
   }
 
+  const tierId = String(formData.get("tier_id") ?? "");
+
   const rawData = {
     full_name: formData.get("full_name"),
     email: formData.get("email"),
     phone: formData.get("phone"),
     date_of_birth: formData.get("date_of_birth"),
     gender: formData.get("gender"),
-    is_minor: parseBool(formData.get("is_minor")),
-    guardian_name: formData.get("guardian_name") || "",
-    guardian_phone: formData.get("guardian_phone") || "",
-    guardian_email: formData.get("guardian_email") || "",
-    guardian_signature: formData.get("guardian_signature") || "",
-    tier_id: formData.get("tier_id"),
     emergency_contact_name: formData.get("emergency_contact_name"),
     emergency_contact_relationship: formData.get("emergency_contact_relationship"),
     emergency_contact_phone: formData.get("emergency_contact_phone"),
@@ -105,40 +106,60 @@ export async function submitRegistration(
 
   const supabase = createServiceClient();
 
-  // Fetch tier price from DB (or fall back for dummy tiers)
+  // Resolve tier — prefer Early Bird, fall back
   let tierName = "";
   let priceCents = 0;
   let currency = "CAD";
   let tierExistsInDb = false;
+  let resolvedTierId = tierId;
 
-  const { data: tier } = await supabase
-    .from("pricing_tiers")
-    .select("*")
-    .eq("id", data.tier_id)
-    .single();
+  if (tierId) {
+    const { data: tier } = await supabase
+      .from("pricing_tiers")
+      .select("*")
+      .eq("id", tierId)
+      .single();
 
-  if (tier) {
-    if (!tier.is_active) {
-      return { success: false, error: "Selected pricing tier is no longer available." };
+    if (tier) {
+      if (!tier.is_active) {
+        return { success: false, error: "Selected pricing tier is no longer available." };
+      }
+      if (tier.max_spots !== null && tier.spots_taken >= tier.max_spots) {
+        return { success: false, error: "This tier is sold out." };
+      }
+      tierName = tier.name;
+      priceCents = tier.price_cents;
+      currency = tier.currency;
+      tierExistsInDb = true;
     }
-    if (tier.max_spots !== null && tier.spots_taken >= tier.max_spots) {
-      return { success: false, error: "This tier is sold out. Please select a different tier." };
+  }
+
+  if (!tierExistsInDb) {
+    // Try to get Early Bird tier from DB
+    const { data: earlyBird } = await supabase
+      .from("pricing_tiers")
+      .select("*")
+      .eq("name", "Early Bird")
+      .eq("is_active", true)
+      .single();
+
+    if (earlyBird) {
+      resolvedTierId = earlyBird.id;
+      tierName = earlyBird.name;
+      priceCents = earlyBird.price_cents;
+      currency = earlyBird.currency;
+      tierExistsInDb = true;
+    } else {
+      const fallback = FALLBACK_TIER_PRICES[tierId] ?? FALLBACK_TIER_PRICES["00000000-0000-0000-0000-000000000001"];
+      resolvedTierId = tierId || "00000000-0000-0000-0000-000000000001";
+      tierName = fallback.name;
+      priceCents = fallback.price_cents;
+      currency = fallback.currency;
     }
-    tierName = tier.name;
-    priceCents = tier.price_cents;
-    currency = tier.currency;
-    tierExistsInDb = true;
-  } else {
-    const fallback = FALLBACK_TIER_PRICES[data.tier_id];
-    if (!fallback) {
-      return { success: false, error: "Selected pricing tier not found." };
-    }
-    tierName = fallback.name;
-    priceCents = fallback.price_cents;
-    currency = fallback.currency;
   }
 
   const now = new Date().toISOString();
+  const confirmationCode = generateConfirmationCode();
 
   const insertPayload = {
     full_name: data.full_name,
@@ -146,16 +167,13 @@ export async function submitRegistration(
     phone: data.phone,
     date_of_birth: data.date_of_birth,
     gender: data.gender,
-    is_minor: data.is_minor,
-    guardian_name: data.is_minor ? data.guardian_name : null,
-    guardian_phone: data.is_minor ? data.guardian_phone || null : null,
-    guardian_email: data.is_minor ? data.guardian_email || null : null,
-    guardian_signature: data.is_minor ? data.guardian_signature : null,
-    tier_id: data.tier_id,
+    is_minor: false,
+    tier_id: resolvedTierId,
     status: "pending" as const,
     payment_status: "pending" as const,
     amount_cents: priceCents,
     currency,
+    confirmation_code: confirmationCode,
     emergency_contact_name: data.emergency_contact_name,
     emergency_contact_phone: data.emergency_contact_phone,
     emergency_contact_relationship: data.emergency_contact_relationship,
@@ -189,11 +207,18 @@ export async function submitRegistration(
     };
   }
 
-  if (tierExistsInDb && tier) {
-    await supabase
+  if (tierExistsInDb) {
+    const { data: currentTier } = await supabase
       .from("pricing_tiers")
-      .update({ spots_taken: tier.spots_taken + 1 })
-      .eq("id", data.tier_id);
+      .select("spots_taken")
+      .eq("id", resolvedTierId)
+      .single();
+    if (currentTier) {
+      await supabase
+        .from("pricing_tiers")
+        .update({ spots_taken: currentTier.spots_taken + 1 })
+        .eq("id", resolvedTierId);
+    }
   }
 
   // Fire-and-forget emails
@@ -203,6 +228,7 @@ export async function submitRegistration(
     email: data.email,
     amount_cents: priceCents,
     currency,
+    confirmation_code: confirmationCode,
   };
 
   sendEmail({

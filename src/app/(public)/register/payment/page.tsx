@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Mail, User, Hash, DollarSign } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/service";
 import { formatCents } from "@/lib/utils";
-import { ETransferConfirmButton } from "@/components/e-transfer-confirm-button";
 import { CopyButton } from "@/components/copy-button";
 import { siteConfig } from "../../../../../content/site-config";
 import type { Metadata } from "next";
@@ -61,11 +60,8 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
   const eTransferEmail =
     (await getRetreatConfigValue("e_transfer_email")) ??
     "finance@mathabah.org";
-  const eTransferInstructions =
-    (await getRetreatConfigValue("e_transfer_instructions")) ??
-    `Please send your Interac e-Transfer to ${eTransferEmail}. Include your full name and registration ID in the message field.`;
 
-  const messageReference = `${registration.full_name} - ${registration.id}`;
+  const messageReference = `${registration.confirmation_code} - ${registration.full_name}`;
 
   return (
     <div className="container py-12">
@@ -75,7 +71,7 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
             Complete Your Payment
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Your registration has been received. Please complete payment via
+            Your registration is pending. Please complete payment via
             Interac e-Transfer to confirm your spot.
           </p>
         </div>
@@ -98,9 +94,9 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
               <div className="flex items-start gap-3">
                 <Hash className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                 <div className="flex-1">
-                  <dt className="text-muted-foreground">Registration ID</dt>
-                  <dd className="break-all font-mono text-xs font-medium text-foreground">
-                    {registration.id}
+                  <dt className="text-muted-foreground">Confirmation Code</dt>
+                  <dd className="font-mono text-2xl font-bold tracking-wider text-foreground">
+                    {registration.confirmation_code}
                   </dd>
                 </div>
               </div>
@@ -178,23 +174,20 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
                 <ul className="mt-1 list-inside list-disc space-y-1">
                   <li>Send the exact amount shown above</li>
                   <li>
-                    Include your full name and registration ID in the message
-                    field
+                    Include your confirmation code <strong>{registration.confirmation_code}</strong> in the message field
                   </li>
                   <li>
-                    Your registration is confirmed once we verify the transfer
+                    Your registration is pending until we verify the transfer
                   </li>
                   <li>We typically verify e-Transfers within 24 hours</li>
                 </ul>
               </div>
-
-              <p className="text-sm text-muted-foreground">
-                {eTransferInstructions}
-              </p>
             </div>
           </div>
 
-          <ETransferConfirmButton registrationId={registration.id} />
+          <p className="text-center text-sm text-muted-foreground">
+            A confirmation email with these details has been sent to your email address.
+          </p>
 
           <p className="text-center text-sm text-muted-foreground">
             Questions? Email us at{" "}

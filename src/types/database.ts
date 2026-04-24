@@ -73,6 +73,7 @@ export interface Database {
           consent_form_accepted_at: string | null;
           typed_signature: string;
           ip_address: string | null;
+          confirmation_code: string;
         };
         Insert: {
           id?: string;
@@ -88,6 +89,7 @@ export interface Database {
           guardian_phone?: string | null;
           guardian_email?: string | null;
           guardian_signature?: string | null;
+          confirmation_code: string;
           tier_id: string;
           status?: RegistrationStatus;
           payment_method?: PaymentMethod | null;
@@ -153,6 +155,7 @@ export interface Database {
           consent_form_accepted_at?: string | null;
           typed_signature?: string;
           ip_address?: string | null;
+          confirmation_code?: string;
         };
         Relationships: [
           {

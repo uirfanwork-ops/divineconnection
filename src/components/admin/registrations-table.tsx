@@ -87,6 +87,9 @@ export function RegistrationsTable({
   ) {
     await updatePaymentStatus(id, paymentStatus);
     router.refresh();
+    if (selectedRow?.id === id) {
+      setSelectedRow({ ...selectedRow, payment_status: paymentStatus });
+    }
   }
 
   if (error) {
@@ -99,7 +102,46 @@ export function RegistrationsTable({
 
   return (
     <div className="space-y-4">
-      {/* Filters */}
+      {/* Quick Filter Buttons */}
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant={!paymentFilter && !statusFilter ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateParams({ payment: "", status: "", page: "" })}
+        >
+          All
+        </Button>
+        <Button
+          variant={paymentFilter === "pending" ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateParams({ payment: "pending", status: "", page: "" })}
+        >
+          Unpaid
+        </Button>
+        <Button
+          variant={paymentFilter === "completed" ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateParams({ payment: "completed", status: "", page: "" })}
+        >
+          Paid
+        </Button>
+        <Button
+          variant={statusFilter === "confirmed" ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateParams({ status: "confirmed", payment: "", page: "" })}
+        >
+          Confirmed
+        </Button>
+        <Button
+          variant={statusFilter === "cancelled" ? "default" : "outline"}
+          size="sm"
+          onClick={() => updateParams({ status: "cancelled", payment: "", page: "" })}
+        >
+          Cancelled
+        </Button>
+      </div>
+
+      {/* Search and Filters */}
       <div className="flex flex-wrap items-end gap-3">
         <form onSubmit={handleSearch} className="flex items-center gap-2">
           <div className="relative">
@@ -170,6 +212,9 @@ export function RegistrationsTable({
           <thead>
             <tr className="border-b bg-muted/50">
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                Code
+              </th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                 Name
               </th>
               <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">
@@ -193,7 +238,7 @@ export function RegistrationsTable({
             {registrations.length === 0 ? (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-4 py-8 text-center text-muted-foreground"
                 >
                   No registrations found.
@@ -203,11 +248,20 @@ export function RegistrationsTable({
               registrations.map((reg) => (
                 <tr
                   key={reg.id}
-                  className="cursor-pointer border-b last:border-0 hover:bg-muted/30"
+                  className={`cursor-pointer border-b last:border-0 hover:bg-muted/30 ${
+                    reg.payment_status === "pending"
+                      ? "bg-amber-500/5"
+                      : reg.payment_status === "completed"
+                        ? "bg-green-500/5"
+                        : ""
+                  }`}
                   onClick={() =>
                     setSelectedRow(selectedRow?.id === reg.id ? null : reg)
                   }
                 >
+                  <td className="px-4 py-3 font-mono text-xs font-bold text-foreground">
+                    {reg.confirmation_code}
+                  </td>
                   <td className="px-4 py-3 font-medium text-foreground">
                     {reg.full_name}
                   </td>
@@ -239,7 +293,7 @@ export function RegistrationsTable({
                       }
                       className="text-xs"
                     >
-                      {reg.payment_status}
+                      {reg.payment_status === "pending" ? "UNPAID" : reg.payment_status === "completed" ? "PAID" : reg.payment_status}
                     </Badge>
                   </td>
                   <td className="px-4 py-3 text-right font-medium">
@@ -317,7 +371,12 @@ function RegistrationDetail({
   return (
     <div className="rounded-lg border bg-card p-6 shadow-sm">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">{registration.full_name}</h3>
+        <div>
+          <h3 className="text-lg font-semibold">{registration.full_name}</h3>
+          <p className="font-mono text-sm font-bold text-muted-foreground">
+            Code: {registration.confirmation_code}
+          </p>
+        </div>
         <Button variant="ghost" size="sm" onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>
@@ -340,9 +399,15 @@ function RegistrationDetail({
           </dd>
         </div>
         <div>
-          <dt className="text-muted-foreground">Payment Method</dt>
+          <dt className="text-muted-foreground">Gender</dt>
           <dd className="font-medium">
-            {registration.payment_method ?? "Not selected"}
+            {registration.gender ?? "N/A"}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-muted-foreground">Date of Birth</dt>
+          <dd className="font-medium">
+            {registration.date_of_birth ?? "N/A"}
           </dd>
         </div>
         <div>
@@ -354,16 +419,24 @@ function RegistrationDetail({
               : ""}
           </dd>
         </div>
-        <div>
-          <dt className="text-muted-foreground">Registration ID</dt>
-          <dd className="break-all font-mono text-xs">{registration.id}</dd>
-        </div>
         {registration.dietary_restrictions && (
           <div className="sm:col-span-2">
             <dt className="text-muted-foreground">Dietary Restrictions</dt>
             <dd className="font-medium">
               {registration.dietary_restrictions}
             </dd>
+          </div>
+        )}
+        {registration.allergies && (
+          <div className="sm:col-span-2">
+            <dt className="text-muted-foreground">Allergies</dt>
+            <dd className="font-medium">{registration.allergies}</dd>
+          </div>
+        )}
+        {registration.medical_conditions && (
+          <div className="sm:col-span-2">
+            <dt className="text-muted-foreground">Medical Conditions</dt>
+            <dd className="font-medium">{registration.medical_conditions}</dd>
           </div>
         )}
         {registration.admin_notes && (
@@ -412,8 +485,8 @@ function RegistrationDetail({
             }
             className="w-36"
           >
-            <option value="pending">Pending</option>
-            <option value="completed">Completed</option>
+            <option value="pending">Unpaid</option>
+            <option value="completed">Paid</option>
             <option value="failed">Failed</option>
             <option value="refunded">Refunded</option>
           </SelectNative>

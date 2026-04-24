@@ -1,11 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   User,
-  Users,
   Phone,
   Stethoscope,
   Car,
@@ -51,18 +50,6 @@ declare global {
   }
 }
 
-function calculateIsMinor(dobStr: string): boolean {
-  if (!dobStr) return false;
-  const dob = new Date(dobStr);
-  if (isNaN(dob.getTime())) return false;
-  const now = new Date();
-  const retreatStart = new Date("2026-07-31");
-  let age = retreatStart.getFullYear() - dob.getFullYear();
-  const m = retreatStart.getMonth() - dob.getMonth();
-  if (m < 0 || (m === 0 && retreatStart.getDate() < dob.getDate())) age--;
-  return age < 18 && now > dob;
-}
-
 export function RegistrationForm({
   tiers,
   preselectedTierId,
@@ -72,6 +59,9 @@ export function RegistrationForm({
     success: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const earlyBirdTier = tiers.find((t) => t.name === "Early Bird") ?? tiers[0];
+  const tierId = preselectedTierId ?? earlyBirdTier?.id ?? "";
 
   const {
     register,
@@ -87,12 +77,6 @@ export function RegistrationForm({
       phone: "",
       date_of_birth: "",
       gender: "",
-      is_minor: false,
-      guardian_name: "",
-      guardian_phone: "",
-      guardian_email: "",
-      guardian_signature: "",
-      tier_id: preselectedTierId ?? tiers[0]?.id ?? "",
       emergency_contact_name: "",
       emergency_contact_relationship: "",
       emergency_contact_phone: "",
@@ -112,16 +96,7 @@ export function RegistrationForm({
     },
   });
 
-  const selectedTierId = watch("tier_id");
   const fullName = watch("full_name");
-  const dob = watch("date_of_birth");
-  const isMinor = watch("is_minor");
-  const selectedTier = tiers.find((t) => t.id === selectedTierId);
-
-  // Auto-calculate minor status from DOB
-  useEffect(() => {
-    setValue("is_minor", calculateIsMinor(dob));
-  }, [dob, setValue]);
 
   const getRecaptchaToken = useCallback(async (): Promise<string> => {
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
@@ -155,6 +130,7 @@ export function RegistrationForm({
         for (const [key, value] of Object.entries(data)) {
           fd.set(key, String(value ?? ""));
         }
+        fd.set("tier_id", tierId);
 
         const result = await submitRegistration({ success: false }, fd);
         setServerState(result);
@@ -167,7 +143,7 @@ export function RegistrationForm({
         setIsSubmitting(false);
       }
     },
-    [getRecaptchaToken]
+    [getRecaptchaToken, tierId]
   );
 
   const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
@@ -250,81 +226,10 @@ export function RegistrationForm({
                 <option value="Prefer not to say">Prefer not to say</option>
               </SelectNative>
             </Field>
-            <Field
-              label="Registration Tier"
-              required
-              error={errors.tier_id?.message || serverState.fieldErrors?.tier_id?.[0]}
-            >
-              <SelectNative {...register("tier_id")}>
-                {tiers.map((tier) => {
-                  const spotsLeft =
-                    tier.max_spots !== null
-                      ? tier.max_spots - tier.spots_taken
-                      : null;
-                  return (
-                    <option
-                      key={tier.id}
-                      value={tier.id}
-                      disabled={spotsLeft === 0}
-                    >
-                      {tier.name} - {formatCents(tier.price_cents, tier.currency)}
-                      {spotsLeft === 0 ? " (Sold out)" : ""}
-                    </option>
-                  );
-                })}
-              </SelectNative>
-              {selectedTier && (
-                <p className="mt-1.5 text-xs text-[var(--text-muted)]">
-                  {selectedTier.description}
-                </p>
-              )}
-            </Field>
           </Grid>
         </Section>
 
-        {/* 2. Parent/Guardian (conditional) */}
-        {isMinor && (
-          <Section
-            icon={Users}
-            title="Parent/Guardian Information"
-            subtitle="Required for participants under 18"
-            accent="amber"
-          >
-            <Grid>
-              <Field
-                label="Parent/Guardian Name"
-                required
-                error={errors.guardian_name?.message || serverState.fieldErrors?.guardian_name?.[0]}
-              >
-                <Input {...register("guardian_name")} placeholder="Full name" />
-              </Field>
-              <Field
-                label="Phone Number"
-                required
-                error={errors.guardian_phone?.message || serverState.fieldErrors?.guardian_phone?.[0]}
-              >
-                <Input
-                  type="tel"
-                  {...register("guardian_phone")}
-                  placeholder="+1 (555) 000-0000"
-                />
-              </Field>
-            </Grid>
-            <Field
-              label="Email Address"
-              required
-              error={errors.guardian_email?.message || serverState.fieldErrors?.guardian_email?.[0]}
-            >
-              <Input
-                type="email"
-                {...register("guardian_email")}
-                placeholder="guardian@example.com"
-              />
-            </Field>
-          </Section>
-        )}
-
-        {/* 3. Emergency Contact */}
+        {/* 2. Emergency Contact */}
         <Section icon={Phone} title="Emergency Contact Information">
           <Grid>
             <Field
@@ -358,7 +263,7 @@ export function RegistrationForm({
           </Field>
         </Section>
 
-        {/* 4. Medical Information */}
+        {/* 3. Medical Information */}
         <Section icon={Stethoscope} title="Medical Information">
           <Field label="Allergies" error={errors.allergies?.message}>
             <Textarea
@@ -390,7 +295,7 @@ export function RegistrationForm({
           </Field>
         </Section>
 
-        {/* 5. Transportation */}
+        {/* 4. Transportation */}
         <Section icon={Car} title="Transportation Information">
           <div className="space-y-3">
             <YesNoRadio
@@ -408,18 +313,19 @@ export function RegistrationForm({
           </div>
         </Section>
 
-        {/* 6. Payment Information */}
+        {/* 5. Payment Information */}
         <Section icon={CreditCard} title="Payment Information">
           <div className="rounded-lg border border-[var(--border-color)] bg-[var(--gold)]/5 p-4">
             <p className="text-sm text-[var(--text-secondary)]">
-              Details for payment will be sent upon registration confirmation.
+              Registration fee: <strong className="text-[var(--gold)]">{earlyBirdTier ? formatCents(earlyBirdTier.price_cents, earlyBirdTier.currency) + " " + earlyBirdTier.currency : "$475.00 CAD"}</strong>.
               Payment will be collected via Interac e-Transfer to{" "}
               <code className="text-[var(--gold)]">finance@mathabah.org</code>.
+              You will receive a unique confirmation code after registering — include it in your e-Transfer message.
             </p>
           </div>
         </Section>
 
-        {/* 7. Photo/Media Consent */}
+        {/* 6. Photo/Media Consent */}
         <Section icon={Camera} title="Photo / Media Consent">
           <p className="mb-3 text-sm text-[var(--text-secondary)]">
             I consent to photographs and videos being taken during the retreat
@@ -436,7 +342,7 @@ export function RegistrationForm({
           />
         </Section>
 
-        {/* 8. Document Acceptance */}
+        {/* 7. Document Acceptance */}
         <Section icon={FileCheck} title="Required Agreements" accent="amber">
           <p className="mb-4 text-sm text-[var(--text-secondary)]">
             Please read and accept each of the following documents. Click each
@@ -490,7 +396,7 @@ export function RegistrationForm({
           </div>
         </Section>
 
-        {/* 9. Declaration and Signature */}
+        {/* 8. Declaration and Signature */}
         <Section icon={PenLine} title="Declaration">
           <div className="rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] p-4 text-sm leading-relaxed text-[var(--text-secondary)]">
             <p>
@@ -514,32 +420,18 @@ export function RegistrationForm({
               autoComplete="off"
             />
           </Field>
-
-          {isMinor && (
-            <Field
-              label="Parent/Guardian Signature"
-              required
-              error={errors.guardian_signature?.message || serverState.fieldErrors?.guardian_signature?.[0]}
-            >
-              <Input
-                {...register("guardian_signature")}
-                placeholder="Parent/Guardian full name"
-                autoComplete="off"
-              />
-            </Field>
-          )}
         </Section>
 
         {/* Submit */}
         <div className="space-y-4 border-t border-[var(--border-color)] pt-6">
-          {selectedTier && (
+          {earlyBirdTier && (
             <div className="flex items-center justify-between rounded-lg glass-luxury p-4">
               <span className="text-sm font-medium text-[var(--text-secondary)]">
-                Total for {selectedTier.name}
+                Registration Fee
               </span>
               <span className="text-2xl font-bold text-gold">
-                {formatCents(selectedTier.price_cents, selectedTier.currency)}{" "}
-                {selectedTier.currency}
+                {formatCents(earlyBirdTier.price_cents, earlyBirdTier.currency)}{" "}
+                {earlyBirdTier.currency}
               </span>
             </div>
           )}

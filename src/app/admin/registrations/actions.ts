@@ -1,7 +1,9 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { getAdminUser } from "@/lib/admin";
+import { sendEmail } from "@/lib/email";
+import { paymentConfirmedEmail } from "@/lib/emails/templates";
 import type { RegistrationStatus, PaymentStatus } from "@/types/database";
 
 export async function updateRegistrationStatus(
@@ -11,7 +13,7 @@ export async function updateRegistrationStatus(
   const admin = await getAdminUser();
   if (!admin) return { error: "Unauthorized" };
 
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const { error } = await supabase
     .from("registrations")
@@ -38,7 +40,13 @@ export async function updatePaymentStatus(
   const admin = await getAdminUser();
   if (!admin) return { error: "Unauthorized" };
 
-  const supabase = await createClient();
+  const supabase = createServiceClient();
+
+  const { data: registration } = await supabase
+    .from("registrations")
+    .select("email, full_name, confirmation_code, payment_status")
+    .eq("id", registrationId)
+    .single();
 
   const { error } = await supabase
     .from("registrations")
@@ -50,6 +58,21 @@ export async function updatePaymentStatus(
     .eq("id", registrationId);
 
   if (error) return { error: error.message };
+
+  // Send confirmation email when payment is marked as completed
+  if (
+    paymentStatus === "completed" &&
+    registration &&
+    registration.payment_status !== "completed"
+  ) {
+    sendEmail({
+      to: registration.email,
+      ...paymentConfirmedEmail({
+        full_name: registration.full_name,
+        confirmation_code: registration.confirmation_code,
+      }),
+    }).catch((err) => console.error("Failed to send payment confirmation email:", err));
+  }
 
   await supabase.from("audit_log").insert({
     user_id: admin.userId,
@@ -66,7 +89,7 @@ export async function exportRegistrationsCsv(): Promise<string> {
   const admin = await getAdminUser();
   if (!admin) return "";
 
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const { data } = await supabase
     .from("registrations")
@@ -76,13 +99,12 @@ export async function exportRegistrationsCsv(): Promise<string> {
   if (!data || data.length === 0) return "";
 
   const headers = [
-    "id",
+    "confirmation_code",
     "full_name",
     "email",
     "phone",
     "status",
     "payment_status",
-    "payment_method",
     "amount_cents",
     "currency",
     "created_at",
