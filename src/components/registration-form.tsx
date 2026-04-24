@@ -563,7 +563,6 @@ function Section({
   icon: Icon,
   title,
   subtitle,
-  accent,
   children,
 }: {
   icon: React.ComponentType<{ className?: string }>;
@@ -572,15 +571,11 @@ function Section({
   accent?: "amber";
   children: React.ReactNode;
 }) {
-  const iconBg =
-    accent === "amber"
-      ? "bg-[var(--gold)] shadow-[var(--gold-muted)]"
-      : "bg-[var(--bg-elevated)] border border-[var(--border-color)]";
   return (
     <fieldset className="space-y-4">
       <legend className="flex items-center gap-3">
-        <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${iconBg} shadow-lg`}>
-          <Icon className="h-4 w-4 text-white" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[#0a1a0a] to-[#111111] shadow-lg ring-1 ring-[#c9a84c]/30">
+          <Icon className="h-4 w-4 text-[#c9a84c]" />
         </div>
         <div>
           <h3 className="text-lg font-bold text-[var(--text-primary)]">{title}</h3>
