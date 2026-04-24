@@ -33,12 +33,6 @@ export function Header() {
           ))}
         </nav>
 
-        <Link
-          href="/register"
-          className="btn-outline-gold shrink-0 px-4 py-2 text-[10px] sm:px-6 sm:py-3 sm:text-xs"
-        >
-          Register Now
-        </Link>
       </div>
     </header>
   );
