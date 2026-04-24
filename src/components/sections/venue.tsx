@@ -1,4 +1,5 @@
-import { MapPin, Check } from "lucide-react";
+import Image from "next/image";
+import { Check } from "lucide-react";
 import { siteConfig } from "../../../content/site-config";
 
 export function VenueSection() {
@@ -9,14 +10,21 @@ export function VenueSection() {
       <div className="container">
         <div className="mx-auto max-w-5xl">
           <div className="grid gap-12 md:grid-cols-2">
-            <div className="flex items-center justify-center border border-[#e0d5c5] bg-[#faf6f0] p-12">
-              <div className="text-center">
-                <MapPin className="mx-auto h-16 w-16 text-[#c9a84c] opacity-50" />
-                <p className="mt-6 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8b7355]">Retreat Venue</p>
-                <h3 className="font-heading mt-2 text-3xl font-bold uppercase tracking-wide text-[#1a1a1a]">
+            <div className="relative overflow-hidden border border-[#e0d5c5]">
+              <Image
+                src="/gallery/venue.jpg"
+                alt={venue.name}
+                width={800}
+                height={600}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-8 text-center">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#c9a84c]">Retreat Venue</p>
+                <h3 className="font-heading mt-2 text-2xl font-bold uppercase tracking-wide text-white md:text-3xl">
                   {venue.name}
                 </h3>
-                <p className="mt-2 text-xs text-[#8b7355]">
+                <p className="mt-2 text-xs text-white/70">
                   {venue.address}
                 </p>
               </div>
