@@ -6,10 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { SelectNative } from "@/components/ui/select-native";
 import { cn, formatCents } from "@/lib/utils";
 import {
   updateRetreatConfig,
   updatePricingTier,
+  createUserAccount,
+  deleteUserAccount,
 } from "@/app/admin/settings/actions";
 import type { Database } from "@/types/database";
 
@@ -199,34 +202,129 @@ function PricingTab({ tiers }: { tiers: PricingTier[] }) {
 }
 
 function AdminUsersTab({ users }: { users: AdminRoleRow[] }) {
+  const router = useRouter();
+  const [showForm, setShowForm] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [role, setRole] = useState<"super_admin" | "admin">("admin");
+  const [creating, setCreating] = useState(false);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  async function handleCreate(e: React.FormEvent) {
+    e.preventDefault();
+    setCreating(true);
+    setMessage(null);
+    const result = await createUserAccount(email, password, displayName, role);
+    if (result.error) {
+      setMessage({ type: "error", text: result.error });
+    } else {
+      setMessage({ type: "success", text: "Account created successfully" });
+      setEmail("");
+      setPassword("");
+      setDisplayName("");
+      setRole("admin");
+      setShowForm(false);
+      router.refresh();
+    }
+    setCreating(false);
+  }
+
+  async function handleDelete(userId: string) {
+    if (!confirm("Are you sure you want to delete this user?")) return;
+    const result = await deleteUserAccount(userId);
+    if (result.error) {
+      setMessage({ type: "error", text: result.error });
+    } else {
+      router.refresh();
+    }
+  }
+
   return (
     <div className="space-y-4">
-      {users.length === 0 ? (
-        <p className="text-muted-foreground">No admin users found.</p>
-      ) : (
-        users.map((user) => (
-          <div
-            key={user.id}
-            className="flex items-center justify-between rounded-lg border bg-card p-4"
-          >
-            <div>
-              <p className="font-medium text-foreground">
-                {user.display_name ?? user.email}
-              </p>
-              <p className="text-sm text-muted-foreground">{user.email}</p>
-            </div>
+      {message && (
+        <div className={`rounded-md border p-3 text-sm ${
+          message.type === "error"
+            ? "border-destructive/50 bg-destructive/10 text-destructive"
+            : "border-green-500/50 bg-green-500/10 text-green-400"
+        }`}>
+          {message.text}
+        </div>
+      )}
+
+      {/* User list */}
+      {users.map((user) => (
+        <div
+          key={user.id}
+          className="flex items-center justify-between rounded-lg border bg-card p-4"
+        >
+          <div>
+            <p className="font-medium text-foreground">
+              {user.display_name ?? user.email}
+            </p>
+            <p className="text-sm text-muted-foreground">{user.email}</p>
+          </div>
+          <div className="flex items-center gap-3">
             <Badge
               variant={user.role === "super_admin" ? "default" : "secondary"}
               className="text-xs"
             >
-              {user.role}
+              {user.role === "super_admin" ? "Admin" : "Employee"}
             </Badge>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleDelete(user.user_id)}
+              className="text-xs text-destructive hover:text-destructive"
+            >
+              Delete
+            </Button>
           </div>
-        ))
+        </div>
+      ))}
+
+      {/* Create form toggle */}
+      {!showForm ? (
+        <Button variant="outline" size="sm" onClick={() => setShowForm(true)}>
+          + Create New Account
+        </Button>
+      ) : (
+        <form onSubmit={handleCreate} className="space-y-3 rounded-lg border bg-card p-4">
+          <h4 className="font-semibold text-foreground">Create New Account</h4>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <Label className="mb-1 block text-xs text-muted-foreground">Display Name</Label>
+              <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Full name" />
+            </div>
+            <div>
+              <Label className="mb-1 block text-xs text-muted-foreground">Email *</Label>
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@example.com" required />
+            </div>
+            <div>
+              <Label className="mb-1 block text-xs text-muted-foreground">Password *</Label>
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min 6 characters" required minLength={6} />
+            </div>
+            <div>
+              <Label className="mb-1 block text-xs text-muted-foreground">Role *</Label>
+              <SelectNative value={role} onChange={(e) => setRole(e.target.value as "super_admin" | "admin")}>
+                <option value="admin">Employee (no settings access)</option>
+                <option value="super_admin">Admin (full access)</option>
+              </SelectNative>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button type="submit" size="sm" disabled={creating}>
+              {creating ? "Creating..." : "Create Account"}
+            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>
+              Cancel
+            </Button>
+          </div>
+        </form>
       )}
+
       <p className="text-xs text-muted-foreground">
-        To add a new admin, create a Supabase Auth user and insert a row into
-        the admin_roles table.
+        <strong>Admin</strong> accounts have full access including settings. <strong>Employee</strong> accounts can access everything except settings.
       </p>
     </div>
   );

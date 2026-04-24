@@ -15,23 +15,28 @@ import { cn } from "@/lib/utils";
 import type { AdminUser } from "@/lib/admin";
 
 const navItems = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Registrations", href: "/admin/registrations", icon: Users },
-  { label: "Receipts", href: "/admin/receipts", icon: Receipt },
-  { label: "Documents", href: "/admin/documents", icon: FileText },
-  { label: "Settings", href: "/admin/settings", icon: Settings },
+  { label: "Dashboard", href: "/admin", icon: LayoutDashboard, adminOnly: false },
+  { label: "Registrations", href: "/admin/registrations", icon: Users, adminOnly: false },
+  { label: "Receipts", href: "/admin/receipts", icon: Receipt, adminOnly: false },
+  { label: "Documents", href: "/admin/documents", icon: FileText, adminOnly: false },
+  { label: "Settings", href: "/admin/settings", icon: Settings, adminOnly: true },
 ];
 
 export function AdminSidebar({ admin }: { admin: AdminUser }) {
   const pathname = usePathname();
   const router = useRouter();
+  const isSuperAdmin = admin.role === "super_admin";
 
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/admin/login");
+    router.push("/admin-login");
     router.refresh();
   }
+
+  const visibleItems = navItems.filter(
+    (item) => !item.adminOnly || isSuperAdmin
+  );
 
   return (
     <aside className="flex w-64 flex-col border-r bg-card">
@@ -41,12 +46,12 @@ export function AdminSidebar({ admin }: { admin: AdminUser }) {
           {admin.displayName ?? admin.email}
         </p>
         <span className="mt-1 inline-block rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-          {admin.role}
+          {admin.role === "super_admin" ? "Admin" : "Employee"}
         </span>
       </div>
 
       <nav className="flex-1 space-y-1 p-3">
-        {navItems.map((item) => {
+        {visibleItems.map((item) => {
           const isActive =
             item.href === "/admin"
               ? pathname === "/admin"
