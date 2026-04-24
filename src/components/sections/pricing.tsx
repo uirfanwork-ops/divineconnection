@@ -7,11 +7,11 @@ type PricingTier = Database["public"]["Tables"]["pricing_tiers"]["Row"];
 
 export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
   return (
-    <section id="pricing" className="bg-cream py-24 md:py-32">
+    <section id="pricing" className="bg-gradient-to-b from-[#111111] via-[#0a0a0a] to-[#111111] py-24 md:py-32">
       <div className="container">
         <div className="text-center">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8b7355]">Pricing</p>
-          <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[#1a1a1a] md:text-5xl">
+          <p className="label-gold">Pricing</p>
+          <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
             Choose Your Tier
           </h2>
         </div>
@@ -29,7 +29,7 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
                 className={`relative flex flex-col border p-8 transition-colors ${
                   isEarlyBird
                     ? "border-[#c9a84c] bg-white"
-                    : "border-[#e0d5c5] bg-white opacity-60"
+                    : "border-[#333] bg-white opacity-60"
                 }`}
               >
                 {isEarlyBird && (
@@ -43,15 +43,18 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
 
                 <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#c9a84c]">{tier.name}</p>
                 <div className="mt-3 flex items-baseline">
-                  <span className={`font-heading text-5xl font-bold ${isRegular ? "text-[#8b7355]" : "text-[#1a1a1a]"}`}>
+                  <span className={`font-heading text-5xl font-bold ${isRegular ? "text-[#999]" : "text-[#1a1a1a]"}`}>
                     {formatCents(tier.price_cents, tier.currency).replace(/\.\d+$/, "")}
                   </span>
-                  <span className="ml-2 text-xs uppercase tracking-wider text-[#8b7355]">
+                  {isEarlyBird && (
+                    <span className="ml-2 font-heading text-2xl font-medium text-[#999] line-through">($550)</span>
+                  )}
+                  <span className="ml-2 text-xs uppercase tracking-wider text-[#999]">
                     {tier.currency}
                   </span>
                 </div>
 
-                <p className={`mt-3 text-sm leading-relaxed ${isRegular ? "text-[#8b7355]" : "text-[#4a4540]"}`}>
+                <p className={`mt-3 text-sm leading-relaxed ${isRegular ? "text-[#999]" : "text-[#555]"}`}>
                   {tier.description}
                 </p>
 
@@ -75,9 +78,9 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
                     return (
                       <li
                         key={feature}
-                        className={`flex items-start gap-2.5 text-sm ${isRegular ? "text-[#8b7355]" : "text-[#4a4540]"}`}
+                        className={`flex items-start gap-2.5 text-sm ${isRegular ? "text-[#999]" : "text-[#555]"}`}
                       >
-                        <Check className={`mt-0.5 h-4 w-4 shrink-0 ${isRegular ? "text-[#8b7355]" : "text-[#c9a84c]"}`} />
+                        <Check className={`mt-0.5 h-4 w-4 shrink-0 ${isRegular ? "text-[#999]" : "text-[#c9a84c]"}`} />
                         <span className={isFreeGift ? "font-bold text-[#c9a84c]" : ""}>
                           {feature}
                         </span>
@@ -103,12 +106,12 @@ export function PricingSection({ tiers }: { tiers: PricingTier[] }) {
         </div>
 
         <div className="mx-auto mt-10 max-w-4xl text-center">
-          <p className="flex items-center justify-center gap-2 text-sm text-[#4a4540]">
-            <Mail className="h-4 w-4 text-[#c9a84c]" />
+          <p className="flex items-center justify-center gap-2 text-sm text-[var(--text-secondary)]">
+            <Mail className="h-4 w-4 text-[var(--gold)]" />
             Installment options available. Email{" "}
             <a
               href="mailto:finance@mathabah.org"
-              className="font-semibold text-[#c9a84c] underline underline-offset-4 hover:text-[#b08930]"
+              className="font-semibold text-[var(--gold)] underline underline-offset-4 hover:text-[var(--gold-light)]"
             >
               finance@mathabah.org
             </a>
