@@ -113,7 +113,7 @@ export function RegistrationForm({
         setIsSubmitting(false);
       }
     },
-    []
+    [router]
   );
 
   return (

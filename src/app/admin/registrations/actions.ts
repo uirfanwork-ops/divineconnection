@@ -73,7 +73,6 @@ export async function updatePaymentStatus(
 
   if (error) return { error: error.message };
 
-  // Send confirmation email when payment is marked as completed
   if (
     paymentStatus === "completed" &&
     registration &&
@@ -107,6 +106,69 @@ export async function updatePaymentStatus(
   return { success: true };
 }
 
+export interface RegistrationUpdateData {
+  full_name: string;
+  email: string;
+  phone: string;
+  date_of_birth: string;
+  gender: string;
+  emergency_contact_name: string;
+  emergency_contact_relationship: string;
+  emergency_contact_phone: string;
+  allergies: string;
+  medical_conditions: string;
+  current_medications: string;
+  dietary_restrictions: string;
+  driving_self: boolean;
+  seeking_carpool: boolean;
+  photo_consent: boolean;
+  admin_notes: string;
+}
+
+export async function updateRegistrationDetails(
+  registrationId: string,
+  data: RegistrationUpdateData
+) {
+  const admin = await getAdminUser();
+  if (!admin) return { error: "Unauthorized" };
+
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from("registrations")
+    .update({
+      full_name: data.full_name,
+      email: data.email,
+      phone: data.phone,
+      date_of_birth: data.date_of_birth || null,
+      gender: data.gender || null,
+      emergency_contact_name: data.emergency_contact_name || null,
+      emergency_contact_relationship: data.emergency_contact_relationship || null,
+      emergency_contact_phone: data.emergency_contact_phone || null,
+      allergies: data.allergies || null,
+      medical_conditions: data.medical_conditions || null,
+      current_medications: data.current_medications || null,
+      dietary_restrictions: data.dietary_restrictions || null,
+      driving_self: data.driving_self,
+      seeking_carpool: data.seeking_carpool,
+      photo_consent: data.photo_consent,
+      admin_notes: data.admin_notes || null,
+    })
+    .eq("id", registrationId);
+
+  if (error) return { error: error.message };
+
+  await supabase.from("audit_log").insert({
+    user_id: admin.userId,
+    action: "update_registration",
+    resource_type: "registration",
+    resource_id: registrationId,
+    details: { updated_fields: Object.keys(data) },
+  });
+
+  return { success: true };
+}
+
 export async function exportRegistrationsCsv(): Promise<string> {
   const admin = await getAdminUser();
   if (!admin) return "";
@@ -125,10 +187,23 @@ export async function exportRegistrationsCsv(): Promise<string> {
     "full_name",
     "email",
     "phone",
+    "date_of_birth",
+    "gender",
     "status",
     "payment_status",
     "amount_cents",
     "currency",
+    "emergency_contact_name",
+    "emergency_contact_relationship",
+    "emergency_contact_phone",
+    "allergies",
+    "medical_conditions",
+    "current_medications",
+    "dietary_restrictions",
+    "driving_self",
+    "seeking_carpool",
+    "photo_consent",
+    "admin_notes",
     "created_at",
   ];
 
