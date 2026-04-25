@@ -85,9 +85,6 @@ export const registrationSchema = z
       .min(2, "Typed signature is required")
       .max(100)
       .trim(),
-
-    // Bot protection (set programmatically, not by user)
-    recaptcha_token: z.string().optional().default(""),
   })
   .refine(
     (data) =>

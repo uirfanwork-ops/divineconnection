@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import { registrationSchema } from "@/lib/validations/registration";
 import { createServiceClient } from "@/lib/supabase/service";
 import { checkRegistrationRateLimit } from "@/lib/rate-limit";
-import { verifyRecaptcha } from "@/lib/recaptcha";
 import { sendEmail } from "@/lib/email";
 import {
   eTransferConfirmationEmail,
@@ -76,7 +75,6 @@ export async function submitRegistration(
     accept_consent_form: parseBool(formData.get("accept_consent_form")),
     accept_privacy_policy: parseBool(formData.get("accept_privacy_policy")),
     typed_signature: formData.get("typed_signature"),
-    recaptcha_token: formData.get("recaptcha_token"),
   };
 
   const parsed = registrationSchema.safeParse(rawData);
@@ -95,14 +93,6 @@ export async function submitRegistration(
   }
 
   const data = parsed.data;
-
-  const recaptchaResult = await verifyRecaptcha(data.recaptcha_token);
-  if (!recaptchaResult.success) {
-    return {
-      success: false,
-      error: "reCAPTCHA verification failed. Please refresh and try again.",
-    };
-  }
 
   const supabase = createServiceClient();
 

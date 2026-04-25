@@ -39,18 +39,6 @@ interface RegistrationFormProps {
   mode?: "dark" | "light";
 }
 
-declare global {
-  interface Window {
-    grecaptcha: {
-      ready: (cb: () => void) => void;
-      execute: (
-        siteKey: string,
-        options: { action: string }
-      ) => Promise<string>;
-    };
-  }
-}
-
 export function RegistrationForm({
   tiers,
   preselectedTierId,
@@ -94,7 +82,6 @@ export function RegistrationForm({
       accept_consent_form: false as unknown as true,
       accept_privacy_policy: false as unknown as true,
       typed_signature: "",
-      recaptcha_token: "",
     },
   });
 
@@ -109,34 +96,12 @@ export function RegistrationForm({
     }
   }, [hasValidationErrors, submitCount]);
 
-  const getRecaptchaToken = useCallback(async (): Promise<string> => {
-    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-    if (!siteKey || typeof window === "undefined" || !window.grecaptcha) {
-      return "no-recaptcha-configured";
-    }
-    return new Promise((resolve) => {
-      window.grecaptcha.ready(async () => {
-        try {
-          const token = await window.grecaptcha.execute(siteKey, {
-            action: "register",
-          });
-          resolve(token);
-        } catch {
-          resolve("recaptcha-error");
-        }
-      });
-    });
-  }, []);
-
   const onSubmit = useCallback(
     async (data: RegistrationFormInput) => {
       setIsSubmitting(true);
       setServerState({ success: false });
 
       try {
-        const token = await getRecaptchaToken();
-        data.recaptcha_token = token;
-
         const fd = new FormData();
         for (const [key, value] of Object.entries(data)) {
           fd.set(key, String(value ?? ""));
@@ -154,20 +119,11 @@ export function RegistrationForm({
         setIsSubmitting(false);
       }
     },
-    [getRecaptchaToken, tierId]
+    [tierId]
   );
-
-  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
   return (
     <div className={mode === "light" ? "theme-cream" : ""}>
-      {recaptchaSiteKey && (
-        <script
-          src={`https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`}
-          async
-          defer
-        />
-      )}
 
       <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="space-y-10" noValidate>
         {serverState.error && (
