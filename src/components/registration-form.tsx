@@ -28,20 +28,12 @@ import {
   submitRegistration,
   type RegistrationActionState,
 } from "@/app/(public)/register/actions";
-import { formatCents } from "@/lib/utils";
-import type { Database } from "@/types/database";
-
-type PricingTier = Database["public"]["Tables"]["pricing_tiers"]["Row"];
 
 interface RegistrationFormProps {
-  tiers: PricingTier[];
-  preselectedTierId?: string;
   mode?: "dark" | "light";
 }
 
 export function RegistrationForm({
-  tiers,
-  preselectedTierId,
   mode = "dark",
 }: RegistrationFormProps) {
   const [serverState, setServerState] = useState<RegistrationActionState>({
@@ -49,9 +41,6 @@ export function RegistrationForm({
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-
-  const earlyBirdTier = tiers.find((t) => t.name === "Early Bird") ?? tiers[0];
-  const tierId = preselectedTierId ?? earlyBirdTier?.id ?? "";
 
   const {
     register,
@@ -106,7 +95,6 @@ export function RegistrationForm({
         for (const [key, value] of Object.entries(data)) {
           fd.set(key, String(value ?? ""));
         }
-        fd.set("tier_id", tierId);
 
         const result = await submitRegistration({ success: false }, fd);
         setServerState(result);
@@ -119,7 +107,7 @@ export function RegistrationForm({
         setIsSubmitting(false);
       }
     },
-    [tierId]
+    []
   );
 
   return (
@@ -305,7 +293,7 @@ export function RegistrationForm({
         <Section icon={CreditCard} title="Payment Information">
           <div className="rounded-lg border border-[var(--border-color)] bg-[var(--gold)]/5 p-4">
             <p className="text-sm text-[var(--text-secondary)]">
-              Registration fee: <strong className="text-[var(--gold)]">{earlyBirdTier ? formatCents(earlyBirdTier.price_cents, earlyBirdTier.currency) + " " + earlyBirdTier.currency : "$475.00 CAD"}</strong>.
+              Registration fee: <strong className="text-[var(--gold)]">$475.00 CAD</strong>.
               Payment will be collected via Interac e-Transfer to{" "}
               <code className="text-[var(--gold)]">finance@mathabah.org</code>.
               You will receive a unique confirmation code after registering — include it in your e-Transfer message.
@@ -412,17 +400,14 @@ export function RegistrationForm({
 
         {/* Submit */}
         <div className="space-y-4 border-t border-[var(--border-color)] pt-6">
-          {earlyBirdTier && (
-            <div className="flex items-center justify-between rounded-lg glass-luxury p-4">
-              <span className="text-sm font-medium text-[var(--text-secondary)]">
-                Registration Fee
-              </span>
-              <span className="text-2xl font-bold text-gold">
-                {formatCents(earlyBirdTier.price_cents, earlyBirdTier.currency)}{" "}
-                {earlyBirdTier.currency}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center justify-between rounded-lg glass-luxury p-4">
+            <span className="text-sm font-medium text-[var(--text-secondary)]">
+              Registration Fee
+            </span>
+            <span className="text-2xl font-bold text-gold">
+              $475.00 CAD
+            </span>
+          </div>
           <Button type="submit" size="lg" disabled={isSubmitting} className="w-full">
             {isSubmitting ? (
               <>

@@ -48,7 +48,7 @@ export interface Database {
           guardian_phone: string | null;
           guardian_email: string | null;
           guardian_signature: string | null;
-          tier_id: string;
+          tier_id: string | null;
           status: RegistrationStatus;
           payment_method: PaymentMethod | null;
           payment_status: PaymentStatus;
@@ -90,7 +90,7 @@ export interface Database {
           guardian_email?: string | null;
           guardian_signature?: string | null;
           confirmation_code: string;
-          tier_id: string;
+          tier_id?: string | null;
           status?: RegistrationStatus;
           payment_method?: PaymentMethod | null;
           payment_status?: PaymentStatus;
@@ -130,7 +130,7 @@ export interface Database {
           guardian_phone?: string | null;
           guardian_email?: string | null;
           guardian_signature?: string | null;
-          tier_id?: string;
+          tier_id?: string | null;
           status?: RegistrationStatus;
           payment_method?: PaymentMethod | null;
           payment_status?: PaymentStatus;

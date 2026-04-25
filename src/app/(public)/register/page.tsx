@@ -1,36 +1,13 @@
-import { createServiceClient } from "@/lib/supabase/service";
 import { RegistrationForm } from "@/components/registration-form";
 import { siteConfig } from "../../../../content/site-config";
 import type { Metadata } from "next";
-import type { Database } from "@/types/database";
-
-type PricingTier = Database["public"]["Tables"]["pricing_tiers"]["Row"];
 
 export const metadata: Metadata = {
   title: `Register - ${siteConfig.shortName}`,
   description: `Register for the ${siteConfig.name} retreat, ${siteConfig.retreatDate} at ${siteConfig.retreatVenue}.`,
 };
 
-interface RegisterPageProps {
-  searchParams: Promise<{ tier?: string }>;
-}
-
-async function loadTiers(): Promise<PricingTier[]> {
-  try {
-    const supabase = createServiceClient();
-    const { data, error } = await supabase
-      .from("pricing_tiers").select("*").eq("is_active", true).order("sort_order", { ascending: true });
-    if (error || !data || data.length === 0) return [];
-    return data;
-  } catch {
-    return [];
-  }
-}
-
-export default async function RegisterPage({ searchParams }: RegisterPageProps) {
-  const params = await searchParams;
-  const tiers = await loadTiers();
-
+export default function RegisterPage() {
   return (
     <div className="bg-gradient-to-b from-[#0a1a0a] via-[#0d1f0d] to-[var(--bg-primary)] bg-topo py-16 md:py-20">
       <div className="container">
@@ -57,7 +34,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           </div>
 
           <div className="border border-[#e0d5c5] bg-[#faf6f0] p-6 md:p-10">
-            <RegistrationForm tiers={tiers} preselectedTierId={params.tier} mode="light" />
+            <RegistrationForm mode="light" />
           </div>
         </div>
       </div>

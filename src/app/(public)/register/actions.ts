@@ -19,6 +19,9 @@ export interface RegistrationActionState {
   registrationId?: string;
 }
 
+const PRICE_CENTS = 47500;
+const CURRENCY = "CAD";
+
 function parseBool(value: FormDataEntryValue | null): boolean {
   if (value === null) return false;
   const s = String(value).toLowerCase();
@@ -46,8 +49,6 @@ export async function submitRegistration(
       error: "Too many registration attempts. Please try again in an hour.",
     };
   }
-
-  const tierId = String(formData.get("tier_id") ?? "");
 
   const rawData = {
     full_name: formData.get("full_name"),
@@ -88,53 +89,7 @@ export async function submitRegistration(
   }
 
   const data = parsed.data;
-
   const supabase = createServiceClient();
-
-  // Resolve tier — always look up from DB, try submitted ID first, then Early Bird, then any active
-  let tierName = "";
-  let priceCents = 0;
-  let currency = "CAD";
-  let resolvedTierId = "";
-
-  // Try the submitted tier ID
-  if (tierId) {
-    const { data: tier } = await supabase
-      .from("pricing_tiers")
-      .select("*")
-      .eq("id", tierId)
-      .eq("is_active", true)
-      .single();
-
-    if (tier) {
-      if (tier.max_spots !== null && tier.spots_taken >= tier.max_spots) {
-        return { success: false, error: "This tier is sold out." };
-      }
-      resolvedTierId = tier.id;
-      tierName = tier.name;
-      priceCents = tier.price_cents;
-      currency = tier.currency;
-    }
-  }
-
-  // Fallback: find Early Bird or any active tier from DB
-  if (!resolvedTierId) {
-    const { data: activeTiers } = await supabase
-      .from("pricing_tiers")
-      .select("*")
-      .eq("is_active", true)
-      .order("sort_order", { ascending: true });
-
-    const tier = activeTiers?.find((t) => t.name === "Early Bird") ?? activeTiers?.[0];
-    if (!tier) {
-      return { success: false, error: "No active pricing tiers found. Please contact us." };
-    }
-    resolvedTierId = tier.id;
-    tierName = tier.name;
-    priceCents = tier.price_cents;
-    currency = tier.currency;
-  }
-
   const now = new Date().toISOString();
   const confirmationCode = generateConfirmationCode();
 
@@ -145,11 +100,11 @@ export async function submitRegistration(
     date_of_birth: data.date_of_birth,
     gender: data.gender,
     is_minor: false,
-    tier_id: resolvedTierId,
+    tier_id: null,
     status: "pending" as const,
     payment_status: "pending" as const,
-    amount_cents: priceCents,
-    currency,
+    amount_cents: PRICE_CENTS,
+    currency: CURRENCY,
     confirmation_code: confirmationCode,
     emergency_contact_name: data.emergency_contact_name,
     emergency_contact_phone: data.emergency_contact_phone,
@@ -179,22 +134,8 @@ export async function submitRegistration(
     console.error("Registration insert failed:", insertError?.message, insertError?.details, insertError?.hint);
     return {
       success: false,
-      error: `Failed to create registration: ${insertError?.message ?? "Unknown error"}. [tier_id=${resolvedTierId}, submitted=${tierId}]`,
+      error: `Failed to create registration: ${insertError?.message ?? "Unknown error"}. Please try again, or contact info@divineconnections.ca if the problem persists.`,
     };
-  }
-
-  if (resolvedTierId) {
-    const { data: currentTier } = await supabase
-      .from("pricing_tiers")
-      .select("spots_taken")
-      .eq("id", resolvedTierId)
-      .single();
-    if (currentTier) {
-      await supabase
-        .from("pricing_tiers")
-        .update({ spots_taken: currentTier.spots_taken + 1 })
-        .eq("id", resolvedTierId);
-    }
   }
 
   // Fire-and-forget emails
@@ -202,8 +143,8 @@ export async function submitRegistration(
     id: registration.id,
     full_name: data.full_name,
     email: data.email,
-    amount_cents: priceCents,
-    currency,
+    amount_cents: PRICE_CENTS,
+    currency: CURRENCY,
     confirmation_code: confirmationCode,
   };
 
@@ -216,7 +157,7 @@ export async function submitRegistration(
   if (adminEmail) {
     sendEmail({
       to: adminEmail,
-      ...adminNewRegistrationEmail({ ...emailData, phone: data.phone, tier_name: tierName }),
+      ...adminNewRegistrationEmail({ ...emailData, phone: data.phone, tier_name: "Early Bird" }),
     }).catch((err) => console.error("Failed to send admin notification:", err));
   }
 
