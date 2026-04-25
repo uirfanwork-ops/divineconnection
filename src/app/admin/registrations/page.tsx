@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { RegistrationsTable } from "@/components/admin/registrations-table";
 import type { RegistrationStatus, PaymentStatus } from "@/types/database";
 
@@ -22,7 +22,7 @@ export default async function RegistrationsPage({
   const statusFilter = params.status ?? "";
   const paymentFilter = params.payment ?? "";
 
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   let query = supabase
     .from("registrations")

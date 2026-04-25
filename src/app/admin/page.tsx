@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import {
   Users,
   CheckCircle2,
@@ -7,7 +9,7 @@ import {
   DollarSign,
   Ticket,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { formatCents } from "@/lib/utils";
 import {
   Card,
@@ -41,7 +43,7 @@ async function getDashboardData(): Promise<{
     created_at: string;
   }>;
 }> {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const { data: registrations } = await supabase
     .from("registrations")

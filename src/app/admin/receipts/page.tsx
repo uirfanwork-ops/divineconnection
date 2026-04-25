@@ -1,8 +1,10 @@
-import { createClient } from "@/lib/supabase/server";
+export const dynamic = "force-dynamic";
+
+import { createServiceClient } from "@/lib/supabase/service";
 import { ReceiptsManager } from "@/components/admin/receipts-manager";
 
 export default async function ReceiptsPage() {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const { data: receipts } = await supabase
     .from("receipts")

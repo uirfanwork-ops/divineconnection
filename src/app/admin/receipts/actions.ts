@@ -1,6 +1,5 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getAdminUser } from "@/lib/admin";
 import { processReceiptImage } from "@/lib/anthropic";
@@ -124,7 +123,7 @@ export async function updateReceiptStatus(
   const admin = await getAdminUser();
   if (!admin) return { error: "Unauthorized" };
 
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const { error } = await supabase
     .from("receipts")

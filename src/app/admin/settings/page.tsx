@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { getAdminUser, isSuperAdmin } from "@/lib/admin";
 import { SettingsTabs } from "@/components/admin/settings-tabs";
 import type { Database } from "@/types/database";
@@ -12,7 +12,7 @@ export default async function SettingsPage() {
   const admin = await getAdminUser();
   if (!admin) return null;
 
-  const supabase = await createClient();
+  const supabase = createServiceClient();
   const superAdmin = isSuperAdmin(admin);
 
   const { data: tiers } = await supabase
