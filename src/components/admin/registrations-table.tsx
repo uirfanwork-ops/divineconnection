@@ -83,9 +83,10 @@ export function RegistrationsTable({
 
   async function handlePaymentChange(
     id: string,
-    paymentStatus: PaymentStatus
+    paymentStatus: PaymentStatus,
+    paymentDetails?: { payment_received_date: string; amount_deposited: number }
   ) {
-    await updatePaymentStatus(id, paymentStatus);
+    await updatePaymentStatus(id, paymentStatus, paymentDetails);
     router.refresh();
     if (selectedRow?.id === id) {
       setSelectedRow({ ...selectedRow, payment_status: paymentStatus });
@@ -365,9 +366,25 @@ function RegistrationDetail({
 }: {
   registration: Registration;
   onStatusChange: (id: string, status: RegistrationStatus) => Promise<void>;
-  onPaymentChange: (id: string, status: PaymentStatus) => Promise<void>;
+  onPaymentChange: (id: string, status: PaymentStatus, paymentDetails?: { payment_received_date: string; amount_deposited: number }) => Promise<void>;
   onClose: () => void;
 }) {
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [paymentDate, setPaymentDate] = useState("");
+  const [amountDeposited, setAmountDeposited] = useState("");
+  const [isConfirming, setIsConfirming] = useState(false);
+
+  async function handleConfirmPayment() {
+    if (!paymentDate || !amountDeposited) return;
+    setIsConfirming(true);
+    await onPaymentChange(registration.id, "completed", {
+      payment_received_date: paymentDate,
+      amount_deposited: Math.round(parseFloat(amountDeposited) * 100),
+    });
+    setShowPaymentForm(false);
+    setIsConfirming(false);
+  }
+
   return (
     <div className="rounded-lg border bg-card p-6 shadow-sm">
       <div className="flex items-center justify-between">
@@ -392,7 +409,7 @@ function RegistrationDetail({
           <dd className="font-medium">{registration.phone}</dd>
         </div>
         <div>
-          <dt className="text-muted-foreground">Amount</dt>
+          <dt className="text-muted-foreground">Amount Due</dt>
           <dd className="font-medium">
             {formatCents(registration.amount_cents, registration.currency)}{" "}
             {registration.currency}
@@ -449,48 +466,120 @@ function RegistrationDetail({
         )}
       </dl>
 
-      <div className="mt-6 flex flex-wrap gap-3">
-        <div>
-          <label className="mb-1 block text-xs font-medium text-muted-foreground">
-            Update Status
-          </label>
-          <SelectNative
-            value={registration.status}
-            onChange={(e) =>
-              onStatusChange(
-                registration.id,
-                e.target.value as RegistrationStatus
-              )
-            }
-            className="w-36"
-          >
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="refunded">Refunded</option>
-            <option value="waitlisted">Waitlisted</option>
-          </SelectNative>
+      <div className="mt-6 space-y-4">
+        <div className="flex flex-wrap gap-3">
+          <div>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">
+              Registration Status
+            </label>
+            <SelectNative
+              value={registration.status}
+              onChange={(e) =>
+                onStatusChange(
+                  registration.id,
+                  e.target.value as RegistrationStatus
+                )
+              }
+              className="w-36"
+            >
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="refunded">Refunded</option>
+              <option value="waitlisted">Waitlisted</option>
+            </SelectNative>
+          </div>
+
+          {registration.payment_status !== "completed" ? (
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                Payment
+              </label>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => setShowPaymentForm(true)}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                Mark as Paid
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                Payment
+              </label>
+              <Badge variant="default" className="mt-1 bg-green-600 text-sm">PAID</Badge>
+            </div>
+          )}
+
+          {registration.payment_status === "completed" && (
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                Revert Payment
+              </label>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPaymentChange(registration.id, "pending")}
+              >
+                Mark Unpaid
+              </Button>
+            </div>
+          )}
         </div>
-        <div>
-          <label className="mb-1 block text-xs font-medium text-muted-foreground">
-            Payment Status
-          </label>
-          <SelectNative
-            value={registration.payment_status}
-            onChange={(e) =>
-              onPaymentChange(
-                registration.id,
-                e.target.value as PaymentStatus
-              )
-            }
-            className="w-36"
-          >
-            <option value="pending">Unpaid</option>
-            <option value="completed">Paid</option>
-            <option value="failed">Failed</option>
-            <option value="refunded">Refunded</option>
-          </SelectNative>
-        </div>
+
+        {showPaymentForm && (
+          <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-900 dark:bg-green-950">
+            <h4 className="mb-3 text-sm font-semibold text-green-800 dark:text-green-200">
+              Confirm Payment Received
+            </h4>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className="mb-1 block text-xs font-medium text-green-700 dark:text-green-300">
+                  Date e-Transfer Received *
+                </label>
+                <Input
+                  type="date"
+                  value={paymentDate}
+                  onChange={(e) => setPaymentDate(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-green-700 dark:text-green-300">
+                  Amount Deposited ($) *
+                </label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="475.00"
+                  value={amountDeposited}
+                  onChange={(e) => setAmountDeposited(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <Button
+                size="sm"
+                disabled={!paymentDate || !amountDeposited || isConfirming}
+                onClick={handleConfirmPayment}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                {isConfirming ? "Confirming..." : "Confirm Payment"}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowPaymentForm(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

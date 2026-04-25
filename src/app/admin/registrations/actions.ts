@@ -35,7 +35,8 @@ export async function updateRegistrationStatus(
 
 export async function updatePaymentStatus(
   registrationId: string,
-  paymentStatus: PaymentStatus
+  paymentStatus: PaymentStatus,
+  paymentDetails?: { payment_received_date: string; amount_deposited: number }
 ) {
   const admin = await getAdminUser();
   if (!admin) return { error: "Unauthorized" };
@@ -48,11 +49,24 @@ export async function updatePaymentStatus(
     .eq("id", registrationId)
     .single();
 
+  let adminNotes: string | undefined;
+  if (paymentStatus === "completed" && paymentDetails) {
+    adminNotes = [
+      `Payment confirmed by admin on ${new Date().toLocaleDateString()}`,
+      `E-Transfer received: ${paymentDetails.payment_received_date}`,
+      `Amount deposited: $${(paymentDetails.amount_deposited / 100).toFixed(2)}`,
+    ].join("\n");
+  }
+
   const { error } = await supabase
     .from("registrations")
     .update(
       paymentStatus === "completed"
-        ? { payment_status: paymentStatus, status: "confirmed" as const }
+        ? {
+            payment_status: paymentStatus,
+            status: "confirmed" as const,
+            ...(adminNotes ? { admin_notes: adminNotes } : {}),
+          }
         : { payment_status: paymentStatus }
     )
     .eq("id", registrationId);
