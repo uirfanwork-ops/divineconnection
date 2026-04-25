@@ -189,11 +189,10 @@ export async function submitRegistration(
     .single();
 
   if (insertError || !registration) {
-    console.error("Registration insert failed:", insertError?.message);
+    console.error("Registration insert failed:", insertError?.message, insertError?.details, insertError?.hint);
     return {
       success: false,
-      error:
-        "Failed to create registration. Please try again, or contact info@divineconnections.ca if the problem persists.",
+      error: `Failed to create registration: ${insertError?.message ?? "Unknown error"}. Please try again, or contact info@divineconnections.ca if the problem persists.`,
     };
   }
 
