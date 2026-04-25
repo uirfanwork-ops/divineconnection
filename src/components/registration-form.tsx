@@ -99,17 +99,15 @@ export function RegistrationForm({
   });
 
   const fullName = watch("full_name");
+  const hasValidationErrors = submitCount > 0 && Object.keys(errors).length > 0;
+  const errorBannerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to first validation error when form is submitted with errors
+  // Scroll to error banner when form is submitted with validation errors
   useEffect(() => {
-    if (submitCount > 0 && Object.keys(errors).length > 0) {
-      const firstError = formRef.current?.querySelector("[data-error='true']") ??
-        formRef.current?.querySelector(".text-destructive");
-      if (firstError) {
-        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
+    if (hasValidationErrors && errorBannerRef.current) {
+      errorBannerRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }, [submitCount, errors]);
+  }, [hasValidationErrors, submitCount]);
 
   const getRecaptchaToken = useCallback(async (): Promise<string> => {
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
@@ -173,8 +171,29 @@ export function RegistrationForm({
 
       <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="space-y-10" noValidate>
         {serverState.error && (
-          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+          <div className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-700">
             {serverState.error}
+          </div>
+        )}
+
+        {hasValidationErrors && (
+          <div ref={errorBannerRef} className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-700">
+            <p className="font-semibold">Please fix the following errors to continue:</p>
+            <ul className="mt-2 list-inside list-disc space-y-1">
+              {errors.full_name && <li>{errors.full_name.message || "Full name is required"}</li>}
+              {errors.email && <li>{errors.email.message || "Email is required"}</li>}
+              {errors.phone && <li>{errors.phone.message || "Phone number is required"}</li>}
+              {errors.date_of_birth && <li>{errors.date_of_birth.message || "Date of birth is required"}</li>}
+              {errors.gender && <li>{errors.gender.message || "Gender is required"}</li>}
+              {errors.emergency_contact_name && <li>{errors.emergency_contact_name.message || "Emergency contact name is required"}</li>}
+              {errors.emergency_contact_relationship && <li>{errors.emergency_contact_relationship.message || "Emergency contact relationship is required"}</li>}
+              {errors.emergency_contact_phone && <li>{errors.emergency_contact_phone.message || "Emergency contact phone is required"}</li>}
+              {errors.accept_waiver && <li>{errors.accept_waiver.message || "You must accept the Waiver Form"}</li>}
+              {errors.accept_code_of_conduct && <li>{errors.accept_code_of_conduct.message || "You must accept the Code of Conduct"}</li>}
+              {errors.accept_consent_form && <li>{errors.accept_consent_form.message || "You must accept the Consent Form"}</li>}
+              {errors.accept_privacy_policy && <li>{errors.accept_privacy_policy.message || "You must accept the Privacy Policy"}</li>}
+              {errors.typed_signature && <li>{errors.typed_signature.message || "Signature is required"}</li>}
+            </ul>
           </div>
         )}
 
@@ -521,7 +540,7 @@ function Field({
         {required && <span className="ml-0.5 text-[var(--gold)]">*</span>}
       </Label>
       {children}
-      {error && <p className="mt-1.5 text-sm text-destructive">{error}</p>}
+      {error && <p className="mt-1.5 text-sm font-medium text-red-600">{error}</p>}
     </div>
   );
 }
@@ -631,7 +650,7 @@ function AgreementCheckbox({
           <p className="mt-0.5 text-xs text-[var(--text-muted)]">{description}</p>
         </div>
       </label>
-      {error && <p className="mt-1.5 text-sm text-destructive">{error}</p>}
+      {error && <p className="mt-1.5 text-sm font-medium text-red-600">{error}</p>}
 
       <PolicyDialog
         slug={slug}
