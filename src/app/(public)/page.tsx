@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { HeroSection } from "@/components/sections/hero";
 import { GalleryMarquee } from "@/components/sections/gallery-marquee";
 import { AboutSection } from "@/components/sections/about";
@@ -63,7 +63,7 @@ const fallbackTiers: PricingTier[] = [
 
 async function getPricingTiers(): Promise<PricingTier[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("pricing_tiers")
       .select("*")

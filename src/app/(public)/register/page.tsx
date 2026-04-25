@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { RegistrationForm } from "@/components/registration-form";
 import { siteConfig } from "../../../../content/site-config";
 import type { Metadata } from "next";
@@ -15,28 +15,15 @@ interface RegisterPageProps {
   searchParams: Promise<{ tier?: string }>;
 }
 
-const fallbackTiers: PricingTier[] = [
-  {
-    id: "00000000-0000-0000-0000-000000000001", created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-    name: "Early Bird", description: "Early bird registrations receive a FREE PRINT poster of the Ibaadur Rahman verses (limited time offer!).",
-    price_cents: 47500, currency: "CAD", max_spots: null, spots_taken: 0, is_active: true, sort_order: 1, stripe_price_id: null, features: [],
-  },
-  {
-    id: "00000000-0000-0000-0000-000000000002", created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
-    name: "Regular", description: "Standard registration for the Divine Connections retreat. Full access to all sessions, meals, and activities.",
-    price_cents: 55000, currency: "CAD", max_spots: null, spots_taken: 0, is_active: true, sort_order: 2, stripe_price_id: null, features: [],
-  },
-];
-
 async function loadTiers(): Promise<PricingTier[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("pricing_tiers").select("*").eq("is_active", true).order("sort_order", { ascending: true });
-    if (error || !data || data.length === 0) return fallbackTiers;
+    if (error || !data || data.length === 0) return [];
     return data;
   } catch {
-    return fallbackTiers;
+    return [];
   }
 }
 
