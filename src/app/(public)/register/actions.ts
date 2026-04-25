@@ -2,7 +2,6 @@
 
 import crypto from "crypto";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { registrationSchema } from "@/lib/validations/registration";
 import { createServiceClient } from "@/lib/supabase/service";
 import { checkRegistrationRateLimit } from "@/lib/rate-limit";
@@ -161,5 +160,5 @@ export async function submitRegistration(
     }).catch((err) => console.error("Failed to send admin notification:", err));
   }
 
-  redirect(`/register/payment?id=${registration.id}`);
+  return { success: true, registrationId: registration.id };
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -36,6 +37,7 @@ interface RegistrationFormProps {
 export function RegistrationForm({
   mode = "dark",
 }: RegistrationFormProps) {
+  const router = useRouter();
   const [serverState, setServerState] = useState<RegistrationActionState>({
     success: false,
   });
@@ -97,11 +99,12 @@ export function RegistrationForm({
         }
 
         const result = await submitRegistration({ success: false }, fd);
-        setServerState(result);
-      } catch (err) {
-        if (typeof err === "object" && err !== null && "digest" in err) {
-          throw err;
+        if (result.success && result.registrationId) {
+          router.push(`/register/payment?id=${result.registrationId}`);
+          return;
         }
+        setServerState(result);
+      } catch {
         setServerState({
           success: false,
           error: "An unexpected error occurred. Please try again.",
