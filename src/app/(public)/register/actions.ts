@@ -19,11 +19,6 @@ export interface RegistrationActionState {
   registrationId?: string;
 }
 
-const FALLBACK_TIER_PRICES: Record<string, { price_cents: number; currency: string; name: string }> = {
-  "00000000-0000-0000-0000-000000000001": { price_cents: 47500, currency: "CAD", name: "Early Bird" },
-  "00000000-0000-0000-0000-000000000002": { price_cents: 55000, currency: "CAD", name: "Regular" },
-};
-
 function parseBool(value: FormDataEntryValue | null): boolean {
   if (value === null) return false;
   const s = String(value).toLowerCase();
