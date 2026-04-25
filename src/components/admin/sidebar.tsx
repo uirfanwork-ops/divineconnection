@@ -9,6 +9,7 @@ import {
   FileText,
   Settings,
   LogOut,
+  ClipboardList,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -19,6 +20,7 @@ const navItems = [
   { label: "Registrations", href: "/admin/registrations", icon: Users, adminOnly: false },
   { label: "Receipts", href: "/admin/receipts", icon: Receipt, adminOnly: false },
   { label: "Documents", href: "/admin/documents", icon: FileText, adminOnly: false },
+  { label: "Audit Log", href: "/admin/audit-log", icon: ClipboardList, adminOnly: true },
   { label: "Settings", href: "/admin/settings", icon: Settings, adminOnly: true },
 ];
 

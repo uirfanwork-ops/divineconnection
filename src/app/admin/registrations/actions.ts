@@ -93,7 +93,15 @@ export async function updatePaymentStatus(
     action: "update_payment_status",
     resource_type: "registration",
     resource_id: registrationId,
-    details: { new_payment_status: paymentStatus },
+    details: {
+      new_payment_status: paymentStatus,
+      registrant_name: registration?.full_name,
+      registrant_email: registration?.email,
+      ...(paymentDetails ? {
+        payment_received_date: paymentDetails.payment_received_date,
+        amount_deposited_cents: paymentDetails.amount_deposited,
+      } : {}),
+    },
   });
 
   return { success: true };
