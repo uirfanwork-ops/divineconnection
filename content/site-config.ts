@@ -13,15 +13,15 @@ export const siteConfig = {
   retreatCity: "Mulmur, Ontario",
   retreatAddress: "937365 Airport Rd, Mulmur, ON L9V 3T6",
   organizerName: "Divine Connections",
-  organizerEmail: "info@divineconnections.ca",
-  supportEmail: "info@divineconnections.ca",
+  organizerEmail: "admin@mathabah.org",
+  supportEmail: "admin@mathabah.org",
   financeEmail: "finance@mathabah.org",
   maxAttendees: 150,
   currency: "CAD",
   socialLinks: {
     instagram: "https://instagram.com/divineconnections",
     facebook: "https://facebook.com/divineconnections",
-    email: "mailto:info@divineconnections.ca",
+    email: "mailto:admin@mathabah.org",
   },
   hero: {
     title: "Divine Connections",

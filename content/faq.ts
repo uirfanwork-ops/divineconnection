@@ -57,7 +57,7 @@ export const faq: FaqItem[] = [
   {
     question: "Can I attend just one day?",
     answer:
-      "The retreat is designed as a complete experience, and we strongly recommend attending all three days. However, if circumstances require it, please contact us at info@divineconnections.ca to discuss partial attendance options.",
+      "The retreat is designed as a complete experience, and we strongly recommend attending all three days. However, if circumstances require it, please contact us at admin@mathabah.org to discuss partial attendance options.",
   },
   {
     question: "I have a medical condition. Can I still attend?",
