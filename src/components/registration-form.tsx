@@ -98,7 +98,10 @@ export function RegistrationForm({
 
         const result = await submitRegistration({ success: false }, fd);
         setServerState(result);
-      } catch {
+      } catch (err) {
+        if (typeof err === "object" && err !== null && "digest" in err) {
+          throw err;
+        }
         setServerState({
           success: false,
           error: "An unexpected error occurred. Please try again.",
