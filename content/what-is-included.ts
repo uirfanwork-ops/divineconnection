@@ -8,7 +8,7 @@ export const whatIsIncluded: IncludedItem[] = [
   {
     title: "Accommodation",
     description:
-      "Comfortable resort accommodation for 2 nights (Friday and Saturday). Standard tier includes shared rooms; Premium tier includes private rooms.",
+      "Comfortable resort accommodation for 3 nights (Fri, Sat, and Sun).",
     icon: "Bed",
   },
   {
@@ -38,19 +38,19 @@ export const whatIsIncluded: IncludedItem[] = [
   {
     title: "Outdoor Activities",
     description:
-      "Guided nature walks, group sports, and recreational activities in the beautiful mountain setting of Blue Mountain Resort.",
+      "Guided nature walks, group sports, and recreational activities in the beautiful setting of Mulmur Ontario.",
     icon: "Trees",
   },
   {
     title: "Networking",
     description:
-      "Structured and informal opportunities to connect with fellow attendees, speakers, and community leaders. Build your brotherhood network.",
+      "Structured and informal opportunities to connect with fellow attendees, speakers, and community leaders. Build your Brotherhood and sisterhood network.",
     icon: "Handshake",
   },
   {
     title: "Digital Resources",
     description:
-      "Post-retreat access to lecture recordings, workshop materials, and a private online community to stay connected with your retreat brothers.",
+      "Post-retreat access to lecture recordings, workshop materials, and a private online community to stay connected with your retreat brothers and sisters respectively. As well as access to the scholarship at the retreat.",
     icon: "Monitor",
   },
 ];
