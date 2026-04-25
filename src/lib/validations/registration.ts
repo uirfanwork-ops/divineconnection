@@ -86,8 +86,8 @@ export const registrationSchema = z
       .max(100)
       .trim(),
 
-    // Bot protection
-    recaptcha_token: z.string().min(1, "reCAPTCHA verification failed"),
+    // Bot protection (set programmatically, not by user)
+    recaptcha_token: z.string().optional().default(""),
   })
   .refine(
     (data) =>
