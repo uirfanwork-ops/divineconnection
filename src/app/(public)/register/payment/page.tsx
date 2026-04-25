@@ -64,7 +64,7 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
   const messageReference = `${registration.confirmation_code} - ${registration.full_name}`;
 
   return (
-    <div className="container py-12">
+    <div className="container pb-12 pt-28">
       <div className="mx-auto max-w-2xl">
         <div className="mb-8 rounded-lg border border-green-200 bg-green-50 p-6 text-center">
           <h1 className="text-2xl font-bold text-green-800">
