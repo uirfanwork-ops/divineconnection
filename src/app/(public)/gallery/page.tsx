@@ -10,21 +10,54 @@ export const metadata: Metadata = {
 };
 
 const galleryImages = [
-  { src: "/gallery/01.jpg", caption: "Retreat gathering" },
-  { src: "/gallery/02.jpg", caption: "Outdoor session" },
-  { src: "/gallery/03.jpg", caption: "Group prayer" },
-  { src: "/gallery/04.jpg", caption: "Nature trails" },
-  { src: "/gallery/05.jpg", caption: "Brotherhood" },
-  { src: "/gallery/06.jpg", caption: "Lecture session" },
-  { src: "/gallery/07.jpg", caption: "Morning reflection" },
-  { src: "/gallery/08.jpg", caption: "Group activity" },
-  { src: "/gallery/09.jpg", caption: "Dhikr circle" },
-  { src: "/gallery/10.jpg", caption: "Outdoor recreation" },
-  { src: "/gallery/11.jpg", caption: "Retreat moments" },
-  { src: "/gallery/12.jpg", caption: "Scenic views" },
-  { src: "/gallery/13.jpg", caption: "Community bonding" },
-  { src: "/gallery/14.jpg", caption: "Spiritual journey" },
-  { src: "/gallery/15.jpg", caption: "Retreat memories" },
+  "/gallery/01.jpg",
+  "/gallery/02.jpg",
+  "/gallery/02.1.jpg",
+  "/gallery/03.jpg",
+  "/gallery/04.jpg",
+  "/gallery/05.jpg",
+  "/gallery/06.jpg",
+  "/gallery/07.jpg",
+  "/gallery/08.jpg",
+  "/gallery/09.jpg",
+  "/gallery/10.jpg",
+  "/gallery/11.jpg",
+  "/gallery/12.jpg",
+  "/gallery/13.jpg",
+  "/gallery/14.jpg",
+  "/gallery/15.jpg",
+  "/gallery/026.jpeg",
+  "/gallery/027.jpeg",
+  "/gallery/030.jpeg",
+  "/gallery/031.jpeg",
+  "/gallery/034.jpeg",
+  "/gallery/035.jpeg",
+  "/gallery/036.jpeg",
+  "/gallery/038.jpeg",
+  "/gallery/040.jpeg",
+  "/gallery/042.jpeg",
+  "/gallery/049.jpeg",
+  "/gallery/051.jpeg",
+  "/gallery/054.jpeg",
+  "/gallery/059.jpeg",
+  "/gallery/061.jpeg",
+  "/gallery/063.jpeg",
+  "/gallery/065.jpeg",
+  "/gallery/066.jpeg",
+  "/gallery/069.jpeg",
+  "/gallery/070.jpeg",
+  "/gallery/071.jpeg",
+  "/gallery/072.jpeg",
+  "/gallery/079.jpeg",
+  "/gallery/080.jpeg",
+  "/gallery/083.jpeg",
+  "/gallery/084.jpeg",
+  "/gallery/085.jpeg",
+  "/gallery/087.jpeg",
+  "/gallery/094.jpeg",
+  "/gallery/095.jpeg",
+  "/gallery/096.jpeg",
+  "/gallery/099.jpeg",
 ];
 
 export default function GalleryPage() {
@@ -58,15 +91,15 @@ export default function GalleryPage() {
 
         {/* Masonry-style grid */}
         <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
-          {galleryImages.map((img, idx) => (
+          {galleryImages.map((src, idx) => (
             <div
               key={idx}
               className="group mb-4 break-inside-avoid overflow-hidden border border-[var(--border-subtle)] bg-[var(--bg-card)] transition-colors hover:border-[var(--border-color)]"
             >
               <div className="relative aspect-[4/3]">
                 <Image
-                  src={img.src}
-                  alt={img.caption}
+                  src={src}
+                  alt={`Retreat photo ${idx + 1}`}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
