@@ -96,56 +96,48 @@ export async function submitRegistration(
 
   const supabase = createServiceClient();
 
-  // Resolve tier — prefer Early Bird, fall back
+  // Resolve tier — always look up from DB, try submitted ID first, then Early Bird, then any active
   let tierName = "";
   let priceCents = 0;
   let currency = "CAD";
-  let tierExistsInDb = false;
-  let resolvedTierId = tierId;
+  let resolvedTierId = "";
 
+  // Try the submitted tier ID
   if (tierId) {
     const { data: tier } = await supabase
       .from("pricing_tiers")
       .select("*")
       .eq("id", tierId)
-      .single();
-
-    if (tier) {
-      if (!tier.is_active) {
-        return { success: false, error: "Selected pricing tier is no longer available." };
-      }
-      if (tier.max_spots !== null && tier.spots_taken >= tier.max_spots) {
-        return { success: false, error: "This tier is sold out." };
-      }
-      tierName = tier.name;
-      priceCents = tier.price_cents;
-      currency = tier.currency;
-      tierExistsInDb = true;
-    }
-  }
-
-  if (!tierExistsInDb) {
-    // Try to get Early Bird tier from DB
-    const { data: earlyBird } = await supabase
-      .from("pricing_tiers")
-      .select("*")
-      .eq("name", "Early Bird")
       .eq("is_active", true)
       .single();
 
-    if (earlyBird) {
-      resolvedTierId = earlyBird.id;
-      tierName = earlyBird.name;
-      priceCents = earlyBird.price_cents;
-      currency = earlyBird.currency;
-      tierExistsInDb = true;
-    } else {
-      const fallback = FALLBACK_TIER_PRICES[tierId] ?? FALLBACK_TIER_PRICES["00000000-0000-0000-0000-000000000001"];
-      resolvedTierId = tierId || "00000000-0000-0000-0000-000000000001";
-      tierName = fallback.name;
-      priceCents = fallback.price_cents;
-      currency = fallback.currency;
+    if (tier) {
+      if (tier.max_spots !== null && tier.spots_taken >= tier.max_spots) {
+        return { success: false, error: "This tier is sold out." };
+      }
+      resolvedTierId = tier.id;
+      tierName = tier.name;
+      priceCents = tier.price_cents;
+      currency = tier.currency;
     }
+  }
+
+  // Fallback: find Early Bird or any active tier from DB
+  if (!resolvedTierId) {
+    const { data: activeTiers } = await supabase
+      .from("pricing_tiers")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    const tier = activeTiers?.find((t) => t.name === "Early Bird") ?? activeTiers?.[0];
+    if (!tier) {
+      return { success: false, error: "No active pricing tiers found. Please contact us." };
+    }
+    resolvedTierId = tier.id;
+    tierName = tier.name;
+    priceCents = tier.price_cents;
+    currency = tier.currency;
   }
 
   const now = new Date().toISOString();
@@ -196,7 +188,7 @@ export async function submitRegistration(
     };
   }
 
-  if (tierExistsInDb) {
+  if (resolvedTierId) {
     const { data: currentTier } = await supabase
       .from("pricing_tiers")
       .select("spots_taken")
