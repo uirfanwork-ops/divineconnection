@@ -18,9 +18,9 @@ export const qualities: Quality[] = [
     icon: "BookOpen",
   },
   {
-    title: "Brotherhood",
+    title: "Brotherhood & Sisterhood",
     description:
-      "Build genuine bonds with fellow Muslim men who share your commitment to faith. The Prophet (SAW) said: 'A believer to another believer is like a building whose parts support each other.'",
+      "Build genuine bonds with fellow Muslim men and women who share your commitment to faith. The Prophet (SAW) said: 'A believer to another believer is like a building whose parts support each other.'",
     icon: "Users",
   },
   {
