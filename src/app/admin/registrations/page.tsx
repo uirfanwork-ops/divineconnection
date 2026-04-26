@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { createServiceClient } from "@/lib/supabase/service";
 import { RegistrationsTable } from "@/components/admin/registrations-table";
 import type { RegistrationStatus, PaymentStatus } from "@/types/database";
