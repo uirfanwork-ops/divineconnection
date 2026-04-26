@@ -407,10 +407,10 @@ export function RegistrationForm({
         {/* Submit */}
         <div className="space-y-4 border-t border-[var(--border-color)] pt-6">
           <div className="flex items-center justify-between rounded-lg glass-luxury p-4">
-            <span className="text-sm font-medium text-[var(--text-secondary)]">
+            <span className="text-sm font-medium text-white">
               Registration Fee
             </span>
-            <span className="text-2xl font-bold text-gold">
+            <span className="text-2xl font-bold text-white">
               $475.00 CAD
             </span>
           </div>
