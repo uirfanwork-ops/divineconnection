@@ -145,3 +145,20 @@ export async function updateReceiptStatus(
 
   return { success: true };
 }
+
+export async function getReceiptFileUrl(storagePath: string) {
+  const admin = await getAdminUser();
+  if (!admin) return { error: "Unauthorized" };
+
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase.storage
+    .from("receipts")
+    .createSignedUrl(storagePath, 300);
+
+  if (error || !data) {
+    return { error: error?.message ?? "Failed to get file URL" };
+  }
+
+  return { url: data.signedUrl };
+}

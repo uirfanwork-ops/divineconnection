@@ -1,14 +1,15 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, FileText, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Upload, FileText, CheckCircle2, XCircle, Clock, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatCents } from "@/lib/utils";
 import {
   uploadReceipt,
   updateReceiptStatus,
+  getReceiptFileUrl,
 } from "@/app/admin/receipts/actions";
 import type { Database, ReceiptStatus } from "@/types/database";
 
@@ -20,6 +21,7 @@ interface ReceiptsManagerProps {
 
 export function ReceiptsManager({ receipts }: ReceiptsManagerProps) {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -41,6 +43,7 @@ export function ReceiptsManager({ receipts }: ReceiptsManagerProps) {
       }
 
       setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       router.refresh();
     },
     [router]
@@ -61,12 +64,16 @@ export function ReceiptsManager({ receipts }: ReceiptsManagerProps) {
     handleUpload(e.dataTransfer.files);
   }
 
-  async function handleStatusChange(
-    id: string,
-    status: ReceiptStatus
-  ) {
+  async function handleStatusChange(id: string, status: ReceiptStatus) {
     await updateReceiptStatus(id, status);
     router.refresh();
+  }
+
+  async function handleViewFile(storagePath: string) {
+    const result = await getReceiptFileUrl(storagePath);
+    if (result.url) {
+      window.open(result.url, "_blank");
+    }
   }
 
   const statusIcon: Record<string, React.ReactNode> = {
@@ -96,24 +103,24 @@ export function ReceiptsManager({ receipts }: ReceiptsManagerProps) {
         <p className="mt-1 text-xs text-muted-foreground">
           JPEG, PNG, WebP, or PDF (max 10MB)
         </p>
-        <label className="mt-4">
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp,application/pdf"
-            multiple
-            className="hidden"
-            onChange={(e) => handleUpload(e.target.files)}
-            disabled={isUploading}
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            asChild
-            disabled={isUploading}
-          >
-            <span>Browse Files</span>
-          </Button>
-        </label>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,application/pdf"
+          multiple
+          className="hidden"
+          onChange={(e) => handleUpload(e.target.files)}
+          disabled={isUploading}
+        />
+        <Button
+          variant="outline"
+          size="sm"
+          className="mt-4"
+          disabled={isUploading}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          Browse Files
+        </Button>
         {uploadError && (
           <p className="mt-3 text-sm text-destructive">{uploadError}</p>
         )}
@@ -124,33 +131,18 @@ export function ReceiptsManager({ receipts }: ReceiptsManagerProps) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b bg-muted/50">
-              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                Status
-              </th>
-              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                File
-              </th>
-              <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">
-                Sender
-              </th>
-              <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                Amount
-              </th>
-              <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground lg:table-cell">
-                Category
-              </th>
-              <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                Actions
-              </th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">File</th>
+              <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">Sender</th>
+              <th className="px-4 py-3 text-right font-medium text-muted-foreground">Amount</th>
+              <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground lg:table-cell">Category</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Actions</th>
             </tr>
           </thead>
           <tbody>
             {receipts.length === 0 ? (
               <tr>
-                <td
-                  colSpan={6}
-                  className="px-4 py-8 text-center text-muted-foreground"
-                >
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                   No receipts uploaded yet.
                 </td>
               </tr>
@@ -161,13 +153,7 @@ export function ReceiptsManager({ receipts }: ReceiptsManagerProps) {
                     <div className="flex items-center gap-2">
                       {statusIcon[receipt.status]}
                       <Badge
-                        variant={
-                          receipt.status === "approved"
-                            ? "default"
-                            : receipt.status === "rejected"
-                              ? "destructive"
-                              : "outline"
-                        }
+                        variant={receipt.status === "approved" ? "default" : receipt.status === "rejected" ? "destructive" : "outline"}
                         className="text-xs"
                       >
                         {receipt.status}
@@ -175,12 +161,17 @@ export function ReceiptsManager({ receipts }: ReceiptsManagerProps) {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="max-w-[200px] truncate font-medium text-foreground">
-                      {receipt.original_filename}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(receipt.created_at).toLocaleDateString()}
-                    </p>
+                    <button
+                      onClick={() => handleViewFile(receipt.storage_path)}
+                      className="text-left hover:underline"
+                    >
+                      <p className="max-w-[200px] truncate font-medium text-foreground">
+                        {receipt.original_filename}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(receipt.created_at).toLocaleDateString()}
+                      </p>
+                    </button>
                   </td>
                   <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
                     {receipt.sender_name ?? "-"}
@@ -195,13 +186,19 @@ export function ReceiptsManager({ receipts }: ReceiptsManagerProps) {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleViewFile(receipt.storage_path)}
+                        title="View file"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
                       {receipt.status !== "approved" && (
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() =>
-                            handleStatusChange(receipt.id, "approved")
-                          }
+                          onClick={() => handleStatusChange(receipt.id, "approved")}
                           className="text-green-600 hover:text-green-700"
                         >
                           Approve
@@ -211,9 +208,7 @@ export function ReceiptsManager({ receipts }: ReceiptsManagerProps) {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() =>
-                            handleStatusChange(receipt.id, "rejected")
-                          }
+                          onClick={() => handleStatusChange(receipt.id, "rejected")}
                           className="text-red-600 hover:text-red-700"
                         >
                           Reject
