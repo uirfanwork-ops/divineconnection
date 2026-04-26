@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
-  Receipt,
   FileText,
   Settings,
   LogOut,
@@ -18,7 +17,6 @@ import type { AdminUser } from "@/lib/admin";
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, adminOnly: false },
   { label: "Registrations", href: "/admin/registrations", icon: Users, adminOnly: false },
-  { label: "Receipts", href: "/admin/receipts", icon: Receipt, adminOnly: false },
   { label: "Documents", href: "/admin/documents", icon: FileText, adminOnly: false },
   { label: "Audit Log", href: "/admin/audit-log", icon: ClipboardList, adminOnly: true },
   { label: "Settings", href: "/admin/settings", icon: Settings, adminOnly: true },
