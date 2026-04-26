@@ -91,7 +91,6 @@ export function RegistrationsTable({
         <Button variant={!paymentFilter && !statusFilter ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "", status: "", page: "" })}>All</Button>
         <Button variant={paymentFilter === "pending" ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "pending", status: "", page: "" })}>Unpaid</Button>
         <Button variant={paymentFilter === "completed" ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "completed", status: "", page: "" })}>Paid</Button>
-        <Button variant={statusFilter === "confirmed" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "confirmed", payment: "", page: "" })}>Confirmed</Button>
         <Button variant={statusFilter === "cancelled" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "cancelled", payment: "", page: "" })}>Cancelled</Button>
       </div>
 

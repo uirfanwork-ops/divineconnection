@@ -31,8 +31,9 @@ export default async function RegistrationsPage({
     .range(offset, offset + perPage - 1);
 
   if (search) {
+    const s = search.replace(/[%_]/g, "");
     query = query.or(
-      `full_name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`
+      `full_name.ilike.%${s}%,email.ilike.%${s}%,phone.ilike.%${s}%,confirmation_code.ilike.%${s}%`
     );
   }
 
