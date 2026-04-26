@@ -13,10 +13,11 @@ import {
   updateRegistrationStatus,
   updatePaymentStatus,
   updateRegistrationDetails,
+  deleteRegistration,
   exportRegistrationsCsv,
 } from "@/app/admin/registrations/actions";
 import type { Database, RegistrationStatus } from "@/types/database";
-import { Search, Download, ChevronLeft, ChevronRight, X, Pencil, Save } from "lucide-react";
+import { Search, Download, ChevronLeft, ChevronRight, X, Pencil, Save, Trash2 } from "lucide-react";
 
 type Registration = Database["public"]["Tables"]["registrations"]["Row"];
 
@@ -213,6 +214,8 @@ function RegistrationDetail({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [paymentDate, setPaymentDate] = useState("");
   const [amountDeposited, setAmountDeposited] = useState("");
@@ -246,6 +249,13 @@ function RegistrationDetail({
     await updateRegistrationDetails(registration.id, form);
     setIsSaving(false);
     setIsEditing(false);
+    onRefresh();
+  }
+
+  async function handleDelete() {
+    setIsDeleting(true);
+    await deleteRegistration(registration.id);
+    setIsDeleting(false);
     onRefresh();
   }
 
@@ -385,6 +395,30 @@ function RegistrationDetail({
             </div>
           </div>
         )}
+
+        {/* Delete */}
+        <div className="mt-4 border-t pt-4">
+          {!showDeleteConfirm ? (
+            <Button variant="outline" size="sm" className="text-red-600 hover:bg-red-50 hover:text-red-700" onClick={() => setShowDeleteConfirm(true)}>
+              <Trash2 className="mr-1 h-3 w-3" />Delete Registration
+            </Button>
+          ) : (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-900 dark:bg-red-950">
+              <p className="text-sm font-semibold text-red-800 dark:text-red-200">
+                Are you sure you want to delete this registration?
+              </p>
+              <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+                This will permanently remove {registration.full_name} ({registration.confirmation_code}). This action cannot be undone.
+              </p>
+              <div className="mt-3 flex gap-2">
+                <Button size="sm" variant="destructive" disabled={isDeleting} onClick={handleDelete}>
+                  {isDeleting ? "Deleting..." : "Yes, Delete"}
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setShowDeleteConfirm(false)}>Cancel</Button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

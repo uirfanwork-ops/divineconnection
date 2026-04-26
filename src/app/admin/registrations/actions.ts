@@ -106,6 +106,40 @@ export async function updatePaymentStatus(
   return { success: true };
 }
 
+export async function deleteRegistration(registrationId: string) {
+  const admin = await getAdminUser();
+  if (!admin) return { error: "Unauthorized" };
+
+  const supabase = createServiceClient();
+
+  const { data: registration } = await supabase
+    .from("registrations")
+    .select("full_name, email, confirmation_code")
+    .eq("id", registrationId)
+    .single();
+
+  const { error } = await supabase
+    .from("registrations")
+    .delete()
+    .eq("id", registrationId);
+
+  if (error) return { error: error.message };
+
+  await supabase.from("audit_log").insert({
+    user_id: admin.userId,
+    action: "delete_registration",
+    resource_type: "registration",
+    resource_id: registrationId,
+    details: {
+      deleted_name: registration?.full_name,
+      deleted_email: registration?.email,
+      deleted_code: registration?.confirmation_code,
+    },
+  });
+
+  return { success: true };
+}
+
 export interface RegistrationUpdateData {
   full_name: string;
   email: string;
