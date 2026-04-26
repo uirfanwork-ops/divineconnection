@@ -11,7 +11,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 export function WhatIsIncludedSection() {
   return (
     <section className="relative overflow-hidden py-24 md:py-32">
-      <ParallaxBg src="/gallery/07.jpg" overlay="dark" speed={0.2} />
+      <ParallaxBg src="/gallery/036.jpeg" overlay="dark" speed={0.2} />
 
       <div className="container relative z-10">
         <div className="text-center">
