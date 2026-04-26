@@ -222,3 +222,61 @@ export function paymentConfirmedEmail(
     html: baseLayout(content),
   };
 }
+
+export function paymentReminderEmail(
+  registration: { full_name: string; confirmation_code: string; amount_cents: number; currency: string }
+): { subject: string; html: string } {
+  const amount = formatCents(registration.amount_cents, registration.currency);
+
+  const content = `
+    <h2 style="margin:0 0 16px;color:#1a1a1a;font-size:20px;">Payment Reminder</h2>
+    <p style="margin:0 0 12px;color:#444;font-size:15px;line-height:1.6;">
+      Assalamu Alaikum ${registration.full_name.split(" ")[0]},
+    </p>
+    <p style="margin:0 0 16px;color:#444;font-size:15px;line-height:1.6;">
+      This is a friendly reminder that your registration for <strong>${siteConfig.name}</strong> is still <strong>pending payment</strong>. Please complete your e-Transfer to secure your spot.
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0a1a0a;border-radius:6px;margin:0 0 20px;">
+      <tr>
+        <td style="padding:20px;text-align:center;">
+          <p style="margin:0 0 4px;color:#c9a84c;font-size:11px;text-transform:uppercase;letter-spacing:1px;">Your Confirmation Code</p>
+          <p style="margin:0;color:#ffffff;font-size:32px;font-weight:bold;letter-spacing:4px;font-family:monospace;">${registration.confirmation_code}</p>
+        </td>
+      </tr>
+    </table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8f8f8;border-radius:6px;margin:0 0 20px;">
+      <tr>
+        <td style="padding:16px;">
+          <p style="margin:0 0 8px;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">E-Transfer Details</p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="padding:4px 0;color:#666;font-size:14px;">Send to:</td>
+              <td style="padding:4px 0;color:#1a1a1a;font-size:14px;font-weight:bold;">finance@mathabah.org</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 0;color:#666;font-size:14px;">Amount:</td>
+              <td style="padding:4px 0;color:#1a1a1a;font-size:14px;font-weight:bold;">${amount} ${registration.currency}</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 0;color:#666;font-size:14px;">Message:</td>
+              <td style="padding:4px 0;color:#1a1a1a;font-size:13px;font-family:monospace;">${registration.confirmation_code} - ${registration.full_name}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <p style="margin:0 0 12px;color:#444;font-size:15px;line-height:1.6;">
+      Please include your confirmation code <strong>${registration.confirmation_code}</strong> in the e-Transfer message so we can match your payment.
+    </p>
+    <p style="margin:0 0 12px;color:#444;font-size:15px;line-height:1.6;">
+      Once we verify your payment, you will receive a confirmation email with retreat details.
+    </p>
+    <p style="margin:0;color:#888;font-size:13px;">
+      Questions? Contact us at ${siteConfig.supportEmail}
+    </p>`;
+
+  return {
+    subject: `Payment Reminder - ${registration.confirmation_code} - ${siteConfig.shortName}`,
+    html: baseLayout(content),
+  };
+}

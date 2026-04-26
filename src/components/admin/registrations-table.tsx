@@ -14,10 +14,11 @@ import {
   updatePaymentStatus,
   updateRegistrationDetails,
   deleteRegistration,
+  sendPaymentReminder,
   exportRegistrationsCsv,
 } from "@/app/admin/registrations/actions";
 import type { Database, RegistrationStatus } from "@/types/database";
-import { Search, Download, ChevronLeft, ChevronRight, X, Pencil, Save, Trash2 } from "lucide-react";
+import { Search, Download, ChevronLeft, ChevronRight, X, Pencil, Save, Trash2, Mail } from "lucide-react";
 
 type Registration = Database["public"]["Tables"]["registrations"]["Row"];
 
@@ -141,11 +142,12 @@ export function RegistrationsTable({
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">Payment</th>
               <th className="px-4 py-3 text-right font-medium text-muted-foreground">Amount</th>
               <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground lg:table-cell">Date</th>
+              <th className="px-4 py-3 text-center font-medium text-muted-foreground">Remind</th>
             </tr>
           </thead>
           <tbody>
             {registrations.length === 0 ? (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">No registrations found.</td></tr>
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-muted-foreground">No registrations found.</td></tr>
             ) : (
               registrations.map((reg) => (
                 <tr
@@ -166,6 +168,11 @@ export function RegistrationsTable({
                   </td>
                   <td className="px-4 py-3 text-right font-medium">{formatCents(reg.amount_cents, reg.currency)}</td>
                   <td className="hidden px-4 py-3 text-muted-foreground lg:table-cell">{new Date(reg.created_at).toLocaleDateString()}</td>
+                  <td className="px-4 py-3 text-center">
+                    {reg.payment_status === "pending" && (
+                      <ReminderButton registrationId={reg.id} />
+                    )}
+                  </td>
                 </tr>
               ))
             )}
@@ -497,5 +504,35 @@ function ToggleField({
         <dd className="font-medium">{value ? "Yes" : "No"}</dd>
       )}
     </div>
+  );
+}
+
+function ReminderButton({ registrationId }: { registrationId: string }) {
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  async function handleSend(e: React.MouseEvent) {
+    e.stopPropagation();
+    setStatus("sending");
+    const result = await sendPaymentReminder(registrationId);
+    setStatus(result.error ? "error" : "sent");
+    if (!result.error) {
+      setTimeout(() => setStatus("idle"), 3000);
+    }
+  }
+
+  if (status === "sent") {
+    return <span className="text-xs text-green-500">Sent!</span>;
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={handleSend}
+      disabled={status === "sending"}
+      title="Send payment reminder email"
+    >
+      <Mail className={`h-4 w-4 ${status === "error" ? "text-red-500" : "text-amber-500"}`} />
+    </Button>
   );
 }
