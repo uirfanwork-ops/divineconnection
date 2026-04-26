@@ -7,6 +7,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { qualities } from "../../../content/qualities";
+import { ParallaxBg } from "@/components/parallax-bg";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Heart, BookOpen, Users, Mountain, Compass, Trophy,
@@ -14,8 +15,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 export function QualitiesSection() {
   return (
-    <section className="bg-cream py-24 md:py-32">
-      <div className="container">
+    <section className="relative overflow-hidden py-24 md:py-32">
+      <ParallaxBg src="/gallery/06.jpg" overlay="cream" speed={0.15} />
+
+      <div className="container relative z-10">
         <div className="text-center">
           <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8b7355]">Why Attend</p>
           <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[#1a1a1a] md:text-5xl">
@@ -29,7 +32,7 @@ export function QualitiesSection() {
             return (
               <div
                 key={quality.title}
-                className="bg-[#faf6f0] p-8 transition-colors hover:bg-white"
+                className="bg-[#faf6f0]/80 p-8 backdrop-blur-sm transition-colors hover:bg-white/90"
               >
                 {Icon && (
                   <Icon className="mb-5 h-7 w-7 text-[#c9a84c]" />

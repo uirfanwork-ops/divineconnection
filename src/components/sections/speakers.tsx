@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { speakers } from "../../../content/speakers";
 import { User, BookOpen } from "lucide-react";
+import { ParallaxBg } from "@/components/parallax-bg";
 
 const speakerImages: Record<string, string> = {
   "Sh. Sulaiman Moola": "/gallery/speakers/sh-sulaiman.jpg",
@@ -14,8 +15,10 @@ const speakerImages: Record<string, string> = {
 
 export function SpeakersSection() {
   return (
-    <section id="speakers" className="bg-dark-green py-24 md:py-32">
-      <div className="container">
+    <section id="speakers" className="relative overflow-hidden py-24 md:py-32">
+      <ParallaxBg src="/gallery/09.jpg" overlay="dark" speed={0.2} />
+
+      <div className="container relative z-10">
         <div className="text-center">
           <p className="label-gold">Our Speakers</p>
           <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
@@ -29,9 +32,8 @@ export function SpeakersSection() {
             return (
               <div
                 key={speaker.name}
-                className="border border-[var(--border-subtle)] bg-[#0a0f0a] transition-colors hover:border-[var(--border-color)]"
+                className="border border-[var(--border-subtle)] bg-[#0a0f0a]/90 backdrop-blur-sm transition-colors hover:border-[var(--border-color)]"
               >
-                {/* Photo */}
                 <div className="relative flex h-52 items-center justify-center overflow-hidden bg-gradient-to-br from-[#0d150d] to-[#050a05]">
                   {imgSrc && (
                     <Image
@@ -61,7 +63,6 @@ export function SpeakersSection() {
                     {speaker.name}
                   </h3>
 
-                  {/* Session topic title */}
                   {speaker.sessionTitle && (
                     <div className="mt-3 flex items-start gap-2 border-t border-[var(--border-subtle)] pt-3">
                       <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-[var(--gold)]" />

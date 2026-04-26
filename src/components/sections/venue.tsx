@@ -1,13 +1,16 @@
 import Image from "next/image";
 import { Check } from "lucide-react";
 import { siteConfig } from "../../../content/site-config";
+import { ParallaxBg } from "@/components/parallax-bg";
 
 export function VenueSection() {
   const { venue } = siteConfig;
 
   return (
-    <section id="venue" className="bg-cream py-24 md:py-32">
-      <div className="container">
+    <section id="venue" className="relative overflow-hidden py-24 md:py-32">
+      <ParallaxBg src="/gallery/02.jpg" overlay="cream" speed={0.15} />
+
+      <div className="container relative z-10">
         <div className="mx-auto max-w-5xl">
           <div className="grid gap-12 md:grid-cols-2">
             <div className="relative overflow-hidden border border-[#e0d5c5]">

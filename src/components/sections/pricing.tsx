@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Check, Mail } from "lucide-react";
+import { ParallaxBg } from "@/components/parallax-bg";
 
 const features = [
   "FREE Ibaadur Rahman verses print poster",
@@ -14,8 +15,10 @@ const features = [
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="bg-gradient-to-b from-[#111111] via-[#0a0a0a] to-[#111111] py-24 md:py-32">
-      <div className="container">
+    <section id="pricing" className="relative overflow-hidden py-24 md:py-32">
+      <ParallaxBg src="/gallery/10.jpg" overlay="dark" speed={0.2} />
+
+      <div className="container relative z-10">
         <div className="text-center">
           <p className="label-gold">Pricing</p>
           <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
@@ -27,13 +30,9 @@ export function PricingSection() {
           <div className="relative flex flex-col border border-[#c9a84c] bg-white p-8">
             <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#c9a84c]">Early Bird</p>
             <div className="mt-3 flex items-baseline">
-              <span className="font-heading text-5xl font-bold text-[#1a1a1a]">
-                $475
-              </span>
+              <span className="font-heading text-5xl font-bold text-[#1a1a1a]">$475</span>
               <span className="ml-2 font-heading text-2xl font-medium text-[#999] line-through">($550)</span>
-              <span className="ml-2 text-xs uppercase tracking-wider text-[#999]">
-                CAD
-              </span>
+              <span className="ml-2 text-xs uppercase tracking-wider text-[#999]">CAD</span>
             </div>
 
             <p className="mt-3 text-sm leading-relaxed text-[#555]">
@@ -50,14 +49,9 @@ export function PricingSection() {
               {features.map((feature) => {
                 const isFreeGift = feature.toLowerCase().includes("ibaadur rahman") || feature.toLowerCase().includes("free");
                 return (
-                  <li
-                    key={feature}
-                    className="flex items-start gap-2.5 text-sm text-[#555]"
-                  >
+                  <li key={feature} className="flex items-start gap-2.5 text-sm text-[#555]">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a84c]" />
-                    <span className={isFreeGift ? "font-bold text-[#c9a84c]" : ""}>
-                      {feature}
-                    </span>
+                    <span className={isFreeGift ? "font-bold text-[#c9a84c]" : ""}>{feature}</span>
                   </li>
                 );
               })}
@@ -76,10 +70,7 @@ export function PricingSection() {
           <p className="flex items-center justify-center gap-2 text-sm text-[var(--text-secondary)]">
             <Mail className="h-4 w-4 text-[var(--gold)]" />
             Installment options available. Email{" "}
-            <a
-              href="mailto:finance@mathabah.org"
-              className="font-semibold text-[var(--gold)] underline underline-offset-4 hover:text-[var(--gold-light)]"
-            >
+            <a href="mailto:finance@mathabah.org" className="font-semibold text-[var(--gold)] underline underline-offset-4 hover:text-[var(--gold-light)]">
               finance@mathabah.org
             </a>
           </p>

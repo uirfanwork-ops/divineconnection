@@ -1,23 +1,14 @@
 import { siteConfig } from "../../../content/site-config";
+import { ParallaxBg } from "@/components/parallax-bg";
 
 export function AboutSection() {
   const { about } = siteConfig;
 
   return (
-    <section id="about" className="relative overflow-hidden bg-dark-green py-24 md:py-32">
-      {/* Bottom-left image with edge gradients */}
-      <div className="pointer-events-none absolute bottom-0 left-0 hidden h-[70%] w-[40%] md:block">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
-          style={{ backgroundImage: "url('/gallery/03.jpg')" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-l from-[#0a1a0a] via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a1a0a] via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a1a0a] via-[#0a1a0a]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1a0a]/30 to-transparent" />
-      </div>
+    <section id="about" className="relative overflow-hidden py-24 md:py-32">
+      <ParallaxBg src="/gallery/04.jpg" overlay="dark" speed={0.2} />
 
-      <div className="container relative">
+      <div className="container relative z-10">
         <div className="grid gap-16 md:grid-cols-2">
           <div>
             <p className="label-gold">{siteConfig.organizerName}</p>

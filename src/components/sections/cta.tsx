@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { siteConfig } from "../../../content/site-config";
+import { ParallaxBg } from "@/components/parallax-bg";
 
 export function CtaSection() {
   const { cta } = siteConfig;
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#0a1a0a] via-[#0d1f0d] to-[var(--bg-primary)] py-24 md:py-32">
-      <div className="absolute inset-0 bg-black/30" />
-      <div className="container relative text-center">
+    <section className="relative overflow-hidden py-24 md:py-32">
+      <ParallaxBg src="/gallery/08.jpg" overlay="dark" speed={0.25} />
+
+      <div className="container relative z-10 text-center">
         <p className="label-gold">Limited Spots</p>
         <h2 className="font-heading mt-4 text-balance text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl lg:text-6xl">
           {cta.title}
