@@ -185,7 +185,7 @@ export function RegistrationsTable({
         <RegistrationDetail
           registration={selectedRow}
           onClose={() => setSelectedRow(null)}
-          onRefresh={() => { router.refresh(); setSelectedRow(null); }}
+          onRefresh={(keepOpen) => { router.refresh(); if (!keepOpen) setSelectedRow(null); }}
         />
       )}
 
@@ -217,10 +217,11 @@ function RegistrationDetail({
 }: {
   registration: Registration;
   onClose: () => void;
-  onRefresh: () => void;
+  onRefresh: (keepOpen?: boolean) => void;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
@@ -253,10 +254,16 @@ function RegistrationDetail({
 
   async function handleSave() {
     setIsSaving(true);
-    await updateRegistrationDetails(registration.id, form);
+    const result = await updateRegistrationDetails(registration.id, form);
     setIsSaving(false);
     setIsEditing(false);
-    onRefresh();
+    if (result.error) {
+      setSaveMessage(`Error: ${result.error}`);
+    } else {
+      setSaveMessage("Saved successfully!");
+      setTimeout(() => setSaveMessage(""), 3000);
+    }
+    onRefresh(true);
   }
 
   async function handleDelete() {
@@ -305,9 +312,17 @@ function RegistrationDetail({
               <Save className="mr-1 h-3 w-3" />{isSaving ? "Saving..." : "Save"}
             </Button>
           )}
+          {isEditing && (
+            <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>Cancel</Button>
+          )}
           <Button variant="ghost" size="sm" onClick={onClose}><X className="h-4 w-4" /></Button>
         </div>
       </div>
+      {saveMessage && (
+        <div className={`mt-2 rounded-md p-2 text-xs font-medium ${saveMessage.startsWith("Error") ? "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300" : "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"}`}>
+          {saveMessage}
+        </div>
+      )}
 
       {/* Editable Fields */}
       <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">

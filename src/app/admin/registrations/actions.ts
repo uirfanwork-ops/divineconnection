@@ -186,7 +186,7 @@ export async function updateRegistrationDetails(
       driving_self: data.driving_self,
       seeking_carpool: data.seeking_carpool,
       photo_consent: data.photo_consent,
-      admin_notes: data.admin_notes || null,
+      admin_notes: data.admin_notes.trim() || null,
     })
     .eq("id", registrationId);
 
