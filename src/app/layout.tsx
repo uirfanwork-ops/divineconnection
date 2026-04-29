@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display } from "next/font/google";
-import localFont from "next/font/local";
+import { Playfair_Display, Lora } from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -9,16 +8,16 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const lora = Lora({
+  subsets: ["latin"],
+  variable: "--font-lora",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Divine Connections: Servants of Allah",
   description:
-    "A transformative Islamic retreat at Mansfield Outdoor Centre. July 31 - August 3, 2026.",
+    "An intensive Islamic academic retreat at Mansfield Outdoor Centre. July 31 - August 3, 2026.",
   keywords: ["Islamic retreat", "Divine Connections", "Servants of Allah"],
 };
 
@@ -30,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${playfair.variable} font-sans antialiased`}
+        className={`${lora.variable} ${playfair.variable} font-serif antialiased`}
       >
         {children}
       </body>

@@ -1,11 +1,11 @@
 import {
-  Bed, UtensilsCrossed, GraduationCap, Gift, Moon, Trees, Handshake, Monitor,
+  Bed, UtensilsCrossed, GraduationCap, Gift, Trees, Handshake,
 } from "lucide-react";
 import { whatIsIncluded } from "../../../content/what-is-included";
 import { ParallaxBg } from "@/components/parallax-bg";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Bed, UtensilsCrossed, GraduationCap, Gift, Moon, Trees, Handshake, Monitor,
+  Bed, UtensilsCrossed, GraduationCap, Gift, Trees, Handshake,
 };
 
 export function WhatIsIncludedSection() {
@@ -21,7 +21,7 @@ export function WhatIsIncludedSection() {
           </h2>
         </div>
 
-        <div className="mt-16 grid gap-px bg-[var(--border-subtle)] sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-16 grid gap-px bg-[var(--border-subtle)] sm:grid-cols-2 lg:grid-cols-3">
           {whatIsIncluded.map((item) => {
             const Icon = iconMap[item.icon];
             return (

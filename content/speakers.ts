@@ -11,8 +11,8 @@ export const speakers: Speaker[] = [
   {
     name: "Sh. Sulaiman Moola",
     title: "Keynote Scholar",
-    bio: "A world renowned scholar whose depth of knowledge and masterful delivery will bring the verses of Surah Al-Furqan to life. His intensive tafsir sessions on the Ibaadur Rahman form the heart of the retreat program.",
-    sessionTitle: "Intensive Tafsir: Ibaadur Rahman (Surah Al-Furqan, 63-76)",
+    bio: "A world-renowned scholar whose depth of knowledge and masterful delivery will bring the verses of Sūrah Al-Furqān to life. His intensive tafsīr sessions on the ʿIbād ul Raḥmān form the heart of the retreat program.",
+    sessionTitle: "Intensive Tafsīr: ʿIbād ul Raḥmān (Sūrah Al-Furqān, 63–76)",
     topics: ["Tafsir", "Spiritual Purification", "Islamic Identity"],
   },
   {
