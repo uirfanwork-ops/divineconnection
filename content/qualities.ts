@@ -8,7 +8,7 @@ export const qualities: Quality[] = [
   {
     title: "Intensive Study",
     description:
-      "Engage in a rigorous and structured tafsīr program centred on the ʿIbād ul Raḥmān verses of Sūrah Al-Furqān, guided by world-class scholars.",
+      "Engage in a rigorous and structured tafsīr program centred on the ʿIbād ur Raḥmān verses of Sūrah Al-Furqān, guided by world-class scholars.",
     icon: "BookOpen",
   },
   {
@@ -18,7 +18,7 @@ export const qualities: Quality[] = [
     icon: "Heart",
   },
   {
-    title: "Brotherhood & Sisterhood",
+    title: "Ṣuḥbah",
     description:
       "Build genuine bonds with fellow Muslim men and women who share your commitment to faith. The Prophet (ﷺ) said: 'A believer to another believer is like a building whose parts support each other.'",
     icon: "Users",
@@ -36,9 +36,9 @@ export const qualities: Quality[] = [
     icon: "Compass",
   },
   {
-    title: "Scholarly Discourse",
+    title: "Scholarly Access",
     description:
-      "Participate in panel discussions, Q&A sessions, and open forums with the scholars. Ask questions, seek clarity, and deepen your understanding of the material.",
+      "Engage directly with our scholars throughout the retreat. Ask questions, seek personal guidance, and deepen your understanding of the material in an intimate learning environment.",
     icon: "Trophy",
   },
 ];

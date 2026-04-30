@@ -3,7 +3,7 @@ export const siteConfig = {
   shortName: "Divine Connections",
   tagline: "Strengthen Your Bond with Allah and Your Brothers & Sisters in Faith",
   description:
-    "An intensive Islamic academic retreat featuring in-depth study of the ʿIbād ul Raḥmān verses, scholarly lectures, and spiritual growth in the embrace of nature.",
+    "An intensive Islamic academic retreat featuring in-depth study of the ʿIbād ur Raḥmān verses, scholarly lectures, and spiritual growth in the embrace of nature.",
   url: "https://divineconnections.ca",
   ogImage: "/og-image.jpg",
   retreatDate: "July 31 - August 3, 2026",
@@ -27,7 +27,7 @@ export const siteConfig = {
     title: "Divine Connections",
     subtitle: "Servants of Allah",
     description:
-      "Join us for an intensive four-day Islamic academic retreat at Mansfield Outdoor Centre. Study under esteemed scholars, immerse yourself in the tafsīr of the ʿIbād ul Raḥmān, and forge bonds of brotherhood and sisterhood that last a lifetime.",
+      "Join us for an intensive four-day Islamic academic retreat at Mansfield Outdoor Centre. Study under esteemed scholars, immerse yourself in the tafsīr of the ʿIbād ur Raḥmān, and forge bonds of ṣuḥbah that last a lifetime.",
     ctaText: "Register Now",
     ctaHref: "/register",
     secondaryCtaText: "View Schedule",
@@ -36,9 +36,9 @@ export const siteConfig = {
   about: {
     title: "About the Retreat",
     description: [
-      "Divine Connections: Servants of Allah is a four-day intensive Islamic academic retreat dedicated to nurturing the spiritual and intellectual growth of Muslim men and women. Set at the beautiful Mansfield Outdoor Centre in Mulmur, Ontario, this retreat offers a rigorous blend of Islamic scholarship, spiritual reflection, and brotherhood and sisterhood in the embrace of nature.",
-      "At the heart of our program is an in-depth tafsīr study of Sūrah Al-Furqān, verses 63 to 76 — the powerful āyāt describing the ʿIbād ul Raḥmān, the Servants of the Most Gracious. These sessions will be delivered by world-renowned scholar Shaykh Sulaiman Moola, whose depth of knowledge and masterful delivery will bring these verses to life. While the classes are intensive and rich in content, they are designed for every Muslim regardless of prior background. The only prerequisite is a serious commitment to show up, engage, and grow.",
-      "Alongside the tafsīr program, you will experience interactive workshops, guided dhikr sessions, and reflective nature walks that bring you closer to Allāh's creation.",
+      "Divine Connections: Servants of Allah is a four-day intensive Islamic academic retreat dedicated to nurturing the spiritual and intellectual growth of Muslim men and women. Set at the beautiful Mansfield Outdoor Centre in Mulmur, Ontario, this retreat offers a rigorous blend of Islamic scholarship, spiritual reflection, and ṣuḥbah in the embrace of nature.",
+      "At the heart of our program is an in-depth tafsīr study of Sūrah Al-Furqān, verses 63 to 76 — the powerful āyāt describing the ʿIbād ur Raḥmān, the Slaves of the Most Merciful. These sessions will be delivered by world-renowned scholar Shaykh Sulaiman Moola, whose depth of knowledge and masterful delivery will bring these verses to life. While the classes are intensive and rich in content, they are designed for every Muslim regardless of prior background. The only prerequisite is a serious commitment to show up, engage, and grow.",
+      "Alongside the tafsīr program, you will experience Tafsīr studies, academic insight into various Islamic sciences, dhikr guide and reflective nature hike.",
       "Step away from the distractions of daily life. Immerse yourself in focused study, meaningful discourse, and leave with a renewed heart and practical tools to strengthen your dīn long after the retreat ends.",
     ],
   },

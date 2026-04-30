@@ -20,7 +20,7 @@ export const whatIsIncluded: IncludedItem[] = [
   {
     title: "Lectures & Workshops",
     description:
-      "Full access to all scholarly lectures, intensive tafsīr classes, interactive workshops, panel discussions, and Q&A sessions with our esteemed speakers.",
+      "Full access to all scholarly lectures, intensive tafsīr classes, and academic sessions with our esteemed speakers.",
     icon: "GraduationCap",
   },
   {
@@ -36,9 +36,9 @@ export const whatIsIncluded: IncludedItem[] = [
     icon: "Trees",
   },
   {
-    title: "Ṣuḥbā",
+    title: "Prayer Facilities",
     description:
-      "Structured and informal opportunities to connect with fellow attendees, scholars, and community leaders. Build your brotherhood and sisterhood network.",
+      "Dedicated prayer space with wuḍū facilities available throughout the retreat. All five daily prayers performed in congregation.",
     icon: "Handshake",
   },
 ];

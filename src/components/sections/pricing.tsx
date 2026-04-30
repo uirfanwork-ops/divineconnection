@@ -3,7 +3,7 @@ import { Check, Mail } from "lucide-react";
 import { ParallaxBg } from "@/components/parallax-bg";
 
 const features = [
-  "FREE ʿIbād ul Raḥmān verses print poster",
+  "FREE ʿIbād ur Raḥmān verses print poster",
   "Shared dormitory accommodation (4-6 per room)",
   "All halal meals included",
   "Full access to lectures and workshops",
@@ -47,7 +47,7 @@ export function PricingSection() {
 
             <ul className="mb-8 flex-1 space-y-3">
               {features.map((feature) => {
-                const isFreeGift = feature.includes("ʿIbād ul Raḥmān") || feature.toLowerCase().includes("free");
+                const isFreeGift = feature.includes("ʿIbād ur Raḥmān") || feature.toLowerCase().includes("free");
                 return (
                   <li key={feature} className="flex items-start gap-2.5 text-sm text-[#555]">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a84c]" />
