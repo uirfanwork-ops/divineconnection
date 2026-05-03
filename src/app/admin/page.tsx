@@ -26,21 +26,34 @@ async function getDashboardData() {
 
   const { data: registrations } = await supabase
     .from("registrations")
-    .select("id, status, payment_status, amount_cents, currency")
+    .select("id, status, payment_status, amount_cents, currency, admin_notes")
     .order("created_at", { ascending: false });
 
   const rows = registrations ?? [];
 
   const paid = rows.filter((r) => r.payment_status === "completed").length;
-  const pending = rows.filter((r) => r.payment_status === "pending").length;
-  const cancelled = rows.filter((r) => r.status === "cancelled").length;
-  const revenueCents = rows
+  const cancelled = rows.filter(
+    (r) => r.status === "cancelled" || r.status === "refunded"
+  ).length;
+  const partialPayment = rows.filter(
+    (r) => r.status === "confirmed" && r.payment_status === "pending"
+  ).length;
+  const pendingPayment = rows.filter(
+    (r) => r.payment_status === "pending" && r.status !== "cancelled" && r.status !== "refunded" && r.status !== "confirmed"
+  ).length;
+
+  const fullRevenueCents = rows
     .filter((r) => r.payment_status === "completed")
     .reduce((sum, r) => sum + r.amount_cents, 0);
 
-  const confirmedCount = rows.filter(
-    (r) => r.status !== "cancelled" && r.status !== "refunded"
-  ).length;
+  const partialRevenueCents = rows
+    .filter((r) => r.status === "confirmed" && r.payment_status === "pending" && r.admin_notes)
+    .reduce((sum, r) => {
+      const match = r.admin_notes?.match(/Amount deposited: \$(\d+(?:\.\d+)?)/);
+      return sum + (match ? Math.round(parseFloat(match[1]) * 100) : 0);
+    }, 0);
+
+  const seatsTaken = paid + partialPayment;
 
   const { data: recent } = await supabase
     .from("registrations")
@@ -52,10 +65,11 @@ async function getDashboardData() {
     kpi: {
       totalRegistrations: rows.length,
       paid,
-      pending,
+      pendingPayment,
       cancelled,
-      revenueCents,
-      seatsRemaining: Math.max(0, MAX_SEATS - confirmedCount),
+      partialPayment,
+      revenueCents: fullRevenueCents + partialRevenueCents,
+      seatsRemaining: Math.max(0, MAX_SEATS - seatsTaken),
     },
     recentRegistrations: recent ?? [],
   };
@@ -66,9 +80,10 @@ export default async function AdminDashboardPage() {
 
   const kpiCards = [
     { title: "Total Registrations", value: kpi.totalRegistrations, icon: Users, color: "text-blue-600" },
-    { title: "Paid", value: kpi.paid, icon: CheckCircle2, color: "text-green-600" },
-    { title: "Pending Payment", value: kpi.pending, icon: Clock, color: "text-amber-600" },
-    { title: "Cancelled", value: kpi.cancelled, icon: XCircle, color: "text-red-600" },
+    { title: "Fully Paid", value: kpi.paid, icon: CheckCircle2, color: "text-green-600" },
+    { title: "Pending Payment", value: kpi.pendingPayment, icon: Clock, color: "text-amber-600" },
+    { title: "Partial Payment", value: kpi.partialPayment, icon: DollarSign, color: "text-orange-600" },
+    { title: "Cancelled / Refunded", value: kpi.cancelled, icon: XCircle, color: "text-red-600" },
     { title: "Revenue", value: formatCents(kpi.revenueCents, "CAD"), icon: DollarSign, color: "text-emerald-600" },
     { title: "Seats Remaining", value: `${kpi.seatsRemaining} / ${MAX_SEATS}`, icon: Ticket, color: "text-sky-600" },
   ];

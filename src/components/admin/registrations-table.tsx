@@ -294,9 +294,15 @@ function RegistrationDetail({
     } else if (selectedStatus === "partial_payment") {
       if (!paymentDate || !amountDeposited) { setIsSavingStatus(false); return; }
       await updateRegistrationStatus(registration.id, "confirmed");
-      await updatePaymentStatus(registration.id, "pending", {
-        payment_received_date: paymentDate,
-        amount_deposited: Math.round(parseFloat(amountDeposited) * 100),
+      await updatePaymentStatus(registration.id, "pending");
+      const notes = [
+        `Partial payment confirmed by admin on ${new Date().toLocaleDateString()}`,
+        `E-Transfer received: ${paymentDate}`,
+        `Amount deposited: $${parseFloat(amountDeposited).toFixed(2)}`,
+      ].join("\n");
+      await updateRegistrationDetails(registration.id, {
+        ...form,
+        admin_notes: notes,
       });
     } else {
       await updateRegistrationStatus(registration.id, "pending");
