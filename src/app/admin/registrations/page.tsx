@@ -39,11 +39,13 @@ export default async function RegistrationsPage({
     );
   }
 
-  if (statusFilter) {
+  if (statusFilter === "cancelled_refunded") {
+    query = query.in("status", ["cancelled", "refunded"]);
+  } else if (statusFilter) {
     query = query.eq("status", statusFilter as RegistrationStatus);
   }
 
-  if (paymentFilter) {
+  if (paymentFilter && paymentFilter !== "partial") {
     query = query.eq("payment_status", paymentFilter as PaymentStatus);
   }
 

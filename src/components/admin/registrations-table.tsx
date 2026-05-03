@@ -91,10 +91,10 @@ export function RegistrationsTable({
       {/* Quick Filter Buttons */}
       <div className="flex flex-wrap gap-2">
         <Button variant={!paymentFilter && !statusFilter ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "", status: "", page: "" })}>All</Button>
-        <Button variant={statusFilter === "pending" && !paymentFilter ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "pending", payment: "", page: "" })}>Pending</Button>
-        <Button variant={paymentFilter === "completed" ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "completed", status: "", page: "" })}>Paid</Button>
-        <Button variant={statusFilter === "cancelled" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "cancelled", payment: "", page: "" })}>Cancelled / Refunded</Button>
-        <Button variant={paymentFilter === "partial" ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "partial", status: "", page: "" })}>Partial Payment</Button>
+        <Button variant={statusFilter === "pending" && paymentFilter === "pending" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "pending", payment: "pending", page: "" })}>Pending</Button>
+        <Button variant={paymentFilter === "completed" && !statusFilter ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "completed", status: "", page: "" })}>Paid</Button>
+        <Button variant={statusFilter === "cancelled_refunded" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "cancelled_refunded", payment: "", page: "" })}>Cancelled / Refunded</Button>
+        <Button variant={statusFilter === "confirmed" && paymentFilter === "pending" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "confirmed", payment: "pending", page: "" })}>Partial Payment</Button>
       </div>
 
       {/* Search and Filters */}
@@ -115,16 +115,12 @@ export function RegistrationsTable({
           <option value="">All statuses</option>
           <option value="pending">Pending</option>
           <option value="confirmed">Confirmed</option>
-          <option value="cancelled">Cancelled</option>
-          <option value="refunded">Refunded</option>
-          <option value="waitlisted">Waitlisted</option>
+          <option value="cancelled_refunded">Cancelled / Refunded</option>
         </SelectNative>
         <SelectNative value={paymentFilter} onChange={(e) => updateParams({ payment: e.target.value, page: "" })} className="w-40">
           <option value="">All payments</option>
-          <option value="pending">Pending</option>
-          <option value="completed">Completed</option>
-          <option value="failed">Failed</option>
-          <option value="refunded">Refunded</option>
+          <option value="pending">Unpaid</option>
+          <option value="completed">Paid</option>
         </SelectNative>
         <Button variant="outline" size="sm" onClick={handleExport}>
           <Download className="mr-1 h-4 w-4" />CSV
