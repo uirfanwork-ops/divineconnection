@@ -37,15 +37,15 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
                 style={{ top: `${80 + idx * 24}px` }}
               >
                 <div className="flex flex-col overflow-hidden border border-[#d4c9a8] bg-[#f5f0e6] shadow-lg md:flex-row">
-                  {/* Speaker Image */}
-                  <div className="relative h-64 w-full shrink-0 md:h-auto md:w-56">
+                  {/* Speaker Image - hidden on mobile */}
+                  <div className="relative hidden w-56 shrink-0 md:block md:h-auto">
                     {imgSrc && (
                       <Image
                         src={imgSrc}
                         alt={speaker.name}
                         fill
                         className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 224px"
+                        sizes="224px"
                         unoptimized
                       />
                     )}
@@ -63,7 +63,7 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
                     {speaker.sessionTitle && (
                       <div className="mt-3 flex items-start gap-2">
                         <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a84c]" />
-                        <p className="text-sm font-semibold leading-snug text-[#8a7535]">
+                        <p className="font-heading text-lg font-bold leading-snug text-[#8a7535] md:text-xl">
                           {speaker.sessionTitle}
                         </p>
                       </div>
