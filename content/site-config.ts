@@ -38,7 +38,6 @@ export const siteConfig = {
     description: [
       "Divine Connections: Servants of the Most Merciful is a four-day intensive Islamic academic retreat dedicated to nurturing the spiritual and intellectual growth of Muslim men and women. Set at the beautiful Mansfield Outdoor Centre in Mulmur, Ontario, this retreat offers a rigorous blend of Islamic scholarship, spiritual reflection, and ṣuḥbah in the embrace of nature.",
       "At the heart of our program is an in-depth tafsīr study of Sūrah Al-Furqān, verses 63 to 76 — the powerful āyāt describing the ʿIbād ur Raḥmān, the Servants of the Most Merciful. These sessions will be delivered by world-renowned scholar Shaykh Sulaiman Moola, whose depth of knowledge and masterful delivery will bring these verses to life. While the classes are intensive and rich in content, they are designed for every Muslim regardless of prior background. The only prerequisite is a serious commitment to show up, engage, and grow.",
-      "Alongside the tafsīr program, you will experience Tafsīr studies, academic insight into various Islamic sciences, dhikr guide and reflective nature hike.",
       "Step away from the distractions of daily life. Immerse yourself in focused study, meaningful discourse, and leave with a renewed heart and practical tools to strengthen your dīn long after the retreat ends.",
     ],
   },
