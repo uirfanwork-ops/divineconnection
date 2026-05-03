@@ -20,7 +20,7 @@ export const qualities: Quality[] = [
   {
     title: "Ṣuḥbah",
     description:
-      "Build genuine bonds with fellow Muslim men and women who share your commitment to faith. The Prophet (ﷺ) said: 'A believer to another believer is like a building whose parts support each other.'",
+      "Build genuine bonds with fellow Muslim men and women who share your commitment to faith. The Prophet (ﷺ) said: 'A believer to another believer is like a building whose parts support each other.' (Bukhāri)",
     icon: "Users",
   },
   {
