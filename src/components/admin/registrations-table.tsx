@@ -47,6 +47,14 @@ export function RegistrationsTable({
   const [searchInput, setSearchInput] = useState(search);
   const [selectedRow, setSelectedRow] = useState<Registration | null>(null);
 
+  function setFilter(status: string, payment: string) {
+    const params = new URLSearchParams();
+    if (status) params.set("status", status);
+    if (payment) params.set("payment", payment);
+    if (searchInput) params.set("search", searchInput);
+    router.push(`/admin/registrations?${params.toString()}`);
+  }
+
   function updateParams(updates: Record<string, string>) {
     const params = new URLSearchParams(searchParams.toString());
     for (const [key, value] of Object.entries(updates)) {
@@ -89,12 +97,12 @@ export function RegistrationsTable({
     <div className="space-y-4">
       {/* Quick Filter Buttons */}
       <div className="flex flex-wrap gap-2">
-        <Button variant={!paymentFilter && !statusFilter ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "", status: "", page: "" })}>All</Button>
-        <Button variant={statusFilter === "pending" && paymentFilter === "pending" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "pending", payment: "pending", page: "" })}>Pending</Button>
-        <Button variant={paymentFilter === "completed" && !statusFilter ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "completed", status: "", page: "" })}>Paid</Button>
-        <Button variant={statusFilter === "cancelled_refunded" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "cancelled_refunded", payment: "", page: "" })}>Cancelled / Refunded</Button>
-        <Button variant={statusFilter === "confirmed" && paymentFilter === "pending" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "confirmed", payment: "pending", page: "" })}>Partial Payment</Button>
-        <Button variant={statusFilter === "waitlisted" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "waitlisted", payment: "", page: "" })}>Staff / Guest</Button>
+        <Button variant={!paymentFilter && !statusFilter ? "default" : "outline"} size="sm" onClick={() => setFilter("", "")}>All</Button>
+        <Button variant={statusFilter === "pending" && paymentFilter === "pending" ? "default" : "outline"} size="sm" onClick={() => setFilter("pending", "pending")}>Pending</Button>
+        <Button variant={paymentFilter === "completed" && !statusFilter ? "default" : "outline"} size="sm" onClick={() => setFilter("", "completed")}>Paid</Button>
+        <Button variant={statusFilter === "cancelled_refunded" ? "default" : "outline"} size="sm" onClick={() => setFilter("cancelled_refunded", "")}>Cancelled / Refunded</Button>
+        <Button variant={statusFilter === "confirmed" && paymentFilter === "pending" ? "default" : "outline"} size="sm" onClick={() => setFilter("confirmed", "pending")}>Partial Payment</Button>
+        <Button variant={statusFilter === "waitlisted" ? "default" : "outline"} size="sm" onClick={() => setFilter("waitlisted", "")}>Staff / Guest</Button>
       </div>
 
       {/* Search and Filters */}

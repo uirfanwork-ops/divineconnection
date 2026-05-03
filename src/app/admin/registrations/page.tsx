@@ -45,7 +45,7 @@ export default async function RegistrationsPage({
     query = query.eq("status", statusFilter as RegistrationStatus);
   }
 
-  if (paymentFilter && paymentFilter !== "partial") {
+  if (paymentFilter) {
     query = query.eq("payment_status", paymentFilter as PaymentStatus);
   }
 
