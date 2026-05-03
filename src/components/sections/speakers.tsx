@@ -8,8 +8,8 @@ import { ParallaxBg } from "@/components/parallax-bg";
 const speakerImages: Record<string, string> = {
   "sulaiman-moola": "/gallery/speakers/sh-sulaiman.jpg",
   "omar-subedar": "/gallery/speakers/sh-omar.jpg",
-  "yusuf-badat": "/gallery/speakers/sh-yusuf.jpg",
-  "hassan-syed": "/gallery/speakers/sh-hassan.jpg",
+  "yusuf-badat": "/gallery/speakers/mufti-yusuf.jpg",
+  "hassan-syed": "/gallery/speakers/ust-hassan.jpg",
   "shariq-lodhi": "/gallery/speakers/dr-shariq.jpg",
 };
 
