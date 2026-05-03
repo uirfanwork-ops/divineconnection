@@ -65,6 +65,11 @@ export const faq: FaqItem[] = [
       "The retreat is designed as a complete academic experience, and we strongly recommend attending all four days. However, if circumstances require it, please contact us at admin@mathabah.org to discuss partial attendance options.",
   },
   {
+    question: "When is check-in and check-out?",
+    answer:
+      "Check-in will be at 6 PM on Friday, July 31st, 2026, and check-out will be Monday 2 PM, August 3rd, 2026.",
+  },
+  {
     question: "I have a medical condition. Can I still attend?",
     answer:
       "We want to accommodate everyone. Please note any medical conditions during registration so we can make appropriate arrangements. If you have specific concerns, reach out to us before registering and we will do our best to help.",
