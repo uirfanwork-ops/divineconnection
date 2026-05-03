@@ -7,9 +7,6 @@ export type { Quality } from "./qualities";
 export { schedule } from "./schedule";
 export type { ScheduleDay, ScheduleEvent } from "./schedule";
 
-export { speakers } from "./speakers";
-export type { Speaker } from "./speakers";
-
 export { faq } from "./faq";
 export type { FaqItem } from "./faq";
 

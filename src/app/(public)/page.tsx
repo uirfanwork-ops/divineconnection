@@ -8,15 +8,18 @@ import { WhatIsIncludedSection } from "@/components/sections/what-is-included";
 import { FaqSection } from "@/components/sections/faq";
 import { PricingSection } from "@/components/sections/pricing";
 import { CtaSection } from "@/components/sections/cta";
+import { getSpeakers } from "@/lib/speakers";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const speakers = await getSpeakers();
+
   return (
     <>
       <HeroSection />
       <GalleryMarquee />
       <AboutSection />
       <QualitiesSection />
-      <SpeakersSection />
+      <SpeakersSection speakers={speakers} />
       <VenueSection />
       <WhatIsIncludedSection />
       <FaqSection />

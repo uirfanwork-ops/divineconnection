@@ -1,19 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { speakers } from "../../../content/speakers";
+import type { Speaker } from "@/lib/speakers";
 import { User, BookOpen } from "lucide-react";
 import { ParallaxBg } from "@/components/parallax-bg";
 
 const speakerImages: Record<string, string> = {
-  "Sh. Sulaiman Moola": "/gallery/speakers/sh-sulaiman.jpg",
-  "Sh. Omar": "/gallery/speakers/sh-omar.jpg",
-  "Sh. Yusuf": "/gallery/speakers/sh-yusuf.jpg",
-  "Sh. Sohaib": "/gallery/speakers/sh-sohaib.jpg",
-  "Dr. Shariq": "/gallery/speakers/dr-shariq.jpg",
+  "sulaiman-moola": "/gallery/speakers/sh-sulaiman.jpg",
+  "omar-subedar": "/gallery/speakers/sh-omar.jpg",
+  "yusuf-badat": "/gallery/speakers/sh-yusuf.jpg",
+  "hassan-syed": "/gallery/speakers/sh-hassan.jpg",
+  "shariq-lodhi": "/gallery/speakers/dr-shariq.jpg",
 };
 
-export function SpeakersSection() {
+export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
   return (
     <section id="speakers" className="relative overflow-hidden py-24 md:py-32">
       <ParallaxBg src="/gallery/031.jpeg" overlay="dark" speed={0.2} />
@@ -28,10 +28,10 @@ export function SpeakersSection() {
 
         <div className="mt-16 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {speakers.map((speaker) => {
-            const imgSrc = speakerImages[speaker.name];
+            const imgSrc = speakerImages[speaker.id];
             return (
               <div
-                key={speaker.name}
+                key={speaker.id}
                 className="border border-[var(--border-subtle)] bg-[#0a0f0a]/90 backdrop-blur-sm transition-colors hover:border-[var(--border-color)]"
               >
                 <div className="relative flex h-52 items-center justify-center overflow-hidden bg-gradient-to-br from-[#0d150d] to-[#050a05]">
@@ -58,7 +58,7 @@ export function SpeakersSection() {
                 </div>
 
                 <div className="p-5">
-                  <p className="label-gold text-[10px]">{speaker.title}</p>
+                  <p className="label-gold text-[10px]">{speaker.category}</p>
                   <h3 className="font-heading mt-1 text-lg font-bold uppercase tracking-wide text-[var(--text-primary)]">
                     {speaker.name}
                   </h3>
@@ -73,7 +73,7 @@ export function SpeakersSection() {
                   )}
 
                   <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
-                    {speaker.bio}
+                    {speaker.description}
                   </p>
                 </div>
               </div>
