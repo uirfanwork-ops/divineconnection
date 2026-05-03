@@ -70,6 +70,11 @@ export const faq: FaqItem[] = [
       "Check-in will be at 6 PM on Friday, July 31st, 2026, and check-out will be Monday 2 PM, August 3rd, 2026.",
   },
   {
+    question: "Are there separate arrangements for brothers and sisters?",
+    answer:
+      "Yes. Classes and lectures are held together in a shared hall. Separate accommodations and dining arrangements are provided for brothers and sisters. Additionally, sisters will have exclusive Q&A sessions with the scholars.",
+  },
+  {
     question: "I have a medical condition. Can I still attend?",
     answer:
       "We want to accommodate everyone. Please note any medical conditions during registration so we can make appropriate arrangements. If you have specific concerns, reach out to us before registering and we will do our best to help.",
