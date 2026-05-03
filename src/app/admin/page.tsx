@@ -7,6 +7,7 @@ import {
   XCircle,
   DollarSign,
   Ticket,
+  UserCheck,
 } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/service";
 import { formatCents } from "@/lib/utils";
@@ -31,7 +32,8 @@ async function getDashboardData() {
 
   const rows = registrations ?? [];
 
-  const paid = rows.filter((r) => r.payment_status === "completed").length;
+  const staffGuest = rows.filter((r) => r.status === "waitlisted").length;
+  const paid = rows.filter((r) => r.payment_status === "completed" && r.status !== "waitlisted").length;
   const cancelled = rows.filter(
     (r) => r.status === "cancelled" || r.status === "refunded"
   ).length;
@@ -39,11 +41,11 @@ async function getDashboardData() {
     (r) => r.status === "confirmed" && r.payment_status === "pending"
   ).length;
   const pendingPayment = rows.filter(
-    (r) => r.payment_status === "pending" && r.status !== "cancelled" && r.status !== "refunded" && r.status !== "confirmed"
+    (r) => r.payment_status === "pending" && r.status !== "cancelled" && r.status !== "refunded" && r.status !== "confirmed" && r.status !== "waitlisted"
   ).length;
 
   const fullRevenueCents = rows
-    .filter((r) => r.payment_status === "completed")
+    .filter((r) => r.payment_status === "completed" && r.status !== "waitlisted")
     .reduce((sum, r) => sum + r.amount_cents, 0);
 
   const partialRevenueCents = rows
@@ -71,6 +73,7 @@ async function getDashboardData() {
       totalRegistrations: rows.length,
       paid,
       pendingPayment,
+      staffGuest,
       cancelled,
       partialPayment,
       revenueCents: fullRevenueCents + partialRevenueCents,
@@ -89,6 +92,7 @@ export default async function AdminDashboardPage() {
     { title: "Pending Payment", value: kpi.pendingPayment, icon: Clock, color: "text-amber-600" },
     { title: "Partial Payment", value: kpi.partialPayment, icon: DollarSign, color: "text-orange-600" },
     { title: "Cancelled / Refunded", value: kpi.cancelled, icon: XCircle, color: "text-red-600" },
+    { title: "Staff / Guest", value: kpi.staffGuest, icon: UserCheck, color: "text-purple-600" },
     { title: "Revenue", value: formatCents(kpi.revenueCents, "CAD"), icon: DollarSign, color: "text-emerald-600" },
     { title: "Seats Remaining", value: `${kpi.seatsRemaining} / ${MAX_SEATS}`, icon: Ticket, color: "text-sky-600" },
   ];

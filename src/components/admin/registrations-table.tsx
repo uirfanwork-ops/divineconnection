@@ -95,6 +95,7 @@ export function RegistrationsTable({
         <Button variant={paymentFilter === "completed" && !statusFilter ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "completed", status: "", page: "" })}>Paid</Button>
         <Button variant={statusFilter === "cancelled_refunded" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "cancelled_refunded", payment: "", page: "" })}>Cancelled / Refunded</Button>
         <Button variant={statusFilter === "confirmed" && paymentFilter === "pending" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "confirmed", payment: "pending", page: "" })}>Partial Payment</Button>
+        <Button variant={statusFilter === "waitlisted" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "waitlisted", payment: "", page: "" })}>Staff / Guest</Button>
       </div>
 
       {/* Search and Filters */}
@@ -116,6 +117,7 @@ export function RegistrationsTable({
           <option value="pending">Pending</option>
           <option value="confirmed">Confirmed</option>
           <option value="cancelled_refunded">Cancelled / Refunded</option>
+          <option value="waitlisted">Staff / Guest</option>
         </SelectNative>
         <SelectNative value={paymentFilter} onChange={(e) => updateParams({ payment: e.target.value, page: "" })} className="w-40">
           <option value="">All payments</option>
@@ -224,7 +226,8 @@ function RegistrationDetail({
   const [selectedStatus, setSelectedStatus] = useState(() => {
     if (registration.payment_status === "completed") return "fully_paid";
     if (registration.status === "cancelled" || registration.status === "refunded") return "cancelled_refunded";
-    if (registration.payment_status === "pending" && registration.admin_notes?.includes("Partial")) return "partial_payment";
+    if (registration.status === "confirmed" && registration.payment_status === "pending") return "partial_payment";
+    if (registration.status === "waitlisted") return "staff_guest";
     return "pending";
   });
   const [showPaymentForm, setShowPaymentForm] = useState(false);
@@ -332,6 +335,9 @@ function RegistrationDetail({
         ...form,
         admin_notes: updatedNotes,
       });
+    } else if (selectedStatus === "staff_guest") {
+      await updateRegistrationStatus(registration.id, "waitlisted");
+      await updatePaymentStatus(registration.id, "completed");
     } else {
       await updateRegistrationStatus(registration.id, "pending");
       await updatePaymentStatus(registration.id, "pending");
@@ -425,6 +431,7 @@ function RegistrationDetail({
             <option value="fully_paid">Mark as Fully Paid</option>
             <option value="cancelled_refunded">Cancelled / Refunded</option>
             <option value="partial_payment">Partial Payment</option>
+            <option value="staff_guest">Staff / Guest</option>
           </SelectNative>
         </div>
 
