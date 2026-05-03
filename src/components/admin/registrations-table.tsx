@@ -17,7 +17,7 @@ import {
   sendPaymentReminder,
   exportRegistrationsCsv,
 } from "@/app/admin/registrations/actions";
-import type { Database, RegistrationStatus } from "@/types/database";
+import type { Database } from "@/types/database";
 import { Search, Download, ChevronLeft, ChevronRight, X, Pencil, Save, Trash2, Mail } from "lucide-react";
 
 type Registration = Database["public"]["Tables"]["registrations"]["Row"];
@@ -224,10 +224,16 @@ function RegistrationDetail({
   const [saveMessage, setSaveMessage] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(() => {
+    if (registration.payment_status === "completed") return "fully_paid";
+    if (registration.status === "cancelled" || registration.status === "refunded") return "cancelled_refunded";
+    if (registration.payment_status === "pending" && registration.admin_notes?.includes("Partial")) return "partial_payment";
+    return "pending";
+  });
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [paymentDate, setPaymentDate] = useState("");
   const [amountDeposited, setAmountDeposited] = useState("");
-  const [isConfirming, setIsConfirming] = useState(false);
+  const [isSavingStatus, setIsSavingStatus] = useState(false);
 
   const [form, setForm] = useState({
     full_name: registration.full_name,
@@ -273,24 +279,29 @@ function RegistrationDetail({
     onRefresh();
   }
 
-  async function handleStatusChange(status: RegistrationStatus) {
-    await updateRegistrationStatus(registration.id, status);
-    onRefresh();
-  }
-
-  async function handleConfirmPayment() {
-    if (!paymentDate || !amountDeposited) return;
-    setIsConfirming(true);
-    await updatePaymentStatus(registration.id, "completed", {
-      payment_received_date: paymentDate,
-      amount_deposited: Math.round(parseFloat(amountDeposited) * 100),
-    });
-    setIsConfirming(false);
-    onRefresh();
-  }
-
-  async function handleMarkUnpaid() {
-    await updatePaymentStatus(registration.id, "pending");
+  async function handleSaveStatus() {
+    setIsSavingStatus(true);
+    if (selectedStatus === "fully_paid") {
+      if (!paymentDate || !amountDeposited) { setIsSavingStatus(false); return; }
+      await updatePaymentStatus(registration.id, "completed", {
+        payment_received_date: paymentDate,
+        amount_deposited: Math.round(parseFloat(amountDeposited) * 100),
+      });
+    } else if (selectedStatus === "cancelled_refunded") {
+      await updateRegistrationStatus(registration.id, "cancelled");
+      await updatePaymentStatus(registration.id, "refunded");
+    } else if (selectedStatus === "partial_payment") {
+      if (!paymentDate || !amountDeposited) { setIsSavingStatus(false); return; }
+      await updateRegistrationStatus(registration.id, "confirmed");
+      await updatePaymentStatus(registration.id, "pending", {
+        payment_received_date: paymentDate,
+        amount_deposited: Math.round(parseFloat(amountDeposited) * 100),
+      });
+    } else {
+      await updateRegistrationStatus(registration.id, "pending");
+      await updatePaymentStatus(registration.id, "pending");
+    }
+    setIsSavingStatus(false);
     onRefresh();
   }
 
@@ -363,60 +374,51 @@ function RegistrationDetail({
         <EditableTextarea label="Admin Notes" value={form.admin_notes} editing={isEditing} onChange={(v) => updateField("admin_notes", v)} fullWidth />
       </div>
 
-      {/* Status & Payment Controls */}
+      {/* Status Controls */}
       <div className="mt-6 space-y-4 border-t pt-4">
-        <div className="flex flex-wrap gap-3">
-          <div>
-            <Label className="mb-1 block text-xs text-muted-foreground">Registration Status</Label>
-            <SelectNative value={registration.status} onChange={(e) => handleStatusChange(e.target.value as RegistrationStatus)} className="w-36">
-              <option value="pending">Pending</option>
-              <option value="confirmed">Confirmed</option>
-              <option value="cancelled">Cancelled</option>
-              <option value="refunded">Refunded</option>
-              <option value="waitlisted">Waitlisted</option>
-            </SelectNative>
-          </div>
-
-          {registration.payment_status !== "completed" ? (
-            <div>
-              <Label className="mb-1 block text-xs text-muted-foreground">Payment</Label>
-              <Button variant="default" size="sm" onClick={() => setShowPaymentForm(true)} className="bg-green-600 hover:bg-green-700">Mark as Paid</Button>
-            </div>
-          ) : (
-            <>
-              <div>
-                <Label className="mb-1 block text-xs text-muted-foreground">Payment</Label>
-                <Badge variant="default" className="mt-1 bg-green-600 text-sm">PAID</Badge>
-              </div>
-              <div>
-                <Label className="mb-1 block text-xs text-muted-foreground">Revert</Label>
-                <Button variant="outline" size="sm" onClick={handleMarkUnpaid}>Mark Unpaid</Button>
-              </div>
-            </>
-          )}
+        <div>
+          <Label className="mb-1 block text-xs text-muted-foreground">Registration Status</Label>
+          <SelectNative
+            value={selectedStatus}
+            onChange={(e) => {
+              setSelectedStatus(e.target.value);
+              setShowPaymentForm(e.target.value === "fully_paid" || e.target.value === "partial_payment");
+            }}
+            className="w-52"
+          >
+            <option value="pending">Pending</option>
+            <option value="fully_paid">Mark as Fully Paid</option>
+            <option value="cancelled_refunded">Cancelled / Refunded</option>
+            <option value="partial_payment">Partial Payment</option>
+          </SelectNative>
         </div>
 
         {showPaymentForm && (
-          <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-900 dark:bg-green-950">
-            <h4 className="mb-3 text-sm font-semibold text-green-800 dark:text-green-200">Confirm Payment Received</h4>
+          <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+            <h4 className="mb-3 text-sm font-semibold text-green-800">
+              {selectedStatus === "fully_paid" ? "Full Payment Details" : "Partial Payment Details"}
+            </h4>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <Label className="mb-1 block text-xs text-green-700 dark:text-green-300">Date e-Transfer Received *</Label>
+                <Label className="mb-1 block text-xs text-green-700">Date e-Transfer Received *</Label>
                 <Input type="date" value={paymentDate} onChange={(e) => setPaymentDate(e.target.value)} />
               </div>
               <div>
-                <Label className="mb-1 block text-xs text-green-700 dark:text-green-300">Amount Deposited ($) *</Label>
+                <Label className="mb-1 block text-xs text-green-700">Amount Deposited ($) *</Label>
                 <Input type="number" step="0.01" min="0" placeholder="475.00" value={amountDeposited} onChange={(e) => setAmountDeposited(e.target.value)} />
               </div>
             </div>
-            <div className="mt-3 flex gap-2">
-              <Button size="sm" disabled={!paymentDate || !amountDeposited || isConfirming} onClick={handleConfirmPayment} className="bg-green-600 hover:bg-green-700">
-                {isConfirming ? "Confirming..." : "Confirm Payment"}
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => setShowPaymentForm(false)}>Cancel</Button>
-            </div>
           </div>
         )}
+
+        <Button
+          size="sm"
+          disabled={isSavingStatus || ((selectedStatus === "fully_paid" || selectedStatus === "partial_payment") && (!paymentDate || !amountDeposited))}
+          onClick={handleSaveStatus}
+        >
+          <Save className="mr-1 h-3 w-3" />
+          {isSavingStatus ? "Saving..." : "Save Status"}
+        </Button>
 
         {/* Delete */}
         <div className="mt-4 border-t pt-4">
