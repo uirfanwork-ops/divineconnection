@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import type { Speaker } from "@/lib/speakers";
-import { User, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { ParallaxBg } from "@/components/parallax-bg";
 
 const speakerImages: Record<string, string> = {
@@ -13,7 +13,6 @@ const speakerImages: Record<string, string> = {
   "shariq-lodhi": "/gallery/speakers/dr-shariq.jpg",
 };
 
-const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
 
 export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
   return (
@@ -39,30 +38,17 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
               >
                 <div className="flex flex-col overflow-hidden border border-[#d4c9a8] bg-[#f5f0e6] shadow-lg md:flex-row">
                   {/* Left: Medallion / Image */}
-                  <div className="relative flex w-full shrink-0 items-center justify-center bg-gradient-to-br from-[#0d150d] to-[#0a1a0a] p-8 md:w-56 md:p-0">
+                  <div className="relative hidden w-56 shrink-0 md:block">
                     {imgSrc && (
                       <Image
                         src={imgSrc}
                         alt={speaker.name}
                         fill
-                        className="object-cover opacity-0 transition-opacity duration-300"
+                        className="object-cover"
                         sizes="224px"
                         unoptimized
-                        onLoad={(e) => {
-                          (e.target as HTMLImageElement).classList.remove("opacity-0");
-                          (e.target as HTMLImageElement).classList.add("opacity-100");
-                        }}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = "none";
-                        }}
                       />
                     )}
-                    <div className="relative flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-[#c9a84c]/40">
-                      <span className="font-heading text-2xl font-bold text-[#c9a84c]">
-                        {romanNumerals[idx]}
-                      </span>
-                      <User className="mt-1 h-6 w-6 text-[#c9a84c]/60" />
-                    </div>
                   </div>
 
                   {/* Right: Content */}
