@@ -91,9 +91,10 @@ export function RegistrationsTable({
       {/* Quick Filter Buttons */}
       <div className="flex flex-wrap gap-2">
         <Button variant={!paymentFilter && !statusFilter ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "", status: "", page: "" })}>All</Button>
-        <Button variant={paymentFilter === "pending" ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "pending", status: "", page: "" })}>Unpaid</Button>
+        <Button variant={statusFilter === "pending" && !paymentFilter ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "pending", payment: "", page: "" })}>Pending</Button>
         <Button variant={paymentFilter === "completed" ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "completed", status: "", page: "" })}>Paid</Button>
-        <Button variant={statusFilter === "cancelled" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "cancelled", payment: "", page: "" })}>Cancelled</Button>
+        <Button variant={statusFilter === "cancelled" ? "default" : "outline"} size="sm" onClick={() => updateParams({ status: "cancelled", payment: "", page: "" })}>Cancelled / Refunded</Button>
+        <Button variant={paymentFilter === "partial" ? "default" : "outline"} size="sm" onClick={() => updateParams({ payment: "partial", status: "", page: "" })}>Partial Payment</Button>
       </div>
 
       {/* Search and Filters */}
