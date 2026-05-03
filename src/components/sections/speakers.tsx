@@ -24,7 +24,7 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
         <div className="container text-center">
           <p className="label-gold">Our Speakers</p>
           <h2 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
-            Learn from the Best
+            Study Sessions at the Retreat
           </h2>
         </div>
 
