@@ -37,15 +37,15 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
                 style={{ top: `${80 + idx * 24}px` }}
               >
                 <div className="flex flex-col overflow-hidden border border-[#d4c9a8] bg-[#f5f0e6] shadow-lg md:flex-row">
-                  {/* Left: Medallion / Image */}
-                  <div className="relative hidden w-56 shrink-0 md:block">
+                  {/* Speaker Image */}
+                  <div className="relative h-64 w-full shrink-0 md:h-auto md:w-56">
                     {imgSrc && (
                       <Image
                         src={imgSrc}
                         alt={speaker.name}
                         fill
                         className="object-cover"
-                        sizes="224px"
+                        sizes="(max-width: 768px) 100vw, 224px"
                         unoptimized
                       />
                     )}
