@@ -49,8 +49,13 @@ async function getDashboardData() {
   const partialRevenueCents = rows
     .filter((r) => r.status === "confirmed" && r.payment_status === "pending" && r.admin_notes)
     .reduce((sum, r) => {
-      const match = r.admin_notes?.match(/Amount deposited: \$(\d+(?:\.\d+)?)/);
-      return sum + (match ? Math.round(parseFloat(match[1]) * 100) : 0);
+      const re = /Payment: \$(\d+(?:\.\d+)?)/g;
+      let m: RegExpExecArray | null;
+      let total = 0;
+      while ((m = re.exec(r.admin_notes ?? "")) !== null) {
+        total += Math.round(parseFloat(m[1]) * 100);
+      }
+      return sum + total;
     }, 0);
 
   const seatsTaken = paid + partialPayment;

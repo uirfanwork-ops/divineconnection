@@ -235,6 +235,9 @@ function RegistrationDetail({
   const [paymentDate, setPaymentDate] = useState("");
   const [amountDeposited, setAmountDeposited] = useState("");
   const [isSavingStatus, setIsSavingStatus] = useState(false);
+  const [isAddingInstallment, setIsAddingInstallment] = useState(false);
+  const [installmentDate, setInstallmentDate] = useState("");
+  const [installmentAmount, setInstallmentAmount] = useState("");
 
   const [form, setForm] = useState({
     full_name: registration.full_name,
@@ -280,6 +283,37 @@ function RegistrationDetail({
     onRefresh();
   }
 
+  function parsePayments(notes: string | null): { date: string; amount: number }[] {
+    if (!notes) return [];
+    const results: { date: string; amount: number }[] = [];
+    const re = /Payment: \$(\d+(?:\.\d+)?) on (\S+)/g;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(notes)) !== null) {
+      results.push({ amount: parseFloat(m[1]), date: m[2] });
+    }
+    return results;
+  }
+
+  const existingPayments = parsePayments(registration.admin_notes);
+  const totalPaidSoFar = existingPayments.reduce((sum, p) => sum + p.amount, 0);
+  const amountDueDollars = registration.amount_cents / 100;
+
+  async function handleAddInstallment() {
+    if (!installmentDate || !installmentAmount) return;
+    setIsAddingInstallment(true);
+    const newLine = `Payment: $${parseFloat(installmentAmount).toFixed(2)} on ${installmentDate} (recorded ${new Date().toLocaleDateString()})`;
+    const existingNotes = registration.admin_notes ?? "";
+    const updatedNotes = existingNotes ? `${existingNotes}\n${newLine}` : newLine;
+    await updateRegistrationDetails(registration.id, {
+      ...form,
+      admin_notes: updatedNotes,
+    });
+    setInstallmentDate("");
+    setInstallmentAmount("");
+    setIsAddingInstallment(false);
+    onRefresh(true);
+  }
+
   async function handleSaveStatus() {
     setIsSavingStatus(true);
     if (selectedStatus === "fully_paid") {
@@ -295,14 +329,12 @@ function RegistrationDetail({
       if (!paymentDate || !amountDeposited) { setIsSavingStatus(false); return; }
       await updateRegistrationStatus(registration.id, "confirmed");
       await updatePaymentStatus(registration.id, "pending");
-      const notes = [
-        `Partial payment confirmed by admin on ${new Date().toLocaleDateString()}`,
-        `E-Transfer received: ${paymentDate}`,
-        `Amount deposited: $${parseFloat(amountDeposited).toFixed(2)}`,
-      ].join("\n");
+      const newLine = `Payment: $${parseFloat(amountDeposited).toFixed(2)} on ${paymentDate} (recorded ${new Date().toLocaleDateString()})`;
+      const existingNotes = registration.admin_notes ?? "";
+      const updatedNotes = existingNotes ? `${existingNotes}\n${newLine}` : newLine;
       await updateRegistrationDetails(registration.id, {
         ...form,
-        admin_notes: notes,
+        admin_notes: updatedNotes,
       });
     } else {
       await updateRegistrationStatus(registration.id, "pending");
@@ -400,11 +432,9 @@ function RegistrationDetail({
           </SelectNative>
         </div>
 
-        {showPaymentForm && (
+        {showPaymentForm && selectedStatus === "fully_paid" && (
           <div className="rounded-lg border border-green-200 bg-green-50 p-4">
-            <h4 className="mb-3 text-sm font-semibold text-green-800">
-              {selectedStatus === "fully_paid" ? "Full Payment Details" : "Partial Payment Details"}
-            </h4>
+            <h4 className="mb-3 text-sm font-semibold text-green-800">Full Payment Details</h4>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <Label className="mb-1 block text-xs text-green-700">Date e-Transfer Received *</Label>
@@ -418,9 +448,83 @@ function RegistrationDetail({
           </div>
         )}
 
+        {(showPaymentForm && selectedStatus === "partial_payment") && (
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+            <h4 className="mb-3 text-sm font-semibold text-blue-800">Installment Plan</h4>
+
+            <div className="mb-3 flex items-baseline justify-between">
+              <span className="text-sm text-blue-700">
+                Total Due: <strong>${amountDueDollars.toFixed(2)}</strong>
+              </span>
+              <span className="text-sm text-blue-700">
+                Paid: <strong>${totalPaidSoFar.toFixed(2)}</strong> &mdash;
+                Remaining: <strong>${(amountDueDollars - totalPaidSoFar).toFixed(2)}</strong>
+              </span>
+            </div>
+
+            {existingPayments.length > 0 && (
+              <div className="mb-4">
+                <Label className="mb-1 block text-xs text-blue-700">Payment History</Label>
+                <div className="space-y-1">
+                  {existingPayments.map((p, i) => (
+                    <div key={i} className="flex items-center justify-between rounded border border-blue-100 bg-white px-3 py-1.5 text-xs">
+                      <span className="text-blue-800">{p.date}</span>
+                      <span className="font-semibold text-blue-900">${p.amount.toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="border-t border-blue-200 pt-3">
+              <Label className="mb-2 block text-xs font-semibold text-blue-700">
+                {existingPayments.length > 0 ? "Add Another Installment" : "Record First Installment"}
+              </Label>
+              {existingPayments.length === 0 ? (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <Label className="mb-1 block text-xs text-blue-600">Date Received *</Label>
+                    <Input type="date" value={paymentDate} onChange={(e) => setPaymentDate(e.target.value)} />
+                  </div>
+                  <div>
+                    <Label className="mb-1 block text-xs text-blue-600">Amount ($) *</Label>
+                    <Input type="number" step="0.01" min="0" placeholder="100.00" value={amountDeposited} onChange={(e) => setAmountDeposited(e.target.value)} />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <Label className="mb-1 block text-xs text-blue-600">Date Received *</Label>
+                      <Input type="date" value={installmentDate} onChange={(e) => setInstallmentDate(e.target.value)} />
+                    </div>
+                    <div>
+                      <Label className="mb-1 block text-xs text-blue-600">Amount ($) *</Label>
+                      <Input type="number" step="0.01" min="0" placeholder="100.00" value={installmentAmount} onChange={(e) => setInstallmentAmount(e.target.value)} />
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-3"
+                    disabled={!installmentDate || !installmentAmount || isAddingInstallment}
+                    onClick={handleAddInstallment}
+                  >
+                    {isAddingInstallment ? "Adding..." : "+ Add Installment"}
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
         <Button
           size="sm"
-          disabled={isSavingStatus || ((selectedStatus === "fully_paid" || selectedStatus === "partial_payment") && (!paymentDate || !amountDeposited))}
+          disabled={
+            isSavingStatus ||
+            (selectedStatus === "fully_paid" && (!paymentDate || !amountDeposited)) ||
+            (selectedStatus === "partial_payment" && existingPayments.length === 0 && (!paymentDate || !amountDeposited))
+          }
           onClick={handleSaveStatus}
         >
           <Save className="mr-1 h-3 w-3" />
