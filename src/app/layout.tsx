@@ -15,10 +15,10 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "Divine Connections: Servants of Allah",
+  title: "Divine Connections: Servants of the Most Merciful",
   description:
     "An intensive Islamic academic retreat at Mansfield Outdoor Centre. July 31 - August 3, 2026.",
-  keywords: ["Islamic retreat", "Divine Connections", "Servants of Allah"],
+  keywords: ["Islamic retreat", "Divine Connections", "Servants of the Most Merciful"],
 };
 
 export default function RootLayout({
