@@ -1,46 +1,76 @@
-export interface Speaker {
+// lib/speakers.ts
+//
+// Loader for the MDX speaker files in content/speakers/*.mdx.
+// Parses frontmatter via gray-matter and returns typed Speaker objects.
+// Server-only (uses node:fs). Call from server components or route handlers.
+//
+// Required dependency:
+//   pnpm add gray-matter
+//
+// If you also want to render the description as MDX (rather than markdown),
+// pipe `description` through next-mdx-remote/serialize or your existing MDX
+// pipeline. For the speakers section as written, plain markdown is enough.
+
+import fs from "node:fs/promises";
+import path from "node:path";
+import matter from "gray-matter";
+
+export type Speaker = {
+  id: string;
+  order: number;
   name: string;
-  title: string;
-  bio: string;
-  imageUrl?: string;
-  topics: string[];
-  sessionTitle?: string;
+  category: string;
+  sessionTitle: string;
+  /** Markdown body of the speaker writeup. Supports italics via *...* */
+  description: string;
+};
+
+const SPEAKERS_DIR = path.join(process.cwd(), "content", "speakers");
+
+let cache: Speaker[] | null = null;
+
+/**
+ * Load all speakers from MDX, sorted by `order`.
+ * Memoized for the lifetime of the server process.
+ */
+export async function getSpeakers(): Promise<Speaker[]> {
+  if (cache) return cache;
+
+  const filenames = await fs.readdir(SPEAKERS_DIR);
+  const mdxFiles = filenames.filter((f) => f.endsWith(".mdx"));
+
+  const speakers = await Promise.all(
+    mdxFiles.map(async (filename): Promise<Speaker> => {
+      const filepath = path.join(SPEAKERS_DIR, filename);
+      const raw = await fs.readFile(filepath, "utf8");
+      const { data, content } = matter(raw);
+
+      const required = ["id", "order", "name", "category", "sessionTitle"];
+      for (const key of required) {
+        if (!(key in data)) {
+          throw new Error(
+            `Speaker file "${filename}" is missing required frontmatter field: ${key}`
+          );
+        }
+      }
+
+      return {
+        id: String(data.id),
+        order: Number(data.order),
+        name: String(data.name),
+        category: String(data.category),
+        sessionTitle: String(data.sessionTitle),
+        description: content.trim(),
+      };
+    })
+  );
+
+  cache = speakers.sort((a, b) => a.order - b.order);
+  return cache;
 }
 
-export const speakers: Speaker[] = [
-  {
-    name: "Sh. Sulaiman Moola",
-    title: "Keynote Scholar",
-    bio: "A world-renowned scholar whose depth of knowledge and masterful delivery will bring the verses of Sūrah Al-Furqān to life. His intensive tafsīr sessions on the ʿIbād ur Raḥmān form the heart of the retreat program.",
-    sessionTitle: "Intensive Tafsīr: ʿIbād ur Raḥmān (Sūrah Al-Furqān, 63–76)",
-    topics: ["Tafsir", "Spiritual Purification", "Islamic Identity"],
-  },
-  {
-    name: "Sh. Omar",
-    title: "Scholar",
-    bio: "An engaging teacher whose sessions bridge traditional Islamic knowledge with contemporary life. Drawing from the Quran and Sunnah, he guides attendees through practical frameworks for strengthening their relationship with Allah in daily life.",
-    sessionTitle: "Faith in Action: Living the Quran Daily",
-    topics: ["Quranic Guidance", "Faith in Daily Life"],
-  },
-  {
-    name: "Sh. Yusuf",
-    title: "Scholar",
-    bio: "A passionate educator dedicated to making the beauty of Islamic knowledge accessible to all. His interactive sessions combine scholarly depth with relatable examples, inspiring attendees to take meaningful action in their spiritual journey.",
-    sessionTitle: "The Path of Taqwa: Practical Steps to God-Consciousness",
-    topics: ["Islamic Knowledge", "Personal Growth"],
-  },
-  {
-    name: "Sh. Sohaib",
-    title: "Scholar",
-    bio: "An inspiring speaker whose sessions explore the intersection of faith, character, and community building. He brings a unique perspective on how the teachings of Islam can transform our relationships, families, and neighborhoods.",
-    sessionTitle: "Building Bonds: Brotherhood, Family, and Community",
-    topics: ["Character Development", "Family", "Community Building"],
-  },
-  {
-    name: "Dr. Shariq",
-    title: "Speaker",
-    bio: "Bringing a unique blend of academic expertise and spiritual insight, Dr. Shariq's sessions address the intellectual and practical dimensions of faith. His thought-provoking discussions encourage critical reflection and deeper understanding.",
-    sessionTitle: "Mind and Soul: Integrating Faith with Modern Life",
-    topics: ["Faith & Intellect", "Mental Wellness"],
-  },
-];
+/** Look up a single speaker by slug. */
+export async function getSpeakerById(id: string): Promise<Speaker | undefined> {
+  const all = await getSpeakers();
+  return all.find((s) => s.id === id);
+}
