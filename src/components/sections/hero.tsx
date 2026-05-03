@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "../../../content/site-config";
 
@@ -19,20 +18,21 @@ export function HeroSection() {
 
   return (
     <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden">
-      {/* Parallax Background Image */}
+      {/* YouTube Background Video */}
       <div
         className="absolute inset-0 -top-20"
         style={{ transform: `translateY(${scrollY * 0.4}px)` }}
       >
-        <Image
-          src="/gallery/hero.jpg"
-          alt="Divine Connections Retreat"
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-          quality={85}
-        />
+        <div className="absolute inset-0 overflow-hidden">
+          <iframe
+            src="https://www.youtube.com/embed/kCrXcwxAvFM?autoplay=1&mute=1&loop=1&playlist=kCrXcwxAvFM&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1&iv_load_policy=3"
+            title="Divine Connections Background"
+            allow="autoplay; encrypted-media"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[120%] w-[120%] min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 scale-[1.2] object-cover"
+            style={{ aspectRatio: "16/9" }}
+            frameBorder="0"
+          />
+        </div>
       </div>
 
       {/* Dark Overlay */}
