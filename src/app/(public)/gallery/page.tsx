@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 const galleryImages = [
   "/gallery/01.jpg",
   "/gallery/02.jpg",
-  "/gallery/02.1.jpg",
   "/gallery/03.jpg",
   "/gallery/04.jpg",
   "/gallery/05.jpg",
@@ -28,7 +27,6 @@ const galleryImages = [
   "/gallery/15.jpg",
   "/gallery/026.jpeg",
   "/gallery/027.jpeg",
-  "/gallery/030.jpeg",
   "/gallery/031.jpeg",
   "/gallery/034.jpeg",
   "/gallery/035.jpeg",
