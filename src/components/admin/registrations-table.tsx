@@ -10,7 +10,6 @@ import { SelectNative } from "@/components/ui/select-native";
 import { Label } from "@/components/ui/label";
 import { formatCents } from "@/lib/utils";
 import {
-  updateRegistrationStatus,
   updatePaymentStatus,
   updateRegistrationDetails,
   deleteRegistration,
@@ -324,14 +323,12 @@ function RegistrationDetail({
       await updatePaymentStatus(registration.id, "completed", {
         payment_received_date: paymentDate,
         amount_deposited: Math.round(parseFloat(amountDeposited) * 100),
-      });
+      }, "confirmed");
     } else if (selectedStatus === "cancelled_refunded") {
-      await updateRegistrationStatus(registration.id, "cancelled");
-      await updatePaymentStatus(registration.id, "refunded");
+      await updatePaymentStatus(registration.id, "refunded", undefined, "cancelled");
     } else if (selectedStatus === "partial_payment") {
       if (!paymentDate || !amountDeposited) { setIsSavingStatus(false); return; }
-      await updateRegistrationStatus(registration.id, "confirmed");
-      await updatePaymentStatus(registration.id, "pending");
+      await updatePaymentStatus(registration.id, "pending", undefined, "confirmed");
       const newLine = `Payment: $${parseFloat(amountDeposited).toFixed(2)} on ${paymentDate} (recorded ${new Date().toLocaleDateString()})`;
       const existingNotes = registration.admin_notes ?? "";
       const updatedNotes = existingNotes ? `${existingNotes}\n${newLine}` : newLine;
@@ -340,11 +337,9 @@ function RegistrationDetail({
         admin_notes: updatedNotes,
       });
     } else if (selectedStatus === "staff_guest") {
-      await updateRegistrationStatus(registration.id, "waitlisted");
-      await updatePaymentStatus(registration.id, "completed");
+      await updatePaymentStatus(registration.id, "completed", undefined, "waitlisted");
     } else {
-      await updateRegistrationStatus(registration.id, "pending");
-      await updatePaymentStatus(registration.id, "pending");
+      await updatePaymentStatus(registration.id, "pending", undefined, "pending");
     }
     setIsSavingStatus(false);
     onRefresh();

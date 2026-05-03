@@ -36,7 +36,8 @@ export async function updateRegistrationStatus(
 export async function updatePaymentStatus(
   registrationId: string,
   paymentStatus: PaymentStatus,
-  paymentDetails?: { payment_received_date: string; amount_deposited: number }
+  paymentDetails?: { payment_received_date: string; amount_deposited: number },
+  statusOverride?: RegistrationStatus
 ) {
   const admin = await getAdminUser();
   if (!admin) return { error: "Unauthorized" };
@@ -62,11 +63,14 @@ export async function updatePaymentStatus(
     paymentStatus === "completed"
       ? {
           payment_status: paymentStatus,
-          status: "confirmed" as const,
+          status: (statusOverride ?? "confirmed") as RegistrationStatus,
           ...(adminNotes ? { admin_notes: adminNotes } : {}),
           ...(paymentDetails ? { amount_cents: paymentDetails.amount_deposited } : {}),
         }
-      : { payment_status: paymentStatus };
+      : {
+          payment_status: paymentStatus,
+          ...(statusOverride ? { status: statusOverride } : {}),
+        };
 
   const { error } = await supabase
     .from("registrations")
