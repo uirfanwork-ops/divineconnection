@@ -64,8 +64,10 @@ export function RegistrationForm({
       allergies: "",
       medical_conditions: "",
       current_medications: "",
-      dietary_restrictions: "",
-      driving_self: false,
+      guardian_first_name: "",
+      guardian_last_name: "",
+      guardian_phone: "",
+      guardian_email: "",
       seeking_carpool: false,
       photo_consent: false,
       accept_waiver: false as unknown as true,
@@ -243,6 +245,42 @@ export function RegistrationForm({
               placeholder="+1 (555) 000-0000"
             />
           </Field>
+
+          <div className="mt-6 rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] p-4">
+            <p className="mb-4 text-sm font-medium text-[var(--text-secondary)]">
+              If the participant is under 16, please provide parent/guardian details:
+            </p>
+            <Grid>
+              <Field label="Parent/Guardian First Name">
+                <Input
+                  {...register("guardian_first_name")}
+                  placeholder="First name"
+                />
+              </Field>
+              <Field label="Parent/Guardian Last Name">
+                <Input
+                  {...register("guardian_last_name")}
+                  placeholder="Last name"
+                />
+              </Field>
+            </Grid>
+            <Grid>
+              <Field label="Parent/Guardian Phone">
+                <Input
+                  type="tel"
+                  {...register("guardian_phone")}
+                  placeholder="+1 (555) 000-0000"
+                />
+              </Field>
+              <Field label="Parent/Guardian Email">
+                <Input
+                  type="email"
+                  {...register("guardian_email")}
+                  placeholder="guardian@example.com"
+                />
+              </Field>
+            </Grid>
+          </div>
         </Section>
 
         {/* 3. Medical Information */}
@@ -268,26 +306,13 @@ export function RegistrationForm({
               rows={2}
             />
           </Field>
-          <Field label="Dietary Restrictions" error={errors.dietary_restrictions?.message}>
-            <Textarea
-              {...register("dietary_restrictions")}
-              placeholder="e.g., vegetarian, gluten-free (leave blank if none)"
-              rows={2}
-            />
-          </Field>
         </Section>
 
         {/* 4. Transportation */}
         <Section icon={Car} title="Transportation Information">
           <div className="space-y-3">
             <YesNoRadio
-              label="Will you be driving yourself?"
-              name="driving_self"
-              value={watch("driving_self")}
-              onChange={(v) => setValue("driving_self", v)}
-            />
-            <YesNoRadio
-              label="Are you looking to carpool?"
+              label="Do you need carpool?"
               name="seeking_carpool"
               value={watch("seeking_carpool")}
               onChange={(v) => setValue("seeking_carpool", v)}

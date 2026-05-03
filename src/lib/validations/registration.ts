@@ -55,15 +55,17 @@ export const registrationSchema = z
     medical_conditions: z.string().max(500).trim().optional().default(""),
     current_medications: z.string().max(500).trim().optional().default(""),
 
+    // Guardian (for under 16)
+    guardian_first_name: z.string().max(100).trim().optional().default(""),
+    guardian_last_name: z.string().max(100).trim().optional().default(""),
+    guardian_phone: z.string().max(20).trim().optional().default(""),
+    guardian_email: z.string().max(255).trim().optional().default(""),
+
     // Transportation
-    driving_self: z.boolean(),
     seeking_carpool: z.boolean(),
 
     // Photo/Media Consent
     photo_consent: z.boolean(),
-
-    // Dietary
-    dietary_restrictions: z.string().max(500).trim().optional().default(""),
 
     // Document acceptances
     accept_waiver: z.literal(true, {
