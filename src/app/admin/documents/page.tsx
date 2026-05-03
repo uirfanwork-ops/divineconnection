@@ -18,7 +18,7 @@ export default function DocumentsPage() {
     );
   }
 
-  const embedUrl = `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
+  const embedUrl = `https://drive.google.com/drive/folders/${folderId}?usp=sharing`;
 
   return (
     <div>
