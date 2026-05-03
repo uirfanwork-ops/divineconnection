@@ -58,17 +58,19 @@ export async function updatePaymentStatus(
     ].join("\n");
   }
 
+  const updateData =
+    paymentStatus === "completed"
+      ? {
+          payment_status: paymentStatus,
+          status: "confirmed" as const,
+          ...(adminNotes ? { admin_notes: adminNotes } : {}),
+          ...(paymentDetails ? { amount_cents: paymentDetails.amount_deposited } : {}),
+        }
+      : { payment_status: paymentStatus };
+
   const { error } = await supabase
     .from("registrations")
-    .update(
-      paymentStatus === "completed"
-        ? {
-            payment_status: paymentStatus,
-            status: "confirmed" as const,
-            ...(adminNotes ? { admin_notes: adminNotes } : {}),
-          }
-        : { payment_status: paymentStatus }
-    )
+    .update(updateData)
     .eq("id", registrationId);
 
   if (error) return { error: error.message };

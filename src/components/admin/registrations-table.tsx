@@ -179,13 +179,17 @@ export function RegistrationsTable({
         </table>
       </div>
 
-      {/* Detail Drawer */}
+      {/* Detail Dialog */}
       {selectedRow && (
-        <RegistrationDetail
-          registration={selectedRow}
-          onClose={() => setSelectedRow(null)}
-          onRefresh={(keepOpen) => { router.refresh(); if (!keepOpen) setSelectedRow(null); }}
-        />
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4 pt-16" onClick={(e) => { if (e.target === e.currentTarget) setSelectedRow(null); }}>
+          <div className="w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
+            <RegistrationDetail
+              registration={selectedRow}
+              onClose={() => setSelectedRow(null)}
+              onRefresh={(keepOpen) => { router.refresh(); if (!keepOpen) setSelectedRow(null); }}
+            />
+          </div>
+        </div>
       )}
 
       {/* Pagination */}
@@ -347,7 +351,7 @@ function RegistrationDetail({
   }
 
   return (
-    <div className="rounded-lg border bg-card p-6 shadow-sm">
+    <div className="rounded-lg border bg-card p-6 shadow-xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
