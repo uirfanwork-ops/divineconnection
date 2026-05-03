@@ -217,6 +217,47 @@
     --destructive-foreground: 0 0% 100%;
   }
 
+  /* ======= ADMIN LIGHT THEME ======= */
+  .theme-admin {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-card: #ffffff;
+    --bg-elevated: #f1f3f5;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    --border-color: #e5e7eb;
+    --border-subtle: #f3f4f6;
+
+    --background: 0 0% 100%;
+    --foreground: 220 14% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 14% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 14% 10%;
+    --primary: 43 50% 54%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 14% 10%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 14% 10%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 8% 46%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 43 50% 54%;
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #111827;
+    background-color: #f8f9fa;
+  }
+
+  .theme-admin-sidebar {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
   /* ======= TEXT BALANCE ======= */
   .text-balance {
     text-wrap: balance;

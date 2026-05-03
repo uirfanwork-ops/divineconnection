@@ -39,7 +39,7 @@ export function AdminSidebar({ admin }: { admin: AdminUser }) {
   );
 
   return (
-    <aside className="flex w-64 flex-col border-r bg-card">
+    <aside className="theme-admin-sidebar flex w-64 flex-col border-r bg-[#111111]">
       <div className="border-b p-4">
         <h2 className="text-lg font-bold text-primary">DC Admin</h2>
         <p className="text-xs text-muted-foreground">
