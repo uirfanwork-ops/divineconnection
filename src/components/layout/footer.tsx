@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Mail } from "lucide-react";
 import { siteConfig } from "../../../content/site-config";
 
@@ -28,6 +29,29 @@ export function Footer() {
               <br />
               ({siteConfig.footer.quranVerse.reference})
             </p>
+            <div className="mt-8">
+              <p className="text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                Retreat provided by{" "}
+                <a
+                  href="https://mathabah.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--gold-light)] underline underline-offset-2"
+                >
+                  Mathabah.org
+                </a>
+              </p>
+              <a href="https://mathabah.org" target="_blank" rel="noopener noreferrer">
+                <Image
+                  src="/mathabah-logo.png"
+                  alt="Mathabah Institute"
+                  width={140}
+                  height={50}
+                  className="mt-3"
+                  unoptimized
+                />
+              </a>
+            </div>
           </div>
 
           {/* Quick Links */}

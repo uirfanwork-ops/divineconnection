@@ -22,7 +22,7 @@ export const faq: FaqItem[] = [
   {
     question: "Is financial aid available?",
     answer:
-      "Yes, financial aid is available upon request. We do not want finances to be a barrier to seeking knowledge. Please contact us at admin@mathabah.org to discuss your situation confidentially.",
+      "Yes, financial aid is available upon request. We do not want finances to be a barrier to seeking knowledge. Please contact us at events@mathabah.org to discuss your situation confidentially.",
   },
   {
     question: "What is the refund policy?",
@@ -62,7 +62,7 @@ export const faq: FaqItem[] = [
   {
     question: "Can I attend just one day?",
     answer:
-      "The retreat is designed as a complete academic experience, and we strongly recommend attending all four days. However, if circumstances require it, please contact us at admin@mathabah.org to discuss partial attendance options.",
+      "The retreat is designed as a complete academic experience, and we strongly recommend attending all four days. However, if circumstances require it, please contact us at events@mathabah.org to discuss partial attendance options.",
   },
   {
     question: "When is check-in and check-out?",
