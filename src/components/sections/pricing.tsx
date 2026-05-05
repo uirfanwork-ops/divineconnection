@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check, Mail } from "lucide-react";
+import { Check } from "lucide-react";
 import { ParallaxBg } from "@/components/parallax-bg";
 
 const features = [
@@ -66,15 +66,6 @@ export function PricingSection() {
           </div>
         </div>
 
-        <div className="mx-auto mt-10 max-w-4xl text-center">
-          <p className="flex items-center justify-center gap-2 text-sm text-[var(--text-secondary)]">
-            <Mail className="h-4 w-4 text-[var(--gold)]" />
-            Installment options available. Email{" "}
-            <a href="mailto:finance@mathabah.org" className="font-semibold text-[var(--gold)] underline underline-offset-4 hover:text-[var(--gold-light)]">
-              finance@mathabah.org
-            </a>
-          </p>
-        </div>
       </div>
     </section>
   );
