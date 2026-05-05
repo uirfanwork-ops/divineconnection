@@ -86,19 +86,19 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
 
         {/* Bottom joint session card */}
         <div className="container mt-6">
-          <div className="overflow-hidden rounded-2xl border border-white/15 bg-black/40 backdrop-blur-sm">
-            <div className="grid grid-cols-3">
+          <div className="overflow-hidden rounded-2xl border border-white/15 bg-black/40 backdrop-blur-sm md:flex">
+            <div className="grid grid-cols-3 md:w-1/2 md:shrink-0">
               {panelScholars.map((scholar) => {
                 const imgSrc = speakerImages[scholar.id];
                 return (
-                  <div key={scholar.id} className="relative aspect-[4/5]">
+                  <div key={scholar.id} className="relative aspect-[3/4] md:aspect-auto md:h-72">
                     {imgSrc ? (
                       <Image
                         src={imgSrc}
                         alt={scholar.name}
                         fill
                         className="object-cover"
-                        sizes="33vw"
+                        sizes="(max-width: 768px) 33vw, 17vw"
                         unoptimized
                       />
                     ) : (
@@ -112,20 +112,32 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
                 );
               })}
             </div>
-            <div className="p-6 text-center md:p-8">
+            <div className="flex flex-1 flex-col justify-center p-6 text-center md:p-8 md:text-left">
               <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#c9a84c]">
-                Joint Session
+                Discussion Panel
               </p>
               <h3 className="font-heading mt-2 text-xl font-bold uppercase tracking-wide text-white md:text-2xl">
                 {panelScholars.map((s) => s.name).join("  ·  ")}
               </h3>
-              <div className="mx-auto mt-3 flex items-center justify-center gap-2">
-                <BookOpen className="h-4 w-4 shrink-0 text-[#c9a84c]" />
+              <div className="mt-3 flex items-start justify-center gap-2 md:justify-start">
+                <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a84c]" />
                 <p className="text-sm font-semibold leading-snug text-[#c9a84c]/80 md:text-base">
                   Discussions on Practical Application of Servanthood in
                   Everyday Life
                 </p>
               </div>
+              <div className="mt-3 h-px w-12 bg-[#c9a84c]/30 md:mx-0 mx-auto" />
+              <p className="mt-3 text-sm leading-relaxed text-white/70">
+                Guided by Ust. Hassan Syed, this discussion panel brings
+                together Dr. Shariq Lodhi and Ust. Tamseel to explore how the
+                qualities of the ʿIbād ur Raḥmān were lived by the great figures
+                of our tradition — and how we can embody them today. From the
+                examples set by the Companions and the righteous generations to
+                the unique challenges of modern life, the scholars examine what
+                true servanthood looks like in practice: in our homes, our
+                workplaces, and our communities. An insightful, candid exchange
+                on bridging timeless principles with the realities we face now.
+              </p>
             </div>
           </div>
         </div>
