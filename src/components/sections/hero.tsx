@@ -5,18 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "../../../content/site-config";
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    YT: any;
-    onYouTubeIframeAPIReady: (() => void) | undefined;
-  }
-}
-
 export function HeroSection() {
   const { hero, retreatDate, retreatVenue } = siteConfig;
   const [scrollY, setScrollY] = useState(0);
-  const playerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
@@ -25,50 +17,6 @@ export function HeroSection() {
     }
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
-
-    window.onYouTubeIframeAPIReady = () => {
-      new window.YT.Player("yt-hero-player", {
-        videoId: "kCrXcwxAvFM",
-        playerVars: {
-          autoplay: 1,
-          mute: 1,
-          loop: 1,
-          playlist: "kCrXcwxAvFM",
-          controls: 0,
-          showinfo: 0,
-          rel: 0,
-          modestbranding: 1,
-          playsinline: 1,
-          disablekb: 1,
-          iv_load_policy: 3,
-          origin: window.location.origin,
-        },
-        events: {
-          onReady: (event: { target: { mute: () => void; playVideo: () => void } }) => {
-            event.target.mute();
-            event.target.playVideo();
-            setVideoReady(true);
-          },
-          onStateChange: (event: { data: number; target: { playVideo: () => void } }) => {
-            if (event.data === 0) {
-              event.target.playVideo();
-            }
-          },
-        },
-      });
-    };
-
-    return () => {
-      window.onYouTubeIframeAPIReady = undefined;
-    };
   }, []);
 
   return (
@@ -89,18 +37,22 @@ export function HeroSection() {
         />
       </div>
 
-      {/* YouTube Background Video */}
+      {/* Self-hosted Background Video */}
       <div
         className="absolute inset-0 -top-20"
         style={{ transform: `translateY(${scrollY * 0.4}px)` }}
       >
-        <div className="absolute inset-0 overflow-hidden">
-          <div
-            ref={playerRef}
-            id="yt-hero-player"
-            className={`pointer-events-none absolute left-1/2 top-1/2 aspect-video w-[300%] max-w-none -translate-x-1/2 -translate-y-1/2 transition-opacity duration-1000 md:w-[180%] ${videoReady ? "opacity-100" : "opacity-0"}`}
-          />
-        </div>
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          onCanPlay={() => setVideoReady(true)}
+          className={`absolute left-1/2 top-1/2 min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 object-cover transition-opacity duration-1000 ${videoReady ? "opacity-100" : "opacity-0"}`}
+        >
+          <source src="/hero.mp4" type="video/mp4" />
+        </video>
       </div>
 
       {/* Dark Overlay */}
