@@ -17,7 +17,7 @@ const speakerImages: Record<string, string> = {
 export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
   return (
     <section id="speakers" className="relative overflow-hidden">
-      <ParallaxBg src="/gallery/031.jpeg" overlay="dark" speed={0.2} />
+      <ParallaxBg src="/gallery/026.jpeg" overlay="dark" speed={0.2} />
 
       <div className="relative z-10 py-24 md:py-32">
         <div className="container text-center">
