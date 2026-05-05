@@ -11,6 +11,7 @@ const speakerImages: Record<string, string> = {
   "yusuf-badat": "/gallery/speakers/mufti-yusuf.jpg",
   "hassan-syed": "/gallery/speakers/ust-hassan.jpg",
   "shariq-lodhi": "/gallery/speakers/dr-shariq.jpg",
+  "tamseel": "/gallery/speakers/ust-tamseel.jpg",
 };
 
 const topSpeakerIds = ["sulaiman-moola", "omar-subedar", "yusuf-badat"];
