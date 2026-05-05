@@ -22,6 +22,12 @@ export function CtaSection() {
             {cta.buttonText}
           </Link>
         </div>
+        <p className="mt-6 text-sm text-[var(--text-secondary)]">
+          Any questions or concerns, please email us at{" "}
+          <a href="mailto:events@mathabah.org" className="text-[var(--gold-light)] underline underline-offset-2">
+            events@mathabah.org
+          </a>
+        </p>
         <p className="mt-8 text-xs italic text-[var(--text-muted)]">
           &quot;{siteConfig.footer.quranVerse.text}&quot; ({siteConfig.footer.quranVerse.reference})
         </p>
