@@ -17,10 +17,10 @@ export default function RegisterPage() {
             <h1 className="font-heading mt-3 text-4xl font-bold uppercase tracking-wide text-[var(--text-primary)] md:text-5xl">
               Secure Your Spot
             </h1>
-            <p className="mt-4 text-sm uppercase tracking-[0.15em] text-[var(--text-muted)]">
+            <p className="mt-4 text-sm uppercase tracking-[0.15em] text-[#d4c9a8]">
               {siteConfig.retreatDate} | {siteConfig.retreatVenue}
             </p>
-            <p className="mt-1 text-xs text-[var(--text-muted)]">
+            <p className="mt-1 text-xs text-[#d4c9a8]">
               {siteConfig.retreatAddress}
             </p>
             <div className="mx-auto mt-6 flex items-center justify-center gap-3">
