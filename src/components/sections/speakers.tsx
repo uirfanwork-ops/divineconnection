@@ -17,8 +17,8 @@ const topSpeakerIds = ["sulaiman-moola", "omar-subedar", "yusuf-badat"];
 
 const panelScholars = [
   { name: "Dr. Shariq Lodhi", id: "shariq-lodhi" },
-  { name: "Ust. Tamseel", id: "tamseel" },
-  { name: "Ust. Hassan Syed", id: "hassan-syed" },
+  { name: "Ustādh Tamseel Ahmed", id: "tamseel" },
+  { name: "Ustādh Hassan Syed", id: "hassan-syed" },
 ];
 
 export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
@@ -128,8 +128,8 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
               </div>
               <div className="mt-3 h-px w-12 bg-[#c9a84c]/30 md:mx-0 mx-auto" />
               <p className="mt-3 text-sm leading-relaxed text-white/70">
-                Guided by Ust. Hassan Syed, this discussion panel brings
-                together Dr. Shariq Lodhi and Ust. Tamseel to explore how the
+                Guided by Ustādh Hassan Syed, this discussion panel brings
+                together Dr. Shariq Lodhi and Ustādh Tamseel Ahmed to explore how the
                 qualities of the ʿIbād ur Raḥmān were lived by the great figures
                 of our tradition — and how we can embody them today. From the
                 examples set by the Companions and the righteous generations to
