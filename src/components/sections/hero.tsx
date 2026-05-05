@@ -111,7 +111,10 @@ export function HeroSection() {
           {hero.title}
         </h1>
         <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--gold-light)] sm:text-sm sm:tracking-[0.3em] md:text-base">
-          {hero.subtitle} | {retreatDate}
+          {hero.subtitle}
+        </p>
+        <p className="mt-2 text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--gold-light)] sm:text-sm sm:tracking-[0.3em] md:text-base">
+          {retreatDate}
         </p>
         <p className="mx-auto mt-2 text-[10px] uppercase tracking-[0.15em] text-[var(--text-secondary)] sm:text-xs sm:tracking-[0.2em]">
           {retreatVenue}
