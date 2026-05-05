@@ -92,7 +92,7 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
               {panelScholars.map((scholar) => {
                 const imgSrc = speakerImages[scholar.id];
                 return (
-                  <div key={scholar.id} className="relative aspect-[3/4] md:aspect-auto md:h-72">
+                  <div key={scholar.id} className="relative aspect-[3/4] md:aspect-auto">
                     {imgSrc ? (
                       <Image
                         src={imgSrc}
