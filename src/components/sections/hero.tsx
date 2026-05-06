@@ -62,10 +62,10 @@ export function HeroSection() {
         <Image
           src="/logo-hero.png"
           alt="Divine Connections — Servants of the Most Merciful — July 31 to August 3, 2026 — Mulmur, ON"
-          width={1200}
-          height={675}
+          width={1920}
+          height={1080}
           priority
-          className="mx-auto w-full max-w-5xl"
+          className="mx-auto w-full"
           unoptimized
         />
         <div className="mt-10 sm:mt-12">
