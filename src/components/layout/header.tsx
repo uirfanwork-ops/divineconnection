@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { siteConfig } from "../../../content/site-config";
 
 const navLinks = [
   { label: "About", href: "/#about" },
