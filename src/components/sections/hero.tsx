@@ -58,18 +58,16 @@ export function HeroSection() {
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0a1a0a]" />
 
-      <div className="relative z-10 flex flex-col items-center py-32 text-center">
-        <div className="w-[150%] max-w-[600px] sm:w-[130%] sm:max-w-none md:w-full md:max-w-5xl">
-          <Image
-            src="/logo-hero.png"
-            alt="Divine Connections — Servants of the Most Merciful — July 31 to August 3, 2026 — Mulmur, ON"
-            width={1878}
-            height={1056}
-            priority
-            className="w-full"
-            unoptimized
-          />
-        </div>
+      <div className="container relative z-10 flex flex-col items-center px-6 py-32 text-center">
+        <Image
+          src="/logo-hero.png"
+          alt="Divine Connections — Servants of the Most Merciful — July 31 to August 3, 2026 — Mulmur, ON"
+          width={1064}
+          height={732}
+          priority
+          className="w-full max-w-3xl"
+          unoptimized
+        />
         <div className="mt-10 sm:mt-12">
           <Link href={hero.ctaHref} className="btn-outline-gold">
             {hero.ctaText}
