@@ -106,7 +106,7 @@ export function eTransferConfirmationEmail(
       Once we verify your payment, you will receive a final confirmation email confirming your official registration for the retreat.
     </p>
     <p style="margin:0;color:#888;font-size:13px;">
-      Questions? Reply to this email or contact us at ${siteConfig.supportEmail}
+      Questions? Email us at ${siteConfig.supportEmail}
     </p>`;
 
   return {
@@ -214,7 +214,7 @@ export function paymentConfirmedEmail(
       Please keep your confirmation code for your records. More details about the retreat (schedule, packing list, etc.) will be sent closer to the date.
     </p>
     <p style="margin:0;color:#888;font-size:13px;">
-      We look forward to seeing you! If you have any questions, contact us at ${siteConfig.supportEmail}
+      We look forward to seeing you! If you have any questions, email us at ${siteConfig.supportEmail}
     </p>`;
 
   return {
@@ -272,7 +272,7 @@ export function paymentReminderEmail(
       Once we verify your payment, you will receive a confirmation email with retreat details.
     </p>
     <p style="margin:0;color:#888;font-size:13px;">
-      Questions? Contact us at ${siteConfig.supportEmail}
+      Questions? Email us at ${siteConfig.supportEmail}
     </p>`;
 
   return {
@@ -303,7 +303,7 @@ Please include your confirmation code ${registration.confirmation_code} in the e
 
 Once we verify your payment, you will receive a confirmation email with retreat details.
 
-Questions? Contact us at ${siteConfig.supportEmail}`,
+Questions? Email us at ${siteConfig.supportEmail}`,
   };
 }
 
