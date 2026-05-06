@@ -280,3 +280,44 @@ export function paymentReminderEmail(
     html: baseLayout(content),
   };
 }
+
+export function paymentReminderPlainText(
+  registration: { full_name: string; confirmation_code: string; amount_cents: number; currency: string }
+): { subject: string; body: string } {
+  const amount = formatCents(registration.amount_cents, registration.currency);
+
+  return {
+    subject: `Payment Reminder - ${registration.confirmation_code} - ${siteConfig.shortName}`,
+    body: `Assalamu Alaikum ${registration.full_name.split(" ")[0]},
+
+This is a friendly reminder that your registration for ${siteConfig.name} is still pending payment. Please complete your e-Transfer to secure your spot.
+
+Confirmation Code: ${registration.confirmation_code}
+
+E-Transfer Details:
+  Send to: finance@mathabah.org
+  Amount: ${amount} ${registration.currency}
+  Message: ${registration.confirmation_code} - ${registration.full_name}
+
+Please include your confirmation code ${registration.confirmation_code} in the e-Transfer message so we can match your payment.
+
+Once we verify your payment, you will receive a confirmation email with retreat details.
+
+Questions? Contact us at ${siteConfig.supportEmail}`,
+  };
+}
+
+export function plainTextToHtml(text: string): string {
+  const escaped = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  const paragraphs = escaped.split(/\n\n+/);
+  const html = paragraphs
+    .map((p) => {
+      const lines = p.replace(/\n/g, "<br>");
+      return `<p style="margin:0 0 16px;color:#444;font-size:15px;line-height:1.6;">${lines}</p>`;
+    })
+    .join("\n    ");
+  return baseLayout(html);
+}

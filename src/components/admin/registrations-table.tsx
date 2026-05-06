@@ -13,7 +13,8 @@ import {
   updatePaymentStatus,
   updateRegistrationDetails,
   deleteRegistration,
-  sendPaymentReminder,
+  getPaymentReminderPreview,
+  sendCustomPaymentReminder,
   exportRegistrationsCsv,
 } from "@/app/admin/registrations/actions";
 import type { Database } from "@/types/database";
@@ -646,31 +647,128 @@ function ToggleField({
 }
 
 function ReminderButton({ registrationId }: { registrationId: string }) {
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [showDialog, setShowDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [to, setTo] = useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
 
-  async function handleSend(e: React.MouseEvent) {
+  async function handleOpen(e: React.MouseEvent) {
     e.stopPropagation();
-    setStatus("sending");
-    const result = await sendPaymentReminder(registrationId);
-    setStatus(result.error ? "error" : "sent");
-    if (!result.error) {
-      setTimeout(() => setStatus("idle"), 3000);
+    setLoading(true);
+    setError("");
+    setShowDialog(true);
+    const result = await getPaymentReminderPreview(registrationId);
+    setLoading(false);
+    if (result.error) {
+      setError(result.error);
+    } else {
+      setTo(result.to ?? "");
+      setSubject(result.subject ?? "");
+      setBody(result.body ?? "");
     }
   }
 
-  if (status === "sent") {
+  function handleDiscard() {
+    setShowDialog(false);
+    setError("");
+    setSent(false);
+  }
+
+  async function handleSend() {
+    setSending(true);
+    const result = await sendCustomPaymentReminder(registrationId, subject, body);
+    setSending(false);
+    if (result.error) {
+      setError(result.error);
+    } else {
+      setSent(true);
+      setTimeout(() => {
+        setShowDialog(false);
+        setSent(false);
+      }, 2000);
+    }
+  }
+
+  if (sent && !showDialog) {
     return <span className="text-xs text-green-500">Sent!</span>;
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={handleSend}
-      disabled={status === "sending"}
-      title="Send payment reminder email"
-    >
-      <Mail className={`h-4 w-4 ${status === "error" ? "text-red-500" : "text-amber-500"}`} />
-    </Button>
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={handleOpen}
+        title="Send payment reminder email"
+      >
+        <Mail className="h-4 w-4 text-amber-500" />
+      </Button>
+
+      {showDialog && (
+        <div
+          className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/50 p-4 pt-16"
+          onClick={(e) => { if (e.target === e.currentTarget) handleDiscard(); }}
+        >
+          <div className="w-full max-w-2xl rounded-lg border bg-card p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Payment Reminder Email</h3>
+              <Button variant="ghost" size="sm" onClick={handleDiscard}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            {loading ? (
+              <p className="mt-4 text-sm text-muted-foreground">Loading email preview...</p>
+            ) : error && !body ? (
+              <p className="mt-4 text-sm text-red-500">{error}</p>
+            ) : sent ? (
+              <div className="mt-4 rounded-md bg-green-50 p-4 text-sm font-medium text-green-700 dark:bg-green-950 dark:text-green-300">
+                Email sent successfully!
+              </div>
+            ) : (
+              <>
+                <div className="mt-4 space-y-3">
+                  <div>
+                    <Label className="mb-1 block text-xs text-muted-foreground">To</Label>
+                    <Input value={to} disabled className="bg-muted" />
+                  </div>
+                  <div>
+                    <Label className="mb-1 block text-xs text-muted-foreground">Subject</Label>
+                    <Input value={subject} onChange={(e) => setSubject(e.target.value)} />
+                  </div>
+                  <div>
+                    <Label className="mb-1 block text-xs text-muted-foreground">Body</Label>
+                    <Textarea
+                      value={body}
+                      onChange={(e) => setBody(e.target.value)}
+                      rows={14}
+                      className="font-mono text-sm"
+                    />
+                  </div>
+                </div>
+
+                {error && (
+                  <p className="mt-2 text-sm text-red-500">{error}</p>
+                )}
+
+                <div className="mt-4 flex justify-end gap-2">
+                  <Button variant="outline" size="sm" onClick={handleDiscard}>
+                    Discard
+                  </Button>
+                  <Button size="sm" disabled={sending || !subject || !body} onClick={handleSend}>
+                    <Mail className="mr-1 h-3 w-3" />
+                    {sending ? "Sending..." : "Send"}
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

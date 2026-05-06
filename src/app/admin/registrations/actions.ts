@@ -3,7 +3,7 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import { getAdminUser } from "@/lib/admin";
 import { sendEmail } from "@/lib/email";
-import { paymentConfirmedEmail, paymentReminderEmail } from "@/lib/emails/templates";
+import { paymentConfirmedEmail, paymentReminderEmail, paymentReminderPlainText, plainTextToHtml } from "@/lib/emails/templates";
 import type { RegistrationStatus, PaymentStatus } from "@/types/database";
 
 export async function updateRegistrationStatus(
@@ -300,6 +300,78 @@ export async function sendPaymentReminder(registrationId: string) {
     details: {
       registrant_name: registration.full_name,
       registrant_email: registration.email,
+    },
+  });
+
+  return { success: true };
+}
+
+export async function getPaymentReminderPreview(registrationId: string) {
+  const admin = await getAdminUser();
+  if (!admin) return { error: "Unauthorized" };
+
+  const supabase = createServiceClient();
+
+  const { data: registration } = await supabase
+    .from("registrations")
+    .select("email, full_name, confirmation_code, amount_cents, currency, payment_status")
+    .eq("id", registrationId)
+    .single();
+
+  if (!registration) return { error: "Registration not found" };
+
+  const preview = paymentReminderPlainText({
+    full_name: registration.full_name,
+    confirmation_code: registration.confirmation_code,
+    amount_cents: registration.amount_cents,
+    currency: registration.currency,
+  });
+
+  return {
+    to: registration.email,
+    subject: preview.subject,
+    body: preview.body,
+  };
+}
+
+export async function sendCustomPaymentReminder(
+  registrationId: string,
+  subject: string,
+  body: string
+) {
+  const admin = await getAdminUser();
+  if (!admin) return { error: "Unauthorized" };
+
+  const supabase = createServiceClient();
+
+  const { data: registration } = await supabase
+    .from("registrations")
+    .select("email, full_name, confirmation_code, payment_status")
+    .eq("id", registrationId)
+    .single();
+
+  if (!registration) return { error: "Registration not found" };
+  if (registration.payment_status === "completed") return { error: "Already paid" };
+
+  try {
+    await sendEmail({
+      to: registration.email,
+      subject,
+      html: plainTextToHtml(body),
+    });
+  } catch {
+    return { error: "Failed to send email" };
+  }
+
+  await supabase.from("audit_log").insert({
+    user_id: admin.userId,
+    action: "send_payment_reminder",
+    resource_type: "registration",
+    resource_id: registrationId,
+    details: {
+      registrant_name: registration.full_name,
+      registrant_email: registration.email,
+      custom_subject: subject,
     },
   });
 
