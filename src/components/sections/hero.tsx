@@ -6,7 +6,7 @@ import Link from "next/link";
 import { siteConfig } from "../../../content/site-config";
 
 export function HeroSection() {
-  const { hero, retreatDate, retreatVenue } = siteConfig;
+  const { hero } = siteConfig;
   const [scrollY, setScrollY] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
@@ -59,18 +59,15 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0a1a0a]" />
 
       <div className="container relative z-10 px-6 py-32 text-center">
-        <h1 className="font-heading text-3xl font-bold uppercase tracking-wide text-[var(--text-primary)] sm:text-5xl md:text-6xl lg:text-8xl">
-          {hero.title}
-        </h1>
-        <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--gold-light)] sm:text-sm sm:tracking-[0.3em] md:text-base">
-          {hero.subtitle}
-        </p>
-        <p className="mt-2 text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--gold-light)] sm:text-sm sm:tracking-[0.3em] md:text-base">
-          {retreatDate}
-        </p>
-        <p className="mx-auto mt-2 text-[10px] uppercase tracking-[0.15em] text-[var(--text-secondary)] sm:text-xs sm:tracking-[0.2em]">
-          {retreatVenue}
-        </p>
+        <Image
+          src="/logo-hero.png"
+          alt="Divine Connections — Servants of the Most Merciful — July 31 to August 3, 2026 — Mulmur, ON"
+          width={800}
+          height={450}
+          priority
+          className="mx-auto w-full max-w-2xl"
+          unoptimized
+        />
         <div className="mt-10 sm:mt-12">
           <Link href={hero.ctaHref} className="btn-outline-gold">
             {hero.ctaText}
