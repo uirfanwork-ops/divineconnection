@@ -168,7 +168,7 @@ export function RegistrationsTable({
                   <td className="px-4 py-3 font-medium text-foreground">{reg.full_name}</td>
                   <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">{reg.email}</td>
                   <td className="px-4 py-3">
-                    <StatusBadge status={reg.status} paymentStatus={reg.payment_status} />
+                    <StatusBadge status={reg.status} paymentStatus={reg.payment_status} adminNotes={reg.admin_notes} />
                   </td>
                   <td className="px-4 py-3">
                     <PaymentBadge status={reg.status} paymentStatus={reg.payment_status} />
@@ -236,10 +236,11 @@ function RegistrationDetail({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(() => {
-    if (registration.payment_status === "completed") return "fully_paid";
-    if (registration.status === "cancelled" || registration.status === "refunded") return "cancelled_refunded";
-    if (registration.status === "confirmed" && registration.payment_status === "pending") return "partial_payment";
     if (registration.status === "waitlisted") return "staff_guest";
+    if (registration.status === "cancelled" || registration.status === "refunded") return "cancelled_refunded";
+    if (registration.admin_notes?.includes("Discounted:")) return "discounted";
+    if (registration.payment_status === "completed") return "fully_paid";
+    if (registration.status === "confirmed" && registration.payment_status === "pending") return "partial_payment";
     return "pending";
   });
   const [showPaymentForm, setShowPaymentForm] = useState(false);
@@ -333,6 +334,23 @@ function RegistrationDetail({
         payment_received_date: paymentDate,
         amount_deposited: Math.round(parseFloat(amountDeposited) * 100),
       }, "confirmed");
+    } else if (selectedStatus === "discounted") {
+      if (!paymentDate || !amountDeposited) { setIsSavingStatus(false); return; }
+      const discountedCents = Math.round(parseFloat(amountDeposited) * 100);
+      await updatePaymentStatus(registration.id, "completed", {
+        payment_received_date: paymentDate,
+        amount_deposited: discountedCents,
+      }, "confirmed");
+      const discountNote = `Discounted: original $${amountDueDollars.toFixed(2)} → $${parseFloat(amountDeposited).toFixed(2)} on ${paymentDate}`;
+      const existingNotes = registration.admin_notes ?? "";
+      const hasDiscount = existingNotes.includes("Discounted:");
+      const updatedNotes = hasDiscount
+        ? existingNotes.replace(/Discounted:.*/, discountNote)
+        : (existingNotes ? `${existingNotes}\n${discountNote}` : discountNote);
+      await updateRegistrationDetails(registration.id, {
+        ...form,
+        admin_notes: updatedNotes,
+      });
     } else if (selectedStatus === "cancelled_refunded") {
       await updatePaymentStatus(registration.id, "refunded", undefined, "cancelled");
     } else if (selectedStatus === "partial_payment") {
@@ -431,12 +449,13 @@ function RegistrationDetail({
             value={selectedStatus}
             onChange={(e) => {
               setSelectedStatus(e.target.value);
-              setShowPaymentForm(e.target.value === "fully_paid" || e.target.value === "partial_payment");
+              setShowPaymentForm(e.target.value === "fully_paid" || e.target.value === "partial_payment" || e.target.value === "discounted");
             }}
             className="w-52"
           >
             <option value="pending">Pending</option>
             <option value="fully_paid">Mark as Fully Paid</option>
+            <option value="discounted">Discounted</option>
             <option value="cancelled_refunded">Cancelled / Refunded</option>
             <option value="partial_payment">Partial Payment</option>
             <option value="staff_guest">Staff / Guest</option>
@@ -454,6 +473,25 @@ function RegistrationDetail({
               <div>
                 <Label className="mb-1 block text-xs text-green-700">Amount Deposited ($) *</Label>
                 <Input type="number" step="0.01" min="0" placeholder="475.00" value={amountDeposited} onChange={(e) => setAmountDeposited(e.target.value)} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showPaymentForm && selectedStatus === "discounted" && (
+          <div className="rounded-lg border border-purple-200 bg-purple-50 p-4">
+            <h4 className="mb-3 text-sm font-semibold text-purple-800">Discounted Payment</h4>
+            <p className="mb-3 text-xs text-purple-600">
+              Original price: <strong>${amountDueDollars.toFixed(2)}</strong>. Enter the discounted amount actually paid. This will be marked as fully paid.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <Label className="mb-1 block text-xs text-purple-700">Date Received *</Label>
+                <Input type="date" value={paymentDate} onChange={(e) => setPaymentDate(e.target.value)} />
+              </div>
+              <div>
+                <Label className="mb-1 block text-xs text-purple-700">Discounted Amount Paid ($) *</Label>
+                <Input type="number" step="0.01" min="0" placeholder="300.00" value={amountDeposited} onChange={(e) => setAmountDeposited(e.target.value)} />
               </div>
             </div>
           </div>
@@ -534,6 +572,7 @@ function RegistrationDetail({
           disabled={
             isSavingStatus ||
             (selectedStatus === "fully_paid" && (!paymentDate || !amountDeposited)) ||
+            (selectedStatus === "discounted" && (!paymentDate || !amountDeposited)) ||
             (selectedStatus === "partial_payment" && existingPayments.length === 0 && (!paymentDate || !amountDeposited))
           }
           onClick={handleSaveStatus}
@@ -656,12 +695,15 @@ function PaymentBadge({ status, paymentStatus }: { status: string; paymentStatus
   return <Badge variant="outline" className="text-xs">UNPAID</Badge>;
 }
 
-function StatusBadge({ status, paymentStatus }: { status: string; paymentStatus: string }) {
+function StatusBadge({ status, paymentStatus, adminNotes }: { status: string; paymentStatus: string; adminNotes?: string | null }) {
   if (status === "waitlisted") {
     return <Badge variant="outline" className="text-xs">Staff/Guest</Badge>;
   }
   if (status === "cancelled" || status === "refunded") {
     return <Badge variant="destructive" className="text-xs">Cancelled/Refunded</Badge>;
+  }
+  if (status === "confirmed" && paymentStatus === "completed" && adminNotes?.includes("Discounted:")) {
+    return <Badge variant="default" className="border-purple-300 bg-purple-100 text-xs text-purple-800 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300">Discounted</Badge>;
   }
   if (status === "confirmed" && paymentStatus === "completed") {
     return <Badge variant="default" className="text-xs">Fully Paid</Badge>;
