@@ -11,17 +11,8 @@ const navLinks = [
 export function Header() {
   return (
     <header className="absolute top-0 z-50 w-full">
-      <div className="container flex h-20 items-center justify-between gap-4">
-        <Link href="/" className="flex shrink-0 flex-col">
-          <span className="font-heading text-base font-bold tracking-wide text-[var(--text-primary)] sm:text-xl">
-            {siteConfig.shortName.toUpperCase()}
-          </span>
-          <span className="label-gold -mt-0.5 text-[8px]">
-            {siteConfig.footer.tagline}
-          </span>
-        </Link>
-
-        <nav className="hidden items-center gap-8 lg:flex">
+      <div className="container flex h-20 items-center justify-center">
+        <nav className="flex items-center gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -32,7 +23,6 @@ export function Header() {
             </Link>
           ))}
         </nav>
-
       </div>
     </header>
   );
