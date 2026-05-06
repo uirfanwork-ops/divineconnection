@@ -171,9 +171,7 @@ export function RegistrationsTable({
                     <StatusBadge status={reg.status} paymentStatus={reg.payment_status} />
                   </td>
                   <td className="px-4 py-3">
-                    <Badge variant={reg.payment_status === "completed" ? "default" : reg.payment_status === "failed" ? "destructive" : "outline"} className="text-xs">
-                      {reg.payment_status === "pending" ? "UNPAID" : reg.payment_status === "completed" ? "PAID" : reg.payment_status}
-                    </Badge>
+                    <PaymentBadge status={reg.status} paymentStatus={reg.payment_status} />
                   </td>
                   <td className="px-4 py-3 text-right font-medium">{formatCents(reg.amount_cents, reg.currency)}</td>
                   <td className="hidden px-4 py-3 text-muted-foreground lg:table-cell">{new Date(reg.created_at).toLocaleDateString()}</td>
@@ -646,6 +644,16 @@ function ToggleField({
       )}
     </div>
   );
+}
+
+function PaymentBadge({ status, paymentStatus }: { status: string; paymentStatus: string }) {
+  if (paymentStatus === "completed") {
+    return <Badge variant="default" className="text-xs">PAID</Badge>;
+  }
+  if (status === "confirmed" && paymentStatus === "pending") {
+    return <Badge variant="outline" className="border-blue-300 bg-blue-50 text-xs text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300">PARTIALLY PAID</Badge>;
+  }
+  return <Badge variant="outline" className="text-xs">UNPAID</Badge>;
 }
 
 function StatusBadge({ status, paymentStatus }: { status: string; paymentStatus: string }) {
