@@ -54,6 +54,7 @@ export function RegistrationsTable({
     if (payment) params.set("payment", payment);
     if (searchInput) params.set("search", searchInput);
     router.push(`/admin/registrations?${params.toString()}`);
+    router.refresh();
   }
 
   function updateParams(updates: Record<string, string>) {
@@ -67,6 +68,7 @@ export function RegistrationsTable({
     }
     if (!updates.page) params.delete("page");
     router.push(`/admin/registrations?${params.toString()}`);
+    router.refresh();
   }
 
   function handleSearch(e: React.FormEvent) {
