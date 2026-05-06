@@ -168,7 +168,7 @@ export function RegistrationsTable({
                   <td className="px-4 py-3 font-medium text-foreground">{reg.full_name}</td>
                   <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">{reg.email}</td>
                   <td className="px-4 py-3">
-                    <Badge variant={reg.status === "confirmed" ? "default" : reg.status === "cancelled" ? "destructive" : "outline"} className="text-xs">{reg.status}</Badge>
+                    <StatusBadge status={reg.status} paymentStatus={reg.payment_status} />
                   </td>
                   <td className="px-4 py-3">
                     <Badge variant={reg.payment_status === "completed" ? "default" : reg.payment_status === "failed" ? "destructive" : "outline"} className="text-xs">
@@ -646,6 +646,22 @@ function ToggleField({
       )}
     </div>
   );
+}
+
+function StatusBadge({ status, paymentStatus }: { status: string; paymentStatus: string }) {
+  if (status === "waitlisted") {
+    return <Badge variant="outline" className="text-xs">Staff/Guest</Badge>;
+  }
+  if (status === "cancelled" || status === "refunded") {
+    return <Badge variant="destructive" className="text-xs">Cancelled/Refunded</Badge>;
+  }
+  if (status === "confirmed" && paymentStatus === "completed") {
+    return <Badge variant="default" className="text-xs">Fully Paid</Badge>;
+  }
+  if (status === "confirmed" && paymentStatus === "pending") {
+    return <Badge variant="outline" className="text-xs">Partial Payment</Badge>;
+  }
+  return <Badge variant="outline" className="text-xs">Pending</Badge>;
 }
 
 function ReminderButton({ registrationId }: { registrationId: string }) {
