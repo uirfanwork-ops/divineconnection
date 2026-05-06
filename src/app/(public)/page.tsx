@@ -16,8 +16,8 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection />
-      <GalleryMarquee />
       <AboutSection />
+      <GalleryMarquee />
       <QualitiesSection />
       <SpeakersSection speakers={speakers} />
       <VenueSection />
