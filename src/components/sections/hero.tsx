@@ -60,16 +60,18 @@ export function HeroSection() {
 
       {/* Floating Stars */}
       <div className="pointer-events-none absolute inset-0 z-20">
-        <div className="hero-orb absolute left-[20%] top-[25%] h-1.5 w-1.5 rounded-full bg-[#c9a84c] shadow-[0_0_6px_2px_rgba(201,168,76,0.6)] [animation-delay:0s]" />
-        <div className="hero-orb absolute right-[18%] top-[30%] h-1 w-1 rounded-full bg-white shadow-[0_0_4px_2px_rgba(255,255,255,0.5)] [animation-delay:-3s]" />
-        <div className="hero-orb absolute left-[35%] top-[55%] h-2 w-2 rounded-full bg-[#c9a84c] shadow-[0_0_8px_3px_rgba(201,168,76,0.5)] [animation-delay:-7s]" />
-        <div className="hero-orb absolute right-[30%] top-[20%] h-1 w-1 rounded-full bg-[#d9b96a] shadow-[0_0_5px_2px_rgba(217,185,106,0.5)] [animation-delay:-5s]" />
-        <div className="hero-orb absolute left-[10%] top-[60%] h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_6px_2px_rgba(255,255,255,0.4)] [animation-delay:-2s]" />
-        <div className="hero-orb absolute right-[12%] top-[65%] h-1 w-1 rounded-full bg-[#c9a84c] shadow-[0_0_4px_2px_rgba(201,168,76,0.6)] [animation-delay:-9s]" />
-        <div className="hero-orb absolute left-[45%] top-[18%] h-1 w-1 rounded-full bg-white shadow-[0_0_4px_1px_rgba(255,255,255,0.5)] [animation-delay:-4s]" />
-        <div className="hero-orb absolute right-[40%] top-[72%] h-1.5 w-1.5 rounded-full bg-[#d9b96a] shadow-[0_0_6px_2px_rgba(217,185,106,0.4)] [animation-delay:-6s]" />
-        <div className="hero-orb absolute left-[28%] top-[40%] h-1 w-1 rounded-full bg-[#c9a84c] shadow-[0_0_4px_2px_rgba(201,168,76,0.5)] [animation-delay:-1s]" />
-        <div className="hero-orb absolute right-[22%] top-[48%] h-2 w-2 rounded-full bg-white shadow-[0_0_6px_3px_rgba(255,255,255,0.3)] [animation-delay:-8s]" />
+        <div className="hero-star absolute left-[20%] top-[25%] h-1 w-1 rounded-full bg-[#e8d48b] shadow-[0_0_4px_2px_#c9a84c,0_0_10px_4px_rgba(201,168,76,0.3)] [animation-delay:0s]" />
+        <div className="hero-star absolute right-[18%] top-[30%] h-1.5 w-1.5 rounded-full bg-[#e8d48b] shadow-[0_0_6px_3px_#c9a84c,0_0_14px_6px_rgba(201,168,76,0.3)] [animation-delay:-2.5s]" />
+        <div className="hero-star absolute left-[35%] top-[55%] h-2.5 w-2.5 rounded-full bg-[#f0e0a0] shadow-[0_0_8px_4px_#c9a84c,0_0_20px_8px_rgba(201,168,76,0.25)] [animation-delay:-5s]" />
+        <div className="hero-star absolute right-[30%] top-[20%] h-0.5 w-0.5 rounded-full bg-[#e8d48b] shadow-[0_0_3px_1px_#c9a84c,0_0_8px_3px_rgba(201,168,76,0.3)] [animation-delay:-7s]" />
+        <div className="hero-star absolute left-[10%] top-[60%] h-2 w-2 rounded-full bg-[#f0e0a0] shadow-[0_0_6px_3px_#c9a84c,0_0_16px_6px_rgba(201,168,76,0.25)] [animation-delay:-1s]" />
+        <div className="hero-star absolute right-[12%] top-[65%] h-1 w-1 rounded-full bg-[#e8d48b] shadow-[0_0_4px_2px_#c9a84c,0_0_10px_4px_rgba(201,168,76,0.3)] [animation-delay:-4s]" />
+        <div className="hero-star absolute left-[45%] top-[18%] h-0.5 w-0.5 rounded-full bg-[#e8d48b] shadow-[0_0_3px_1px_#c9a84c,0_0_8px_3px_rgba(201,168,76,0.3)] [animation-delay:-6s]" />
+        <div className="hero-star absolute right-[40%] top-[72%] h-1.5 w-1.5 rounded-full bg-[#f0e0a0] shadow-[0_0_6px_3px_#c9a84c,0_0_14px_6px_rgba(201,168,76,0.25)] [animation-delay:-3s]" />
+        <div className="hero-star absolute left-[28%] top-[40%] h-0.5 w-0.5 rounded-full bg-[#e8d48b] shadow-[0_0_3px_1px_#c9a84c,0_0_8px_3px_rgba(201,168,76,0.3)] [animation-delay:-8s]" />
+        <div className="hero-star absolute right-[22%] top-[48%] h-3 w-3 rounded-full bg-[#f5e8b0] shadow-[0_0_10px_5px_#c9a84c,0_0_24px_10px_rgba(201,168,76,0.2)] [animation-delay:-5.5s]" />
+        <div className="hero-star absolute left-[52%] top-[35%] h-1 w-1 rounded-full bg-[#e8d48b] shadow-[0_0_4px_2px_#c9a84c,0_0_10px_4px_rgba(201,168,76,0.3)] [animation-delay:-9s]" />
+        <div className="hero-star absolute right-[8%] top-[45%] h-0.5 w-0.5 rounded-full bg-[#e8d48b] shadow-[0_0_3px_1px_#c9a84c,0_0_8px_3px_rgba(201,168,76,0.3)] [animation-delay:-7.5s]" />
       </div>
 
       <div className="container relative z-10 flex flex-col items-center px-6 py-32 text-center">
