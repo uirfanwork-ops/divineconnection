@@ -65,7 +65,7 @@ export function HeroSection() {
           width={1064}
           height={732}
           priority
-          className="w-full max-w-3xl"
+          className="w-full max-w-4xl"
           unoptimized
         />
         <div className="mt-10 sm:mt-12">
