@@ -58,6 +58,16 @@ export function HeroSection() {
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#0a1a0a]" />
 
+      {/* Glowing Orbs */}
+      <div className="pointer-events-none absolute inset-0 z-[5]">
+        <div className="hero-orb absolute left-[15%] top-[20%] h-32 w-32 rounded-full bg-[#c9a84c]/20 blur-3xl [animation-delay:0s]" />
+        <div className="hero-orb absolute right-[10%] top-[30%] h-24 w-24 rounded-full bg-[#c9a84c]/15 blur-2xl [animation-delay:-3s]" />
+        <div className="hero-orb absolute left-[40%] top-[60%] h-40 w-40 rounded-full bg-[#c9a84c]/10 blur-3xl [animation-delay:-7s]" />
+        <div className="hero-orb absolute right-[25%] top-[15%] h-20 w-20 rounded-full bg-white/10 blur-2xl [animation-delay:-5s]" />
+        <div className="hero-orb absolute left-[5%] top-[65%] h-28 w-28 rounded-full bg-[#c9a84c]/15 blur-3xl [animation-delay:-2s]" />
+        <div className="hero-orb absolute right-[15%] top-[70%] h-36 w-36 rounded-full bg-white/5 blur-3xl [animation-delay:-9s]" />
+      </div>
+
       <div className="container relative z-10 flex flex-col items-center px-6 py-32 text-center">
         <Image
           src="/logo-hero.png"

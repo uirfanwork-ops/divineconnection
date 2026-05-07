@@ -187,6 +187,30 @@
     animation-play-state: paused;
   }
 
+  /* ======= HERO ORBS ======= */
+  @keyframes orb-float {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+      opacity: 0.6;
+    }
+    25% {
+      transform: translate(30px, -40px) scale(1.15);
+      opacity: 1;
+    }
+    50% {
+      transform: translate(-20px, -60px) scale(0.9);
+      opacity: 0.4;
+    }
+    75% {
+      transform: translate(-40px, -20px) scale(1.1);
+      opacity: 0.8;
+    }
+  }
+
+  .hero-orb {
+    animation: orb-float 12s ease-in-out infinite;
+  }
+
   /* ======= LIGHT MODE OVERRIDES (for registration) ======= */
   .theme-cream {
     --bg-primary: #f5f0e8;
