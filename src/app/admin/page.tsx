@@ -8,6 +8,7 @@ import {
   DollarSign,
   Ticket,
   UserCheck,
+  Eye,
 } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/service";
 import { formatCents } from "@/lib/utils";
@@ -68,6 +69,10 @@ async function getDashboardData() {
     .order("created_at", { ascending: false })
     .limit(10);
 
+  const { count: uniqueVisitors } = await supabase
+    .from("site_visits")
+    .select("*", { count: "exact", head: true });
+
   return {
     kpi: {
       totalRegistrations: rows.length,
@@ -78,6 +83,7 @@ async function getDashboardData() {
       partialPayment,
       revenueCents: fullRevenueCents + partialRevenueCents,
       seatsRemaining: Math.max(0, MAX_SEATS - seatsTaken),
+      uniqueVisitors: uniqueVisitors ?? 0,
     },
     recentRegistrations: recent ?? [],
   };
@@ -87,6 +93,7 @@ export default async function AdminDashboardPage() {
   const { kpi, recentRegistrations } = await getDashboardData();
 
   const kpiCards = [
+    { title: "Unique Visitors", value: kpi.uniqueVisitors, icon: Eye, color: "text-indigo-600" },
     { title: "Total Registrations", value: kpi.totalRegistrations, icon: Users, color: "text-blue-600" },
     { title: "Fully Paid", value: kpi.paid, icon: CheckCircle2, color: "text-green-600" },
     { title: "Pending Payment", value: kpi.pendingPayment, icon: Clock, color: "text-amber-600" },

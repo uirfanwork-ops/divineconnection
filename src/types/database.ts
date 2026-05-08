@@ -423,6 +423,24 @@ export interface Database {
         };
         Relationships: [];
       };
+      site_visits: {
+        Row: {
+          id: string;
+          visitor_id: string;
+          visited_at: string;
+        };
+        Insert: {
+          id?: string;
+          visitor_id: string;
+          visited_at?: string;
+        };
+        Update: {
+          id?: string;
+          visitor_id?: string;
+          visited_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
