@@ -70,7 +70,7 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
                   {speaker.sessionTitle && (
                     <div className="mt-3 flex items-start gap-2">
                       <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a84c]" />
-                      <p className="text-sm font-semibold leading-snug text-[#c9a84c]/80">
+                      <p className="font-heading text-xl font-bold leading-snug text-[#c9a84c]/80 md:text-2xl">
                         {speaker.sessionTitle}
                       </p>
                     </div>
@@ -122,7 +122,7 @@ export function SpeakersSection({ speakers }: { speakers: Speaker[] }) {
               </h3>
               <div className="mt-3 flex items-start justify-center gap-2 md:justify-start">
                 <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-[#c9a84c]" />
-                <p className="text-sm font-semibold leading-snug text-[#c9a84c]/80 md:text-base">
+                <p className="font-heading text-xl font-bold leading-snug text-[#c9a84c]/80 md:text-2xl">
                   Discussions on Practical Application of Servanthood in
                   Everyday Life
                 </p>
