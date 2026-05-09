@@ -37,7 +37,7 @@ export function QualitiesSection() {
                 {Icon && (
                   <Icon className="mb-5 h-7 w-7 text-[#c9a84c]" />
                 )}
-                <h3 className="font-heading text-xl font-semibold uppercase tracking-wide text-[#1a1a1a]">
+                <h3 className="text-xl font-semibold uppercase tracking-wide text-[#1a1a1a]">
                   {quality.title}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-[#4a4540]">
