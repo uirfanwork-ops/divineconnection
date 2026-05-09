@@ -194,7 +194,12 @@ export function RegistrationsTable({
             <RegistrationDetail
               registration={selectedRow}
               onClose={() => setSelectedRow(null)}
-              onRefresh={(keepOpen) => { router.refresh(); if (!keepOpen) setSelectedRow(null); }}
+              onRefresh={(keepOpen) => {
+                router.refresh();
+                if (!keepOpen) {
+                  setTimeout(() => setSelectedRow(null), 300);
+                }
+              }}
             />
           </div>
         </div>
@@ -369,7 +374,11 @@ function RegistrationDetail({
       await updatePaymentStatus(registration.id, "pending", undefined, "pending");
     }
     setIsSavingStatus(false);
-    onRefresh();
+    setSaveMessage("Status updated!");
+    setTimeout(() => {
+      setSaveMessage("");
+      onRefresh();
+    }, 1000);
   }
 
   return (
