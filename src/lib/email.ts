@@ -17,6 +17,7 @@ interface SendEmailOptions {
   subject: string;
   html: string;
   replyTo?: string;
+  cc?: string | string[];
 }
 
 export async function sendEmail(options: SendEmailOptions): Promise<string> {
@@ -28,6 +29,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<string> {
         subject: options.subject,
         html: options.html,
         replyTo: options.replyTo,
+        cc: options.cc ? (Array.isArray(options.cc) ? options.cc : [options.cc]) : undefined,
       });
 
       if (error) {

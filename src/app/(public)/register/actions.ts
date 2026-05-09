@@ -152,6 +152,7 @@ export async function submitRegistration(
 
   sendEmail({
     to: data.email,
+    cc: "events@mathabah.org",
     ...eTransferConfirmationEmail(emailData),
   }).catch((err) => console.error("Failed to send confirmation:", err));
 
@@ -159,6 +160,7 @@ export async function submitRegistration(
   if (adminEmail) {
     sendEmail({
       to: adminEmail,
+      cc: "events@mathabah.org",
       ...adminNewRegistrationEmail({ ...emailData, phone: data.phone, tier_name: "Early Bird" }),
     }).catch((err) => console.error("Failed to send admin notification:", err));
   }
