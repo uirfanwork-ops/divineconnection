@@ -152,7 +152,7 @@ export async function submitRegistration(
 
   sendEmail({
     to: data.email,
-    cc: "events@mathabah.org",
+    cc: ["events@mathabah.org", "admin@mathabah.org"],
     ...eTransferConfirmationEmail(emailData),
   }).catch((err) => console.error("Failed to send confirmation:", err));
 
