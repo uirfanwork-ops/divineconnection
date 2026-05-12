@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1066" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EFE8DA"/>
+      <stop offset="1" stop-color="#A89377"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1066" fill="url(#g)"/>
+  <g fill="#A89377" opacity="0.22">
+    <rect x="128" y="692.9" width="1344" height="1"/>
+    <rect x="128" y="746.1999999999999" width="1344" height="1"/>
+  </g>
+  <text x="800" y="533" text-anchor="middle" font-family="Georgia, serif" font-size="88" fill="#F4EDE3" opacity="0.85" font-style="italic">No. 08</text>
+</svg>

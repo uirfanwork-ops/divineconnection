@@ -1,88 +1,79 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./content/**/*.{md,mdx}",
   ],
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
-      fontFamily: {
-        serif: ["var(--font-lora)", "Georgia", "serif"],
-        heading: ["var(--font-playfair)", "Georgia", "serif"],
-      },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        chart: {
-          "1": "hsl(var(--chart-1))",
-          "2": "hsl(var(--chart-2))",
-          "3": "hsl(var(--chart-3))",
-          "4": "hsl(var(--chart-4))",
-          "5": "hsl(var(--chart-5))",
-        },
+        bone: "#F4EDE3",
+        sand: "#C9B89C",
+        sandSoft: "#EAE1D0",
+        stone: "#A89377",
+        clay: "#8B6F47",
+        amber: "#D4A574",
+        mist: "#8B8278",
+        mistBone: "#EDE7DC",
+        ink: "#1F1A14",
+        hairline: "rgba(31,26,20,0.18)",
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+      fontFamily: {
+        display: [
+          "var(--font-display)",
+          "Tiempos Headline",
+          "Georgia",
+          "serif",
+        ],
+        sans: [
+          "var(--font-sans)",
+          "Neue Haas Grotesk Display",
+          "Inter",
+          "system-ui",
+          "sans-serif",
+        ],
+      },
+      fontSize: {
+        eyebrow: ["11px", { lineHeight: "1.4", letterSpacing: "0.22em" }],
+        caption: ["13px", { lineHeight: "1.5" }],
+        body: ["16px", { lineHeight: "1.65" }],
+        "body-lg": ["24px", { lineHeight: "1.5" }],
+        h3: ["28px", { lineHeight: "1.2" }],
+      },
+      letterSpacing: {
+        wordmark: "0.04em",
+        nav: "0.18em",
+        eyebrow: "0.22em",
+        hero: "0.32em",
+        tight: "-0.02em",
+        tighter: "-0.025em",
+      },
+      maxWidth: {
+        page: "1440px",
+        prose: "580px",
+        proseLg: "720px",
+      },
+      spacing: {
+        gutter: "96px",
+        "gutter-md": "64px",
+        "gutter-sm": "32px",
+        "section-y": "96px",
+        "section-y-sm": "56px",
       },
       keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(24px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-up": "fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 };
 export default config;
