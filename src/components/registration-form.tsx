@@ -9,6 +9,7 @@ import {
   Phone,
   Stethoscope,
   Car,
+  BedDouble,
   Camera,
   FileCheck,
   PenLine,
@@ -69,6 +70,7 @@ export function RegistrationForm({
       guardian_phone: "",
       guardian_email: "",
       seeking_carpool: false,
+      roommate_preference: "",
       photo_consent: false,
       accept_waiver: false as unknown as true,
       accept_code_of_conduct: false as unknown as true,
@@ -318,6 +320,19 @@ export function RegistrationForm({
               onChange={(v) => setValue("seeking_carpool", v)}
             />
           </div>
+        </Section>
+
+        {/* 4b. Room Preference */}
+        <Section icon={BedDouble} title="Room Preference">
+          <Field label="Who would you like to share a room with?" error={errors.roommate_preference?.message}>
+            <Input
+              placeholder="Enter the name of the person you'd like to room with"
+              {...register("roommate_preference")}
+            />
+            <p className="mt-1 text-xs text-[var(--text-muted)]">
+              Optional — if you know the name of the person you would like to share a room with.
+            </p>
+          </Field>
         </Section>
 
         {/* 5. Payment Information */}

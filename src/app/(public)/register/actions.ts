@@ -117,6 +117,7 @@ export async function submitRegistration(
     guardian_email: data.guardian_email || null,
     driving_self: false,
     seeking_carpool: data.seeking_carpool,
+    admin_notes: data.roommate_preference ? `Roommate preference: ${data.roommate_preference}` : null,
     photo_consent: data.photo_consent,
     policy_consent_at: now,
     waiver_accepted_at: now,

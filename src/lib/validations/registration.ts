@@ -64,6 +64,9 @@ export const registrationSchema = z
     // Transportation
     seeking_carpool: z.boolean(),
 
+    // Room preference
+    roommate_preference: z.string().max(200).trim().optional().default(""),
+
     // Photo/Media Consent
     photo_consent: z.boolean(),
 
