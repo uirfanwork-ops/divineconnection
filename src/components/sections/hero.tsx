@@ -89,6 +89,9 @@ export function HeroSection() {
             {hero.ctaText}
           </Link>
         </div>
+        <div className="glow-pill mt-6 rounded-full border border-[#c9a84c]/40 bg-[#c9a84c]/10 px-6 py-2 text-xs font-semibold uppercase tracking-widest text-[#e8d48b] backdrop-blur-sm sm:text-sm">
+          Early Bird Extended Until June 25th, 2026
+        </div>
       </div>
     </section>
   );
