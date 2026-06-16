@@ -300,6 +300,12 @@ function RegistrationDetail({
     onRefresh();
   }
 
+  function parseRoommatePreference(notes: string | null): string {
+    if (!notes) return "N/A";
+    const match = notes.match(/Roommate preference: (.+)/);
+    return match ? match[1] : "N/A";
+  }
+
   function parsePayments(notes: string | null): { date: string; amount: number }[] {
     if (!notes) return [];
     const results: { date: string; amount: number }[] = [];
@@ -444,6 +450,13 @@ function RegistrationDetail({
         <ToggleField label="Driving Self" value={form.driving_self} editing={isEditing} onChange={(v) => updateField("driving_self", v)} />
         <ToggleField label="Seeking Carpool" value={form.seeking_carpool} editing={isEditing} onChange={(v) => updateField("seeking_carpool", v)} />
         <ToggleField label="Photo Consent" value={form.photo_consent} editing={isEditing} onChange={(v) => updateField("photo_consent", v)} />
+      </div>
+
+      <div className="mt-4">
+        <div>
+          <dt className="text-muted-foreground">Room Preference</dt>
+          <dd className="font-medium">{parseRoommatePreference(registration.admin_notes)}</dd>
+        </div>
       </div>
 
       <div className="mt-4">
