@@ -40,7 +40,7 @@ export function PricingSection() {
             </p>
 
             <p className="mt-3 text-sm font-bold uppercase tracking-wider text-[#c9a84c]">
-              Until June 25th, 2026
+              Until July 10th, 2026
             </p>
 
             <div className="my-6 h-px w-16 bg-[#c9a84c] opacity-50" />
