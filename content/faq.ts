@@ -20,11 +20,6 @@ export const faq: FaqItem[] = [
       "Your registration includes accommodation for 3 nights, all halal meals (breakfast, lunch, and dinner), access to all lectures, workshops, and activities, a welcome package with retreat materials, and access to the venue facilities. Please see the 'What Is Included' section for full details.",
   },
   {
-    question: "Is financial aid available?",
-    answer:
-      "Yes, financial aid is available upon request. We do not want finances to be a barrier to seeking knowledge. Please contact us at events@mathabah.org to discuss your situation confidentially.",
-  },
-  {
     question: "What is the refund policy?",
     answer:
       "Full refunds are available up to 30 days before the retreat. A 50% refund is available 15–30 days before the retreat. No refunds are available within 14 days of the retreat. Transfers to another attendee are permitted at any time with prior notice. Please review our full refund policy for details.",
