@@ -147,7 +147,8 @@ export function RegistrationsTable({
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">Code</th>
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
               <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">Email</th>
-              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Gender</th>
+              <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground md:table-cell">Allergies</th>
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">Payment</th>
               <th className="px-4 py-3 text-right font-medium text-muted-foreground">Amount</th>
               <th className="hidden px-4 py-3 text-left font-medium text-muted-foreground lg:table-cell">Date</th>
@@ -156,7 +157,7 @@ export function RegistrationsTable({
           </thead>
           <tbody>
             {registrations.length === 0 ? (
-              <tr><td colSpan={8} className="px-4 py-8 text-center text-muted-foreground">No registrations found.</td></tr>
+              <tr><td colSpan={9} className="px-4 py-8 text-center text-muted-foreground">No registrations found.</td></tr>
             ) : (
               registrations.map((reg) => (
                 <tr
@@ -167,8 +168,9 @@ export function RegistrationsTable({
                   <td className="px-4 py-3 font-mono text-xs font-bold text-foreground">{reg.confirmation_code}</td>
                   <td className="px-4 py-3 font-medium text-foreground">{reg.full_name}</td>
                   <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">{reg.email}</td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={reg.status} paymentStatus={reg.payment_status} adminNotes={reg.admin_notes} />
+                  <td className="px-4 py-3 capitalize text-muted-foreground">{reg.gender ?? "—"}</td>
+                  <td className="hidden max-w-[200px] truncate px-4 py-3 text-muted-foreground md:table-cell" title={reg.allergies ?? ""}>
+                    {reg.allergies || "—"}
                   </td>
                   <td className="px-4 py-3">
                     <PaymentBadge status={reg.status} paymentStatus={reg.payment_status} />
@@ -715,25 +717,6 @@ function PaymentBadge({ status, paymentStatus }: { status: string; paymentStatus
     return <Badge variant="outline" className="border-blue-300 bg-blue-50 text-xs text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300">PARTIALLY PAID</Badge>;
   }
   return <Badge variant="outline" className="text-xs">UNPAID</Badge>;
-}
-
-function StatusBadge({ status, paymentStatus, adminNotes }: { status: string; paymentStatus: string; adminNotes?: string | null }) {
-  if (status === "waitlisted") {
-    return <Badge variant="outline" className="text-xs">Staff/Guest</Badge>;
-  }
-  if (status === "cancelled" || status === "refunded") {
-    return <Badge variant="destructive" className="text-xs">Cancelled/Refunded</Badge>;
-  }
-  if (status === "confirmed" && paymentStatus === "completed" && adminNotes?.includes("Discounted:")) {
-    return <Badge variant="default" className="border-purple-300 bg-purple-100 text-xs text-purple-800 dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300">Discounted</Badge>;
-  }
-  if (status === "confirmed" && paymentStatus === "completed") {
-    return <Badge variant="default" className="text-xs">Fully Paid</Badge>;
-  }
-  if (status === "confirmed" && paymentStatus === "pending") {
-    return <Badge variant="outline" className="text-xs">Partial Payment</Badge>;
-  }
-  return <Badge variant="outline" className="text-xs">Pending</Badge>;
 }
 
 function ReminderButton({ registrationId }: { registrationId: string }) {
