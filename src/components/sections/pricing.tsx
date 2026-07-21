@@ -28,19 +28,14 @@ export function PricingSection() {
 
         <div className="mx-auto mt-16 max-w-lg">
           <div className="relative flex flex-col border border-[#c9a84c] bg-white p-8">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#c9a84c]">Early Bird</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#c9a84c]">Registration</p>
             <div className="mt-3 flex items-baseline">
               <span className="font-heading text-5xl font-bold text-[#1a1a1a]">$475</span>
-              <span className="ml-2 font-heading text-2xl font-medium text-[#999] line-through">($550)</span>
               <span className="ml-2 text-xs uppercase tracking-wider text-[#999]">CAD</span>
             </div>
 
             <p className="mt-3 text-sm leading-relaxed text-[#555]">
               All-inclusive registration for the Divine Connections retreat. Includes accommodation, meals, sessions, and activities.
-            </p>
-
-            <p className="mt-3 text-sm font-bold uppercase tracking-wider text-[#c9a84c]">
-              Until July 10th, 2026
             </p>
 
             <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-3 text-xs leading-relaxed text-red-800">

@@ -28,9 +28,6 @@ export default function RegisterPage() {
               <div className="h-2 w-2 rotate-45 border border-[var(--gold)]" />
               <div className="h-px w-12 bg-[var(--gold)]" />
             </div>
-            <div className="glow-pill mx-auto mt-6 w-fit rounded-full border border-[#c9a84c]/40 bg-[#c9a84c]/10 px-6 py-2 text-xs font-semibold uppercase tracking-widest text-[#e8d48b] sm:text-sm">
-              Early Bird Extended Until July 10th, 2026
-            </div>
             <p className="mt-4 text-sm text-[var(--text-muted)]">
               Fields marked with <span className="font-semibold text-[var(--gold)]">*</span> are required.
             </p>
