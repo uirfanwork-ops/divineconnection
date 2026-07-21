@@ -43,6 +43,13 @@ export function PricingSection() {
               Until July 10th, 2026
             </p>
 
+            <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-3 text-xs leading-relaxed text-red-800">
+              <strong className="block font-bold uppercase tracking-wide">Sisters&apos; Accommodations Sold Out</strong>
+              <span className="mt-1 block">
+                All sisters&apos; accommodations are at capacity and have been sold out. Please only fill out the form if you would like to be placed on the waitlist. We apologise for any inconvenience.
+              </span>
+            </div>
+
             <div className="my-6 h-px w-16 bg-[#c9a84c] opacity-50" />
 
             <ul className="mb-8 flex-1 space-y-3">

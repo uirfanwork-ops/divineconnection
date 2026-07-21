@@ -92,6 +92,12 @@ export function HeroSection() {
         <div className="glow-pill mt-6 rounded-full border border-[#c9a84c]/40 bg-[#c9a84c]/10 px-6 py-2 text-xs font-semibold uppercase tracking-widest text-[#e8d48b] backdrop-blur-sm sm:text-sm">
           Early Bird Extended Until July 10th, 2026
         </div>
+        <div className="mt-4 max-w-xl rounded-md border border-red-400/50 bg-red-950/40 px-4 py-3 text-xs leading-relaxed text-red-100 backdrop-blur-sm sm:text-sm">
+          <strong className="block font-bold uppercase tracking-wide text-red-200">Sisters&apos; Accommodations Sold Out</strong>
+          <span className="mt-1 block">
+            All sisters&apos; accommodations are at capacity and have been sold out. Please only fill out the form if you would like to be placed on the waitlist. We apologise for any inconvenience.
+          </span>
+        </div>
       </div>
     </section>
   );
