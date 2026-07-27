@@ -109,14 +109,13 @@ export default function GalleryPage() {
         </div>
 
         {/* CTA */}
-        <div className="mx-auto mt-16 max-w-xl rounded-md border border-red-400/50 bg-red-950/40 px-6 py-4 text-center text-sm leading-relaxed text-red-100 backdrop-blur-sm sm:text-base">
-          <strong className="block font-bold uppercase tracking-wide text-red-200">Event Sold Out</strong>
-          <span className="mt-2 block">
-            This event has been sold out. For any inquiries, please email{" "}
-            <a href="mailto:events@mathabah.org" className="underline underline-offset-2 hover:text-white">
-              events@mathabah.org
-            </a>.
-          </span>
+        <div className="mt-16 text-center">
+          <p className="text-sm text-[var(--text-secondary)]">
+            Want to be part of this year&apos;s memories?
+          </p>
+          <Link href="/register" className="btn-outline-gold mt-4 inline-flex">
+            Register for 2026
+          </Link>
         </div>
       </div>
     </div>

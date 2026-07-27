@@ -63,6 +63,7 @@ export function Footer() {
                 { label: "Schedule", href: "/#schedule" },
                 { label: "Speakers", href: "/#speakers" },
                 { label: "Pricing", href: "/#pricing" },
+                { label: "Register", href: "/register" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link

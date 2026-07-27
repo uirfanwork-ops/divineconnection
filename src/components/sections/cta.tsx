@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { siteConfig } from "../../../content/site-config";
 import { ParallaxBg } from "@/components/parallax-bg";
 
@@ -16,15 +17,17 @@ export function CtaSection() {
         <p className="mx-auto mt-6 max-w-2xl text-balance text-base text-[var(--text-secondary)]">
           {cta.description}
         </p>
-        <div className="mx-auto mt-10 max-w-xl rounded-md border border-red-400/50 bg-red-950/40 px-6 py-4 text-sm leading-relaxed text-red-100 backdrop-blur-sm sm:text-base">
-          <strong className="block font-bold uppercase tracking-wide text-red-200">Event Sold Out</strong>
-          <span className="mt-2 block">
-            This event has been sold out. For any inquiries, please email{" "}
-            <a href="mailto:events@mathabah.org" className="underline underline-offset-2 hover:text-white">
-              events@mathabah.org
-            </a>.
-          </span>
+        <div className="mt-10">
+          <Link href={cta.buttonHref} className="btn-outline-gold">
+            {cta.buttonText}
+          </Link>
         </div>
+        <p className="mt-6 text-sm text-[var(--text-secondary)]">
+          Any questions or concerns, please email us at{" "}
+          <a href="mailto:events@mathabah.org" className="text-[var(--gold-light)] underline underline-offset-2">
+            events@mathabah.org
+          </a>
+        </p>
         <p className="mt-8 text-xs italic text-[var(--text-muted)]">
           &quot;{siteConfig.footer.quranVerse.text}&quot; ({siteConfig.footer.quranVerse.reference})
         </p>
