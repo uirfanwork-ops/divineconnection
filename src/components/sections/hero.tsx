@@ -2,11 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { siteConfig } from "../../../content/site-config";
 
 export function HeroSection() {
-  const { hero } = siteConfig;
   const [scrollY, setScrollY] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoReady, setVideoReady] = useState(false);
@@ -84,15 +81,13 @@ export function HeroSection() {
           className="w-full max-w-4xl"
           unoptimized
         />
-        <div className="mt-10 sm:mt-12">
-          <Link href={hero.ctaHref} className="btn-outline-gold">
-            {hero.ctaText}
-          </Link>
-        </div>
-        <div className="mt-6 max-w-xl rounded-md border border-red-400/50 bg-red-950/40 px-4 py-3 text-xs leading-relaxed text-red-100 backdrop-blur-sm sm:text-sm">
-          <strong className="block font-bold uppercase tracking-wide text-red-200">Sisters&apos; Accommodations Sold Out</strong>
-          <span className="mt-1 block">
-            All sisters&apos; accommodations are at capacity and have been sold out. Please only fill out the form if you would like to be placed on the waitlist. We apologise for any inconvenience.
+        <div className="mt-10 max-w-xl rounded-md border border-red-400/50 bg-red-950/40 px-6 py-4 text-sm leading-relaxed text-red-100 backdrop-blur-sm sm:mt-12 sm:text-base">
+          <strong className="block font-bold uppercase tracking-wide text-red-200">Event Sold Out</strong>
+          <span className="mt-2 block">
+            This event has been sold out. For any inquiries, please email{" "}
+            <a href="mailto:events@mathabah.org" className="underline underline-offset-2 hover:text-white">
+              events@mathabah.org
+            </a>.
           </span>
         </div>
       </div>
