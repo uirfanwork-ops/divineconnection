@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { registrationSchema } from "@/lib/validations/registration";
 import { createServiceClient } from "@/lib/supabase/service";
 import { checkRegistrationRateLimit } from "@/lib/rate-limit";
+import { REGISTRATIONS_CLOSED } from "@/lib/registration-status";
 import { sendEmail } from "@/lib/email";
 import {
   eTransferConfirmationEmail,
@@ -35,6 +36,14 @@ export async function submitRegistration(
   _prevState: RegistrationActionState,
   formData: FormData
 ): Promise<RegistrationActionState> {
+  if (REGISTRATIONS_CLOSED) {
+    return {
+      success: false,
+      error:
+        "Registrations are closed — this event has been sold out. For any inquiries, please email events@mathabah.org.",
+    };
+  }
+
   const headerStore = await headers();
   const ip =
     headerStore.get("x-forwarded-for")?.split(",")[0]?.trim() ??
