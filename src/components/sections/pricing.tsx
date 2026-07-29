@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Check } from "lucide-react";
 import { ParallaxBg } from "@/components/parallax-bg";
 
@@ -38,13 +37,6 @@ export function PricingSection() {
               All-inclusive registration for the Divine Connections retreat. Includes accommodation, meals, sessions, and activities.
             </p>
 
-            <div className="mt-4 rounded-md border border-red-300 bg-red-50 p-3 text-xs leading-relaxed text-red-800">
-              <strong className="block font-bold uppercase tracking-wide">Sisters&apos; Accommodations Sold Out</strong>
-              <span className="mt-1 block">
-                All sisters&apos; accommodations are at capacity and have been sold out. Please only fill out the form if you would like to be placed on the waitlist. We apologise for any inconvenience.
-              </span>
-            </div>
-
             <div className="my-6 h-px w-16 bg-[#c9a84c] opacity-50" />
 
             <ul className="mb-8 flex-1 space-y-3">
@@ -59,12 +51,15 @@ export function PricingSection() {
               })}
             </ul>
 
-            <Link
-              href="/register"
-              className="inline-flex w-full items-center justify-center border border-[#c9a84c] bg-[#c9a84c] py-3 text-xs font-medium uppercase tracking-[0.15em] text-white transition-all hover:bg-[#b08930]"
-            >
-              Register Now
-            </Link>
+            <div className="rounded-md border border-red-300 bg-red-50 p-4 text-sm leading-relaxed text-red-800">
+              <strong className="block font-bold uppercase tracking-wide">Event Sold Out</strong>
+              <span className="mt-2 block">
+                This event has been sold out. For any inquiries, please email{" "}
+                <a href="mailto:events@mathabah.org" className="underline underline-offset-2 hover:text-red-900">
+                  events@mathabah.org
+                </a>.
+              </span>
+            </div>
           </div>
         </div>
 
