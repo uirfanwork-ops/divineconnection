@@ -7,7 +7,14 @@ if (!apiKey && process.env.NEXT_PHASE !== "phase-production-build") {
   console.warn("Missing RESEND_API_KEY environment variable");
 }
 
-const resend = new Resend(apiKey ?? "");
+let resend: Resend | null = null;
+
+// Created on first send so importing this module never throws without a key.
+function getResend(): Resend {
+  if (!apiKey) throw new Error("Missing RESEND_API_KEY environment variable");
+  if (!resend) resend = new Resend(apiKey);
+  return resend;
+}
 
 const FROM_EMAIL =
   process.env.EMAIL_FROM ?? "Divine Connections <noreply@divineconnections.ca>";
@@ -18,18 +25,26 @@ interface SendEmailOptions {
   html: string;
   replyTo?: string;
   cc?: string | string[];
+  from?: string;
+  attachments?: {
+    filename: string;
+    content: Buffer | string;
+    contentType?: string;
+    contentId?: string;
+  }[];
 }
 
 export async function sendEmail(options: SendEmailOptions): Promise<string> {
   return withRetry(
     async () => {
-      const { data, error } = await resend.emails.send({
-        from: FROM_EMAIL,
+      const { data, error } = await getResend().emails.send({
+        from: options.from ?? FROM_EMAIL,
         to: Array.isArray(options.to) ? options.to : [options.to],
         subject: options.subject,
         html: options.html,
         replyTo: options.replyTo,
         cc: options.cc ? (Array.isArray(options.cc) ? options.cc : [options.cc]) : undefined,
+        attachments: options.attachments,
       });
 
       if (error) {

@@ -37,6 +37,15 @@ const apiLimiter = redis
     })
   : null;
 
+const cdCheckoutLimiter = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(20, "1 h"),
+      analytics: true,
+      prefix: "ratelimit:cd-checkout",
+    })
+  : null;
+
 interface RateLimitResult {
   success: boolean;
   limit: number;
@@ -68,6 +77,23 @@ export async function checkApiRateLimit(
   }
 
   const result = await apiLimiter.limit(identifier);
+  return {
+    success: result.success,
+    limit: result.limit,
+    remaining: result.remaining,
+    reset: result.reset,
+  };
+}
+
+/** Contemplating Death checkout: families often register several people from one IP. */
+export async function checkCdCheckoutRateLimit(
+  ip: string
+): Promise<RateLimitResult> {
+  if (!cdCheckoutLimiter) {
+    return { success: true, limit: 20, remaining: 20, reset: 0 };
+  }
+
+  const result = await cdCheckoutLimiter.limit(ip);
   return {
     success: result.success,
     limit: result.limit,
