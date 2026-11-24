@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAdminUser } from "@/lib/admin";
+import { getCdStaff } from "@/lib/contemplating-death/staff";
 import { Scanner } from "@/components/contemplating-death/scanner";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ScanPage() {
-  const admin = await getAdminUser();
+  const admin = await getCdStaff();
 
   if (!admin) {
     return (
@@ -21,7 +21,7 @@ export default async function ScanPage() {
           <p>Sign in to scan tickets at the door.</p>
           <Link
             className="button button-dark"
-            href="/admin-login?next=/contemplating-death/scan"
+            href="/contemplating-death/staff?next=/contemplating-death/scan"
           >
             Staff sign-in
           </Link>
@@ -38,7 +38,7 @@ export default async function ScanPage() {
             <p className="eyebrow">Contemplating Death</p>
             <h1>Ticket scanner</h1>
           </div>
-          <Link className="cd-scan-link" href="/admin/contemplating-death">
+          <Link className="cd-scan-link" href="/event-admin">
             Attendee list
           </Link>
         </div>

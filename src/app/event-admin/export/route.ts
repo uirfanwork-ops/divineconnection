@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminUser } from "@/lib/admin";
+import { getCdStaff } from "@/lib/contemplating-death/staff";
 import {
   CD_TABLE,
   cdDb,
@@ -16,7 +16,7 @@ function cell(value: unknown): string {
 }
 
 export async function GET() {
-  const admin = await getAdminUser();
+  const admin = await getCdStaff();
   if (!admin)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

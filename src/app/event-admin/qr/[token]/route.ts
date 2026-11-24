@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminUser } from "@/lib/admin";
+import { getCdStaff } from "@/lib/contemplating-death/staff";
 import { TICKET_TOKEN_PATTERN } from "@/lib/contemplating-death/db";
 import { ticketQrSvg } from "@/lib/contemplating-death/tickets";
 
@@ -10,7 +10,7 @@ export async function GET(
   _request: Request,
   { params }: { params: { token: string } }
 ) {
-  const admin = await getAdminUser();
+  const admin = await getCdStaff();
   if (!admin)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!TICKET_TOKEN_PATTERN.test(params.token)) {

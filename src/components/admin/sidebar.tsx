@@ -18,7 +18,7 @@ import type { AdminUser } from "@/lib/admin";
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, adminOnly: false },
   { label: "Registrations", href: "/admin/registrations", icon: Users, adminOnly: false },
-  { label: "Contemplating Death", href: "/admin/contemplating-death", icon: Ticket, adminOnly: false },
+  { label: "Contemplating Death", href: "/event-admin", icon: Ticket, adminOnly: false },
   { label: "Documents", href: "/admin/documents", icon: FileText, adminOnly: false },
   { label: "Audit Log", href: "/admin/audit-log", icon: ClipboardList, adminOnly: true },
   { label: "Settings", href: "/admin/settings", icon: Settings, adminOnly: true },

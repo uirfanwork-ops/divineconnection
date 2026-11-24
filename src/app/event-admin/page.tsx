@@ -1,6 +1,18 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import {
+  STAFF_LOGIN_PATH,
+  STAFF_TABLE,
+  getCdStaff,
+} from "@/lib/contemplating-death/staff";
+import {
+  addStaffMember,
+  removeStaffMember,
+  signOutStaff,
+} from "@/lib/contemplating-death/staff-actions";
 import {
   CD_TABLE,
   cdDb,
@@ -58,9 +70,18 @@ function detailRows(row: CdRegistration): [string, string][] {
   ];
 }
 
+export const metadata: Metadata = {
+  title: "Event admin | Contemplating Death",
+  robots: { index: false, follow: false },
+};
+
 export default async function ContemplatingDeathAdminPage({
   searchParams,
 }: PageProps) {
+  const staff = await getCdStaff();
+  if (!staff) redirect(`${STAFF_LOGIN_PATH}?next=/event-admin`);
+
+  let staffEmails: string[] = [];
   const search = (searchParams.search ?? "").trim();
   const show = searchParams.show === "all" ? "all" : "paid";
 
@@ -97,6 +118,12 @@ export default async function ContemplatingDeathAdminPage({
         `full_name.ilike.%${s}%,email.ilike.%${s}%,phone.ilike.%${s}%,ticket_code.ilike.%${s}%`
       );
     }
+    const { data: staffRows } = await db
+      .from(STAFF_TABLE)
+      .select("email")
+      .order("added_at", { ascending: true });
+    staffEmails = (staffRows ?? []).map((r) => r.email as string);
+
     const { data, error } = await query;
     if (error) throw new Error(error.message);
     rows = (data ?? []) as CdRegistration[];
@@ -115,7 +142,7 @@ export default async function ContemplatingDeathAdminPage({
   ];
 
   return (
-    <div>
+    <div className="theme-admin min-h-screen bg-background p-4 text-foreground sm:p-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
@@ -134,7 +161,7 @@ export default async function ContemplatingDeathAdminPage({
           </Link>
           <a
             className="rounded-md border px-5 py-2.5 text-sm font-semibold text-foreground"
-            href="/admin/contemplating-death/export"
+            href="/event-admin/export"
             download
           >
             Download CSV
@@ -189,7 +216,8 @@ export default async function ContemplatingDeathAdminPage({
       {loadError ? (
         <p className="mt-6 rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
           Could not load registrations: {loadError}. If the table is missing,
-          run docs/migration-contemplating-death.sql in Supabase.
+          run docs/migration-contemplating-death.sql in the Mathabah Supabase
+          project.
         </p>
       ) : null}
 
@@ -231,7 +259,7 @@ export default async function ContemplatingDeathAdminPage({
                         <div className="text-center">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={`/admin/contemplating-death/qr/${row.ticket_token}`}
+                            src={`/event-admin/qr/${row.ticket_token}`}
                             alt={`QR code for ${row.full_name}`}
                             width={180}
                             height={180}
@@ -336,6 +364,67 @@ export default async function ContemplatingDeathAdminPage({
           </tbody>
         </table>
       </div>
+
+      <section className="mt-10 rounded-lg border bg-card p-5">
+        <h2 className="text-lg font-bold text-foreground">Staff access</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          People on this list can sign in with an emailed link and use the
+          attendee list and the ticket scanner.
+        </p>
+        <ul className="mt-4 divide-y rounded-md border">
+          {staffEmails.map((email) => (
+            <li
+              key={email}
+              className="flex items-center justify-between gap-3 px-3 py-2 text-sm"
+            >
+              <span className="text-foreground">
+                {email}
+                {email === staff.email ? (
+                  <span className="ml-2 text-xs text-muted-foreground">
+                    (you)
+                  </span>
+                ) : null}
+              </span>
+              {email !== staff.email ? (
+                <form action={removeStaffMember}>
+                  <input type="hidden" name="email" value={email} />
+                  <button
+                    type="submit"
+                    className="text-xs underline text-destructive"
+                  >
+                    Remove
+                  </button>
+                </form>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+        <form action={addStaffMember} className="mt-4 flex flex-wrap gap-3">
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="volunteer@example.org"
+            className="h-10 min-w-[240px] flex-1 rounded-md border bg-background px-3 text-sm text-foreground"
+          />
+          <button
+            type="submit"
+            className="h-10 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
+          >
+            Add staff
+          </button>
+        </form>
+      </section>
+
+      <form
+        action={signOutStaff}
+        className="mt-6 text-sm text-muted-foreground"
+      >
+        Signed in as {staff.email}.{" "}
+        <button type="submit" className="underline text-primary">
+          Sign out
+        </button>
+      </form>
     </div>
   );
 }
