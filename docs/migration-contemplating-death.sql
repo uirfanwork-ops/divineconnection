@@ -1,6 +1,8 @@
 -- ============================================================
 -- Contemplating Death (January 16, 2027) registrations
--- Run once in the Supabase SQL editor.
+-- Run once in the SQL editor of the Supabase project this app uses
+-- (the one with the admin_roles table). It stops with an error if a
+-- cd_registrations table already exists, instead of silently skipping.
 --
 -- Security model: RLS is enabled with NO policies, so the anon
 -- and authenticated roles cannot read or write this table at
@@ -8,7 +10,7 @@
 -- (checkout action, Stripe webhook, admin pages).
 -- ============================================================
 
-CREATE TABLE IF NOT EXISTS cd_registrations (
+CREATE TABLE cd_registrations (
   id                        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at                TIMESTAMPTZ NOT NULL DEFAULT now(),
 
