@@ -73,10 +73,13 @@ export async function startCheckout(input: unknown): Promise<CheckoutResult> {
   if (
     typeof input === "object" &&
     input !== null &&
-    "company" in input &&
-    (input as { company?: unknown }).company
+    "cd_confirm_blank" in input &&
+    (input as { cd_confirm_blank?: unknown }).cd_confirm_blank
   ) {
-    return { ok: false, error: "We could not process that registration." };
+    return {
+      ok: false,
+      error: `We could not process that registration. Please reload the page and try again, or email ${cdEvent.contactEmail}.`,
+    };
   }
 
   const parsed = checkoutSchema.safeParse(input);

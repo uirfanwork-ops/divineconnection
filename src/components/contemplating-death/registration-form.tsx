@@ -195,13 +195,17 @@ export function RegistrationForm({ open }: { open: boolean }) {
             />
           </div>
           <div className="hp" aria-hidden="true">
+            {/* Bot trap. The odd name and label keep browser autofill from filling it. */}
             <label>
-              Company
+              Leave this field empty
               <input
-                name="company"
+                name="cd_confirm_blank"
                 type="text"
                 tabIndex={-1}
                 autoComplete="off"
+                data-1p-ignore
+                data-lpignore="true"
+                data-form-type="other"
               />
             </label>
           </div>
