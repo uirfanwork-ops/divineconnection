@@ -1,8 +1,8 @@
 -- ============================================================
 -- Contemplating Death (January 16, 2027) registrations
--- Run once in the SQL editor of the Supabase project this app uses
--- (the one with the admin_roles table). It stops with an error if a
--- cd_registrations table already exists, instead of silently skipping.
+-- Runs in the Mathabah Supabase project (CD_SUPABASE_URL). The table is
+-- named cd_seminar_registrations so it does not collide with the older
+-- cd_registrations table from the first version of the site.
 --
 -- Security model: RLS is enabled with NO policies, so the anon
 -- and authenticated roles cannot read or write this table at
@@ -10,7 +10,7 @@
 -- (checkout action, Stripe webhook, admin pages).
 -- ============================================================
 
-CREATE TABLE cd_registrations (
+CREATE TABLE cd_seminar_registrations (
   id                        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at                TIMESTAMPTZ NOT NULL DEFAULT now(),
 
@@ -46,12 +46,13 @@ CREATE TABLE cd_registrations (
   checked_in_by             TEXT
 );
 
-CREATE INDEX IF NOT EXISTS cd_registrations_status_idx
-  ON cd_registrations (status);
-CREATE INDEX IF NOT EXISTS cd_registrations_email_idx
-  ON cd_registrations (lower(email));
-CREATE INDEX IF NOT EXISTS cd_registrations_payment_intent_idx
-  ON cd_registrations (stripe_payment_intent_id);
+CREATE INDEX IF NOT EXISTS cd_seminar_registrations_status_idx
+  ON cd_seminar_registrations (status);
+CREATE INDEX IF NOT EXISTS cd_seminar_registrations_email_idx
+  ON cd_seminar_registrations (lower(email));
+CREATE INDEX IF NOT EXISTS cd_seminar_registrations_payment_intent_idx
+  ON cd_seminar_registrations (stripe_payment_intent_id);
 
-ALTER TABLE cd_registrations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cd_seminar_registrations ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON cd_seminar_registrations FROM anon, authenticated;
 -- Intentionally no policies. See the security model note above.

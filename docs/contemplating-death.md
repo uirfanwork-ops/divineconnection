@@ -1,12 +1,13 @@
 # Contemplating Death event pages
 
-The event lives at `/contemplating-death`. It reuses this project's Supabase,
-Stripe, Resend and admin sign-in.
+The event lives at `/contemplating-death`. Registrations are stored in the
+Mathabah Supabase project (`CD_SUPABASE_URL`). Staff sign in with this app's
+existing admin accounts. Stripe and Resend are shared with the rest of the app.
 
 ## How registration works
 
 1. The attendee fills in the form. The server saves a `pending` row in
-   `cd_registrations` and creates a Stripe Checkout Session for $50.00 CAD.
+   `cd_seminar_registrations` and creates a Stripe Checkout Session for $50.00 CAD.
 2. The attendee pays on Stripe's hosted checkout.
 3. Stripe calls `/api/contemplating-death/webhook`. The server marks the row
    `paid` and emails the ticket with a QR code. The confirmation page runs the
@@ -29,7 +30,10 @@ Stripe, Resend and admin sign-in.
 
 ## One-time setup
 
-1. In the Supabase SQL editor, run `docs/migration-contemplating-death.sql`.
+1. In the Mathabah Supabase project, run
+   `docs/migration-contemplating-death.sql`. Set `CD_SUPABASE_URL` and
+   `CD_SUPABASE_SERVICE_ROLE_KEY` in Vercel to that project's URL and service
+   role key.
 2. In Vercel, confirm these variables are set for production:
    `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY`,
    `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SUPABASE_URL`,
@@ -55,7 +59,7 @@ Speakers, sessions, date, venue and price are in
 
 ## Security notes
 
-- `cd_registrations` has row-level security on with no policies. Only server
+- `cd_seminar_registrations` has row-level security on with no policies. Only server
   code with the service role key can read or write it.
 - The ticket price is set on the server. The browser never sends an amount.
 - The webhook verifies Stripe's signature before it does anything.

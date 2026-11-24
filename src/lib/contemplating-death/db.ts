@@ -27,19 +27,27 @@ export interface CdRegistration {
   checked_in_by: string | null;
 }
 
-export const CD_TABLE = "cd_registrations";
+/** Named apart from the older cd_registrations table that already exists in the Mathabah project. */
+export const CD_TABLE = "cd_seminar_registrations";
 
 /**
- * Service role client for the cd_registrations table.
+ * Service role client for the event's registrations table.
  * Server only: this bypasses RLS. Never import from a client component.
+ *
+ * The event's data lives in the Mathabah Supabase project, set with
+ * CD_SUPABASE_URL and CD_SUPABASE_SERVICE_ROLE_KEY. Without those it falls
+ * back to the project the rest of this app uses.
  */
 export function cdDb() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const url =
+    process.env.CD_SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.CD_SUPABASE_URL
+    ? process.env.CD_SUPABASE_SERVICE_ROLE_KEY
+    : process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !serviceKey) {
     throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY"
+      "Missing CD_SUPABASE_URL and CD_SUPABASE_SERVICE_ROLE_KEY (or the default Supabase variables)"
     );
   }
 
