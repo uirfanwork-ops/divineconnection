@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getAdminUser } from "@/lib/admin";
+import { getCdStaff } from "./staff";
 import { CD_PATH } from "./config";
 import {
   CD_TABLE,
@@ -17,13 +17,13 @@ export interface StaffActionResult {
 }
 
 function refresh(token?: string) {
-  revalidatePath("/admin/contemplating-death");
+  revalidatePath("/event-admin");
   if (token) revalidatePath(`${CD_PATH}/check-in/${token}`);
 }
 
 /** Every action re-checks the staff session; the page guard alone is not enough. */
 export async function checkInTicket(token: string): Promise<StaffActionResult> {
-  const admin = await getAdminUser();
+  const admin = await getCdStaff();
   if (!admin) return { ok: false, message: "Staff sign-in required." };
   if (!TICKET_TOKEN_PATTERN.test(token)) {
     return { ok: false, message: "Ticket not found." };
@@ -53,7 +53,7 @@ export async function checkInTicket(token: string): Promise<StaffActionResult> {
 }
 
 export async function undoCheckIn(token: string): Promise<StaffActionResult> {
-  const admin = await getAdminUser();
+  const admin = await getCdStaff();
   if (!admin) return { ok: false, message: "Staff sign-in required." };
   if (!TICKET_TOKEN_PATTERN.test(token)) {
     return { ok: false, message: "Ticket not found." };
@@ -70,7 +70,7 @@ export async function undoCheckIn(token: string): Promise<StaffActionResult> {
 }
 
 export async function resendTicket(token: string): Promise<StaffActionResult> {
-  const admin = await getAdminUser();
+  const admin = await getCdStaff();
   if (!admin) return { ok: false, message: "Staff sign-in required." };
   if (!TICKET_TOKEN_PATTERN.test(token)) {
     return { ok: false, message: "Ticket not found." };
@@ -125,7 +125,7 @@ function torontoTime(iso: string): string {
  * check-in URL) or a typed ticket code, and checks the attendee in right away.
  */
 export async function scanTicket(input: string): Promise<ScanResult> {
-  const admin = await getAdminUser();
+  const admin = await getCdStaff();
   if (!admin) return { state: "unauthorized" };
 
   const text = String(input ?? "")

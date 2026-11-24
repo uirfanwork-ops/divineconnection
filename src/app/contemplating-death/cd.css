@@ -370,3 +370,10 @@ body:has(.cd) { background: #151612; }
 .cd .cd-scan-bar { display: flex; justify-content: space-between; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #ffffff1f; font-size: .9rem; color: #dfd8ca; }
 .cd .cd-scan-foot { margin: 10px 0 0; font-size: .8rem; color: #a59f90; }
 @keyframes cd-pulse { 50% { border-color: #e3bf8166; } }
+
+/* Staff sign-in form */
+.cd .cd-staff-form { display: grid; gap: 10px; margin-top: 6px; text-align: left; }
+.cd .cd-staff-form label { font-size: .9rem; font-weight: 700; }
+.cd .cd-staff-form input { width: 100%; min-height: 50px; padding: 9px 12px; border: 1px solid #bdb19b; border-radius: 3px; background: #fffdf7; color: var(--ink); font-size: 1rem; }
+.cd .cd-staff-form input:focus { outline: none; border-color: var(--bronze); box-shadow: 0 0 0 3px #805a2a2e; }
+.cd .cd-staff-form .cd-banner { margin: 6px 0 0; }

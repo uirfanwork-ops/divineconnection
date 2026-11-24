@@ -56,3 +56,33 @@ CREATE INDEX IF NOT EXISTS cd_seminar_registrations_payment_intent_idx
 ALTER TABLE cd_seminar_registrations ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON cd_seminar_registrations FROM anon, authenticated;
 -- Intentionally no policies. See the security model note above.
+
+-- ============================================================
+-- Staff sign-in for this event (email sign-in links).
+-- Same security model: RLS on, no policies, service role only.
+-- ============================================================
+
+CREATE TABLE cd_seminar_staff (
+  email     TEXT PRIMARY KEY CHECK (email = lower(btrim(email)) AND char_length(email) BETWEEN 3 AND 254),
+  added_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  added_by  TEXT
+);
+
+-- One row per emailed sign-in link. Only a SHA-256 hash of the token is stored.
+CREATE TABLE cd_seminar_staff_links (
+  token_hash  TEXT PRIMARY KEY CHECK (token_hash ~ '^[0-9a-f]{64}$'),
+  email       TEXT NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  expires_at  TIMESTAMPTZ NOT NULL,
+  used_at     TIMESTAMPTZ
+);
+CREATE INDEX cd_seminar_staff_links_email_idx
+  ON cd_seminar_staff_links (email, created_at DESC);
+
+ALTER TABLE cd_seminar_staff ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cd_seminar_staff_links ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON cd_seminar_staff FROM anon, authenticated;
+REVOKE ALL ON cd_seminar_staff_links FROM anon, authenticated;
+
+-- Add the first staff member by hand, then manage the list from /event-admin:
+-- INSERT INTO cd_seminar_staff (email) VALUES ('you@example.org');

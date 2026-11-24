@@ -1,8 +1,10 @@
 # Contemplating Death event pages
 
 The event lives at `/contemplating-death`. Registrations are stored in the
-Mathabah Supabase project (`CD_SUPABASE_URL`). Staff sign in with this app's
-existing admin accounts. Stripe and Resend are shared with the rest of the app.
+Mathabah Supabase project (`CD_SUPABASE_URL`). Staff sign in at
+`/contemplating-death/staff` with a one-time link sent to their email. The
+staff list is the `cd_seminar_staff` table and can be managed from
+`/event-admin`. Stripe and Resend are shared with the rest of the app.
 
 ## How registration works
 
@@ -24,8 +26,9 @@ existing admin accounts. Stripe and Resend are shared with the rest of the app.
 | `/contemplating-death/success` | Confirmation after payment |
 | `/contemplating-death/ticket/<token>` | Attendee's ticket with QR code |
 | `/contemplating-death/check-in/<token>` | Door check-in, staff only |
+| `/contemplating-death/staff` | Staff sign-in by emailed link |
 | `/contemplating-death/scan` | Camera scanner for staff. Each scan checks the attendee in |
-| `/admin/contemplating-death` | Every registration with full details and QR code, **Start scanning**, **Download CSV**, manual check-in, resend ticket |
+| `/event-admin` | Every registration with full details and QR code, **Start scanning**, **Download CSV**, manual check-in, resend ticket |
 | `/api/contemplating-death/webhook` | Stripe webhook |
 
 ## One-time setup
@@ -63,7 +66,10 @@ Speakers, sessions, date, venue and price are in
   code with the service role key can read or write it.
 - The ticket price is set on the server. The browser never sends an amount.
 - The webhook verifies Stripe's signature before it does anything.
-- Staff actions (check in, undo, resend, export) check the admin session on
-  every call.
+- Staff actions (check in, undo, resend, export, staff list) check the signed
+  staff session cookie and that the email is still on the staff list, on every
+  call. Removing someone from the list signs them out everywhere.
+- Sign-in links are single use, expire in 20 minutes, and only a SHA-256 hash
+  is stored.
 - A ticket link contains a random 128-bit token. Anyone with the link can view
   that ticket, so treat it like the ticket itself.

@@ -199,10 +199,7 @@ export default function ContemplatingDeathPage() {
           <p>
             {cdEvent.title} <span aria-hidden="true">·</span> January 16, 2027
           </p>
-          <a
-            className="staff-link"
-            href="/admin-login?next=/admin/contemplating-death"
-          >
+          <a className="staff-link" href="/contemplating-death/staff">
             Staff sign-in
           </a>
         </div>

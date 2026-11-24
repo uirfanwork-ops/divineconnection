@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAdminUser } from "@/lib/admin";
+import { getCdStaff } from "@/lib/contemplating-death/staff";
 import { TICKET_TOKEN_PATTERN } from "@/lib/contemplating-death/db";
 import { getRegistrationByToken } from "@/lib/contemplating-death/tickets";
 import { StaffButton } from "@/components/contemplating-death/staff-buttons";
@@ -24,7 +24,7 @@ export default async function CheckInPage({
 }: {
   params: { token: string };
 }) {
-  const admin = await getAdminUser();
+  const admin = await getCdStaff();
 
   // Attendees who scan their own code land here too. Show nothing about the ticket.
   if (!admin) {
@@ -42,7 +42,7 @@ export default async function CheckInPage({
           </p>
           <Link
             className="button button-dark"
-            href={`/admin-login?next=${next}`}
+            href={`/contemplating-death/staff?next=${next}`}
           >
             Staff sign-in
           </Link>
@@ -129,10 +129,7 @@ export default async function CheckInPage({
           <Link className="button button-dark" href="/contemplating-death/scan">
             Open the scanner
           </Link>
-          <Link
-            className="button button-quiet"
-            href="/admin/contemplating-death"
-          >
+          <Link className="button button-quiet" href="/event-admin">
             Open the door list
           </Link>
         </div>
