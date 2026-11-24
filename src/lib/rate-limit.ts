@@ -14,7 +14,8 @@ function createRedisClient(): Redis | null {
     return null;
   }
 
-  return new Redis({ url, token });
+  // One quick retry only: a missing database should not stall a form for seconds.
+  return new Redis({ url, token, retry: { retries: 1 } });
 }
 
 const redis = createRedisClient();
@@ -53,51 +54,56 @@ interface RateLimitResult {
   reset: number;
 }
 
+/**
+ * Runs a limiter but never lets a rate-limit outage take a form down.
+ * If Redis is unreachable (deleted database, network error), the request is
+ * allowed and the failure is logged.
+ */
+async function safeLimit(
+  limiter: Ratelimit | null,
+  key: string,
+  fallbackLimit: number
+): Promise<RateLimitResult> {
+  const open = {
+    success: true,
+    limit: fallbackLimit,
+    remaining: fallbackLimit,
+    reset: 0,
+  };
+  if (!limiter) return open;
+
+  try {
+    const result = await limiter.limit(key);
+    return {
+      success: result.success,
+      limit: result.limit,
+      remaining: result.remaining,
+      reset: result.reset,
+    };
+  } catch (error) {
+    console.error(
+      "Rate limiter unavailable, allowing request:",
+      error instanceof Error ? error.message : error
+    );
+    return open;
+  }
+}
+
 export async function checkRegistrationRateLimit(
   ip: string
 ): Promise<RateLimitResult> {
-  if (!registrationLimiter) {
-    return { success: true, limit: 5, remaining: 5, reset: 0 };
-  }
-
-  const result = await registrationLimiter.limit(ip);
-  return {
-    success: result.success,
-    limit: result.limit,
-    remaining: result.remaining,
-    reset: result.reset,
-  };
+  return safeLimit(registrationLimiter, ip, 5);
 }
 
 export async function checkApiRateLimit(
   identifier: string
 ): Promise<RateLimitResult> {
-  if (!apiLimiter) {
-    return { success: true, limit: 60, remaining: 60, reset: 0 };
-  }
-
-  const result = await apiLimiter.limit(identifier);
-  return {
-    success: result.success,
-    limit: result.limit,
-    remaining: result.remaining,
-    reset: result.reset,
-  };
+  return safeLimit(apiLimiter, identifier, 60);
 }
 
 /** Contemplating Death checkout: families often register several people from one IP. */
 export async function checkCdCheckoutRateLimit(
   ip: string
 ): Promise<RateLimitResult> {
-  if (!cdCheckoutLimiter) {
-    return { success: true, limit: 20, remaining: 20, reset: 0 };
-  }
-
-  const result = await cdCheckoutLimiter.limit(ip);
-  return {
-    success: result.success,
-    limit: result.limit,
-    remaining: result.remaining,
-    reset: result.reset,
-  };
+  return safeLimit(cdCheckoutLimiter, ip, 20);
 }
