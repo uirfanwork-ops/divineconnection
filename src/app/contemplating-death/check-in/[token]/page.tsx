@@ -126,6 +126,9 @@ export default async function CheckInPage({
               Undo check-in
             </StaffButton>
           ) : null}
+          <Link className="button button-dark" href="/contemplating-death/scan">
+            Open the scanner
+          </Link>
           <Link
             className="button button-quiet"
             href="/admin/contemplating-death"

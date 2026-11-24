@@ -94,3 +94,112 @@ export async function resendTicket(token: string): Promise<StaffActionResult> {
   refresh();
   return { ok: true, message: `Ticket sent to ${registration.email}.` };
 }
+
+export type ScanState =
+  | "checked_in"
+  | "already"
+  | "not_paid"
+  | "refunded"
+  | "not_found"
+  | "unauthorized"
+  | "error";
+
+export interface ScanResult {
+  state: ScanState;
+  name?: string;
+  code?: string;
+  detail?: string;
+  accessibility?: string | null;
+}
+
+function torontoTime(iso: string): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Toronto",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(iso));
+}
+
+/**
+ * Used by the in-browser scanner. Accepts the text read from a QR code (the
+ * check-in URL) or a typed ticket code, and checks the attendee in right away.
+ */
+export async function scanTicket(input: string): Promise<ScanResult> {
+  const admin = await getAdminUser();
+  if (!admin) return { state: "unauthorized" };
+
+  const text = String(input ?? "")
+    .trim()
+    .slice(0, 500);
+  const token = text.toLowerCase().match(/[0-9a-f]{32}/)?.[0];
+  const code = text.toUpperCase().match(/^CD-?([A-Z0-9]{6})$/)?.[1];
+  if (!token && !code) return { state: "not_found" };
+
+  try {
+    const db = cdDb();
+    const lookup = db.from(CD_TABLE).select("*");
+    const { data, error } = await (
+      token
+        ? lookup.eq("ticket_token", token)
+        : lookup.eq("ticket_code", `CD-${code}`)
+    ).maybeSingle();
+    if (error) throw new Error(error.message);
+
+    const registration = data as CdRegistration | null;
+    if (!registration) return { state: "not_found" };
+
+    const base = {
+      name: registration.full_name,
+      code: registration.ticket_code,
+      accessibility: registration.accessibility,
+    };
+
+    if (registration.status === "refunded")
+      return { ...base, state: "refunded" };
+    if (registration.status !== "paid") return { ...base, state: "not_paid" };
+
+    const alreadyDetail = (at: string, by: string | null) =>
+      `Checked in at ${torontoTime(at)}${by ? ` by ${by}` : ""}.`;
+
+    if (registration.checked_in_at) {
+      return {
+        ...base,
+        state: "already",
+        detail: alreadyDetail(
+          registration.checked_in_at,
+          registration.checked_in_by
+        ),
+      };
+    }
+
+    // Conditional update: if two phones scan the same ticket, only one wins.
+    const { data: updated, error: updateError } = await db
+      .from(CD_TABLE)
+      .update({
+        checked_in_at: new Date().toISOString(),
+        checked_in_by: admin.email,
+      })
+      .eq("id", registration.id)
+      .eq("status", "paid")
+      .is("checked_in_at", null)
+      .select("id")
+      .maybeSingle();
+    if (updateError) throw new Error(updateError.message);
+
+    refresh(registration.ticket_token);
+    if (!updated) {
+      return {
+        ...base,
+        state: "already",
+        detail: "Checked in a moment ago on another device.",
+      };
+    }
+    return { ...base, state: "checked_in" };
+  } catch (error) {
+    console.error(
+      "Contemplating Death scan failed:",
+      error instanceof Error ? error.message : error
+    );
+    return { state: "error" };
+  }
+}

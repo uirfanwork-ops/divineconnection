@@ -23,7 +23,8 @@ Stripe, Resend and admin sign-in.
 | `/contemplating-death/success` | Confirmation after payment |
 | `/contemplating-death/ticket/<token>` | Attendee's ticket with QR code |
 | `/contemplating-death/check-in/<token>` | Door check-in, staff only |
-| `/admin/contemplating-death` | Attendee list, manual check-in, resend ticket, CSV export |
+| `/contemplating-death/scan` | Camera scanner for staff. Each scan checks the attendee in |
+| `/admin/contemplating-death` | Every registration with full details and QR code, **Start scanning**, **Download CSV**, manual check-in, resend ticket |
 | `/api/contemplating-death/webhook` | Stripe webhook |
 
 ## One-time setup

@@ -32,6 +32,32 @@ const SOURCE_LABELS: Record<string, string> = {
   other: "Other",
 };
 
+function yesNo(value: boolean): string {
+  return value ? "Yes" : "No";
+}
+
+function detailRows(row: CdRegistration): [string, string][] {
+  return [
+    ["Full name", row.full_name],
+    ["Email", row.email],
+    ["Phone", row.phone ?? ""],
+    ["Ticket code", row.ticket_code],
+    ["Status", row.status],
+    ["Amount", formatCents(row.amount_cents, row.currency)],
+    ["Registered", formatTime(row.created_at)],
+    ["Paid", formatTime(row.paid_at)],
+    ["Ticket emailed", formatTime(row.ticket_emailed_at)],
+    ["Checked in", formatTime(row.checked_in_at)],
+    ["Checked in by", row.checked_in_by ?? ""],
+    ["Heard via", SOURCE_LABELS[row.source] ?? row.source],
+    ["Heard of Mathabah", yesNo(row.heard_of_mathabah)],
+    ["Attended before", yesNo(row.attended_mathabah)],
+    ["Wants updates", yesNo(row.wants_updates)],
+    ["Interest", row.interest ?? ""],
+    ["Accessibility", row.accessibility ?? ""],
+  ];
+}
+
 export default async function ContemplatingDeathAdminPage({
   searchParams,
 }: PageProps) {
@@ -99,20 +125,27 @@ export default async function ContemplatingDeathAdminPage({
             January 16, 2027. Tickets, payments and door check-in.
           </p>
         </div>
-        <div className="flex gap-3 text-sm">
+        <div className="flex flex-wrap items-center gap-3">
           <Link
-            className="underline text-primary"
+            className="rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+            href="/contemplating-death/scan"
+          >
+            Start scanning
+          </Link>
+          <a
+            className="rounded-md border px-5 py-2.5 text-sm font-semibold text-foreground"
+            href="/admin/contemplating-death/export"
+            download
+          >
+            Download CSV
+          </a>
+          <Link
+            className="text-sm underline text-primary"
             href="/contemplating-death"
             target="_blank"
           >
             View event page
           </Link>
-          <a
-            className="underline text-primary"
-            href="/admin/contemplating-death/export"
-          >
-            Export CSV
-          </a>
         </div>
       </div>
 
@@ -188,6 +221,44 @@ export default async function ContemplatingDeathAdminPage({
                   {row.phone ? (
                     <p className="text-muted-foreground">{row.phone}</p>
                   ) : null}
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-primary underline">
+                      Full registration
+                      {row.status === "paid" ? " and QR code" : ""}
+                    </summary>
+                    <div className="mt-3 flex flex-wrap gap-5 rounded-md border bg-card p-4">
+                      {row.status === "paid" ? (
+                        <div className="text-center">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`/admin/contemplating-death/qr/${row.ticket_token}`}
+                            alt={`QR code for ${row.full_name}`}
+                            width={180}
+                            height={180}
+                            loading="lazy"
+                            className="rounded bg-white"
+                          />
+                          <a
+                            className="mt-2 inline-block text-xs underline text-primary"
+                            href={`/contemplating-death/ticket/${row.ticket_token}`}
+                            target="_blank"
+                          >
+                            Open ticket
+                          </a>
+                        </div>
+                      ) : null}
+                      <dl className="grid min-w-[260px] flex-1 grid-cols-[150px_1fr] gap-x-3 gap-y-1.5 text-sm">
+                        {detailRows(row).map(([label, value]) => (
+                          <div key={label} className="contents">
+                            <dt className="text-muted-foreground">{label}</dt>
+                            <dd className="break-words text-foreground">
+                              {value || "None"}
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </div>
+                  </details>
                 </td>
                 <td className="px-3 py-3 font-mono text-foreground">
                   {row.ticket_code}
