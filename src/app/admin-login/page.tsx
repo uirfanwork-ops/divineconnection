@@ -33,7 +33,11 @@ export default function AdminLoginPage() {
     }
 
     logAdminLogin(email).catch(() => {});
-    router.push("/admin");
+    // Optional same-site return path, used by the door check-in QR flow.
+    const next = new URLSearchParams(window.location.search).get("next");
+    const safeNext =
+      next && /^\/(?![\/\\])[A-Za-z0-9\-_\/\[\]]*$/.test(next) ? next : "/admin";
+    router.push(safeNext);
     router.refresh();
   }
 
