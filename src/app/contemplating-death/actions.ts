@@ -170,6 +170,8 @@ export async function startCheckout(input: unknown): Promise<CheckoutResult> {
     // never taken from the browser.
     const session = await getStripe().checkout.sessions.create({
       mode: "payment",
+      // Shows the "Add promotion code" link on Stripe Checkout.
+      allow_promotion_codes: true,
       line_items: [
         priceId
           ? { price: priceId, quantity: 1 }

@@ -74,8 +74,8 @@ export default async function SuccessPage({
         </h1>
         <p>
           {emailError
-            ? "Payment received. We had trouble emailing your ticket, so please save this page or take a screenshot of the QR code below."
-            : `Payment received. We sent your ticket to ${registration.email}. Show this QR code at the door.`}
+            ? "You are registered. We had trouble emailing your ticket, so please save this page or take a screenshot of the QR code below."
+            : `You are registered. We sent your ticket to ${registration.email}. Show this QR code at the door.`}
         </p>
         <div
           className="cd-qr"
