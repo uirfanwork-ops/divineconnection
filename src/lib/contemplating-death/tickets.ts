@@ -139,7 +139,11 @@ export async function fulfillCheckoutSession(
   const registrationId =
     session.client_reference_id ?? session.metadata?.registration_id;
   if (!registrationId) return { state: "not_found" };
-  if (session.payment_status !== "paid") return { state: "unpaid" };
+  // A 100% promotion code completes checkout with nothing to charge.
+  const settled =
+    session.payment_status === "paid" ||
+    session.payment_status === "no_payment_required";
+  if (session.status !== "complete" || !settled) return { state: "unpaid" };
 
   const db = cdDb();
   const paymentIntentId =

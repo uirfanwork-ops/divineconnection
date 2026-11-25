@@ -51,7 +51,7 @@ export function ticketEmail(
           <tr>
             <td style="padding:32px 32px 8px;">
               <p style="margin:0 0 14px;color:#24231c;font-size:16px;line-height:1.6;">Assalamu alaikum ${firstName},</p>
-              <p style="margin:0;color:#5e594d;font-size:15px;line-height:1.65;">Your place is confirmed and your payment of ${amount} has been received. This email is your ticket. Show the QR code below at the door, on your phone or printed.</p>
+              <p style="margin:0;color:#5e594d;font-size:15px;line-height:1.65;">Your place is confirmed${registration.amount_cents > 0 ? ` and your payment of ${amount} has been received` : ""}. This email is your ticket. Show the QR code below at the door, on your phone or printed.</p>
             </td>
           </tr>
           <tr>
